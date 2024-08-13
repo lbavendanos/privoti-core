@@ -8,5 +8,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['verified'])->group(function () {
         Route::put('/auth/user', [UserController::class, 'update']);
+        Route::post('/auth/user/password', [UserController::class, 'updatePassword']);
     });
 });

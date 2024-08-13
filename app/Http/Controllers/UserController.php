@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
@@ -30,5 +33,26 @@ class UserController extends Controller
         $request->user()->update($request->only('first_name', 'last_name', 'phone', 'dob'));
 
         return new UserResource($request->user());
+    }
+
+    /**
+     * Update the user's password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password', 'string'],
+            'password' => ['required',  'string', Rules\Password::defaults()],
+        ], [
+            'current_password.current_password' => 'The provided password does not match your current password.'
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($request->string('password')),
+        ]);
+
+        event(new PasswordReset($request->user()));
+
+        return response()->noContent();
     }
 }
