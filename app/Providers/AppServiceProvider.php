@@ -33,10 +33,10 @@ class AppServiceProvider extends ServiceProvider
             $id = $notifiable->getKey();
             $hash = sha1($notifiable->getEmailForVerification());
 
-            $temporarySignedRoute =   URL::temporarySignedRoute(
+            $temporarySignedRoute = URL::temporarySignedRoute(
                 'verification.verify',
                 Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-                ['id' => $id, 'hash' => $hash,]
+                ['id' => $id, 'hash' => $hash]
             );
 
             $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);

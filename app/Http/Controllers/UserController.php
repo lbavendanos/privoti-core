@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Notifications\VerifyNewEmail;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
 class UserController extends Controller
@@ -54,5 +58,49 @@ class UserController extends Controller
         event(new PasswordReset($request->user()));
 
         return response()->noContent();
+    }
+
+    /**
+     * Send email change verification notification.
+     */
+    public function sendEmailChangeVerificationNotification(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'string', 'email', Rule::unique('users')],
+        ]);
+
+        Notification::route('mail', $request->string('email'))
+            ->notify(new VerifyNewEmail($request->user()));
+
+        return response()->noContent();
+    }
+
+    /**
+     * Verify the new email address
+     */
+    public function verifyNewEmail(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'integer'],
+            'email' => ['required', 'string', 'email'],
+            'hash' => ['required', 'string'],
+        ]);
+
+        if (! hash_equals((string) $request->user()->getKey(), (string) $request->input('id'))) {
+            return abort(403);
+        }
+
+        if (! hash_equals(sha1($request->string('email')), (string) $request->hash('hash'))) {
+            abort(403);
+        }
+
+        $request->user()->update([
+            'email' => $request->string('email'),
+            'email_verified_at' => now(),
+        ]);
+
+        event(new Verified($request->user()));
+
+        return new UserResource($request->user());
     }
 }
