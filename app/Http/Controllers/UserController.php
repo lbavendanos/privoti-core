@@ -80,27 +80,21 @@ class UserController extends Controller
      */
     public function verifyNewEmail(Request $request)
     {
-        $request->validate([
-            'id' => ['required', 'integer'],
-            'email' => ['required', 'string', 'email'],
-            'hash' => ['required', 'string'],
-        ]);
-
-        if (! hash_equals((string) $request->user()->getKey(), (string) $request->input('id'))) {
-            return abort(403);
+        if (! hash_equals((string) $request->user()->getKey(), (string) $request->route('id'))) {
+            abort(403);
         }
 
-        if (! hash_equals(sha1($request->string('email')), (string) $request->hash('hash'))) {
+        if (! hash_equals(sha1($request->route('email')), (string) $request->route('hash'))) {
             abort(403);
         }
 
         $request->user()->update([
-            'email' => $request->string('email'),
+            'email' => $request->route('email'),
             'email_verified_at' => now(),
         ]);
 
         event(new Verified($request->user()));
 
-        return new UserResource($request->user());
+        return response()->noContent();
     }
 }
