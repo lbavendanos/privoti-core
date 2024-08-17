@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +14,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/auth/user/email/verify/{id}/{email}/{hash}', [UserController::class, 'verifyNewEmail'])
             ->middleware(['signed', 'throttle:6,1'])
             ->name('auth.user.email.verify');
+
+        Route::apiResource('/auth/addresses', AddressController::class);
     });
 });
