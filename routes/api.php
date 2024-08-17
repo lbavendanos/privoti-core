@@ -16,5 +16,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
             ->name('auth.user.email.verify');
 
         Route::apiResource('/auth/addresses', AddressController::class);
+        Route::put('/auth/addresses/{address}/default', [AddressController::class, 'setDefault']);
     });
 });

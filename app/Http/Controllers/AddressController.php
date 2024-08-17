@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
+    const ADDRESS_LIMIT = 5;
+
     /**
      * Display a listing of the resource.
      */
@@ -34,8 +36,8 @@ class AddressController extends Controller
 
         $numberOfAddresses = $request->user()->addresses()->count();
 
-        if ($numberOfAddresses === 5) {
-            abort(403, 'You can not add more than 5 addresses.');
+        if ($numberOfAddresses === self::ADDRESS_LIMIT) {
+            abort(403, 'You can not add more than ' . self::ADDRESS_LIMIT . ' addresses.');
         }
 
         $request->merge(['default' => $numberOfAddresses === 0]);
@@ -110,8 +112,27 @@ class AddressController extends Controller
             abort(403);
         }
 
+        if ($address->default) {
+            abort(403, 'You can not delete your default address.');
+        }
+
         $address->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Set the specified address as default.
+     */
+    public function setDefault(Request $request, Address $address)
+    {
+        if ($address->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $request->user()->addresses()->update(['default' => false]);
+        $address->update(['default' => true]);
+
+        return new AddressResource($address);
     }
 }
