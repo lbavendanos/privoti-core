@@ -1,10 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
@@ -14,14 +11,14 @@ Route::prefix('auth')->group(function () {
     Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
     Route::middleware(['guest'])->group(function () {
-        Route::post('/register', [RegisteredUserController::class, 'store']);
-        Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
-        Route::post('/reset-password', [NewPasswordController::class, 'store']);
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+        Route::post('/logout', [AuthController::class, 'destroy']);
 
         Route::get('/user', [UserController::class, 'index']);
         Route::post('/user/email/notification', [UserController::class, 'sendEmailVerificationNotification'])
