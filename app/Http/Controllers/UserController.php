@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Notifications\VerifyNewEmail;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
@@ -56,6 +57,36 @@ class UserController extends Controller
         ]);
 
         event(new PasswordReset($request->user()));
+
+        return response()->noContent();
+    }
+
+    /**
+     * Send a new email verification notification.
+     */
+    public function sendEmailVerificationNotification(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->noContent();
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->noContent();
+    }
+
+    /**
+     * Mark the authenticated user's email address as verified.
+     */
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->noContent();
+        }
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
 
         return response()->noContent();
     }

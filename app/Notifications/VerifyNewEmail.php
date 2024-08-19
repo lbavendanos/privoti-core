@@ -73,7 +73,7 @@ class VerifyNewEmail extends Notification
         $hash = sha1($notifiable->routes['mail']);
 
         $temporarySignedRoute = URL::temporarySignedRoute(
-            'auth.user.email.verify',
+            'auth.user.email.new.verify',
             now()->addMinutes(config('auth.verification.expire', 60)),
             ['id' => $id, 'email' => $email, 'hash' => $hash]
         );

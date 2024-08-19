@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             $hash = sha1($notifiable->getEmailForVerification());
 
             $temporarySignedRoute = URL::temporarySignedRoute(
-                'auth.verification.verify',
+                'auth.user.email.verify',
                 Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                 ['id' => $id, 'hash' => $hash]
             );
