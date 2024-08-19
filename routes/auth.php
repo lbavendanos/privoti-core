@@ -7,8 +7,12 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::prefix('auth')->group(function () {
+
+    Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
+
     Route::middleware(['guest'])->group(function () {
         Route::post('/register', [RegisteredUserController::class, 'store']);
         Route::post('/login', [AuthenticatedSessionController::class, 'store']);
