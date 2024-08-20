@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Auth\AddressController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\W\Auth\AddressController;
+use App\Http\Controllers\W\Auth\AuthController;
+use App\Http\Controllers\W\Auth\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
