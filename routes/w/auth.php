@@ -10,14 +10,14 @@ Route::prefix('auth')->group(function () {
 
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show']);
 
-    Route::middleware(['guest'])->group(function () {
+    Route::middleware(['guest:web'])->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:web'])->group(function () {
         Route::post('/logout', [AuthController::class, 'destroy']);
 
         Route::get('/user', [UserController::class, 'index']);
