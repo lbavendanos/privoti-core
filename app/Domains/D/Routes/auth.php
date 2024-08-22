@@ -15,6 +15,6 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware(['auth:dashboard'])->group(function () {
         Route::post('/logout', [AuthController::class, 'destroy']);
-        Route::get('/user', [AdminController::class, 'index']);
+        Route::get('/admin', [AdminController::class, 'index']);
     });
 });
