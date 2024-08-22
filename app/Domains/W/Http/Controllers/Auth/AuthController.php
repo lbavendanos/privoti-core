@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\W\Auth;
+namespace App\Domains\W\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\UserResource;
+use App\Domains\W\Http\Controllers\Controller;
+use App\Domains\W\Http\Requests\Auth\LoginRequest;
+use App\Domains\W\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;

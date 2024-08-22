@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\W\Auth;
+namespace App\Domains\W\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Notifications\VerifyNewEmail;
+use App\Domains\W\Http\Controllers\Controller;
+use App\Domains\W\Http\Resources\UserResource;
+use App\Domains\W\Notifications\VerifyNewEmail;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\W\Auth;
+namespace App\Domains\W\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AddressResource;
+use App\Domains\W\Http\Controllers\Controller;
+use App\Domains\W\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Http\Request;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\D\Auth;
+namespace App\Domains\D\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AdminResource;
+use App\Domains\D\Http\Controllers\Controller;
+use App\Domains\D\Http\Resources\AdminResource;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller

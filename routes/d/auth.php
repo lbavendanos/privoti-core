@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\D\Auth\AuthController;
-use App\Http\Controllers\D\Auth\AdminController;
+use App\Domains\D\Http\Controllers\Auth\AuthController;
+use App\Domains\D\Http\Controllers\Auth\AdminController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
