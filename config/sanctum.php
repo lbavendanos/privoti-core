@@ -19,8 +19,8 @@ return [
         '%s%s%s%s',
         'localhost,localhost:3000,localhost:3001,127.0.0.1,127.0.0.1:8000,::1',
         Sanctum::currentApplicationUrlWithPort(),
-        env('WEB_URL') ? ',' . parse_url(env('WEB_URL'), PHP_URL_HOST) : '',
-        env('DASHBOARD_URL') ? ',' . parse_url(env('DASHBOARD_URL'), PHP_URL_HOST) : ''
+        env('DASHBOARD_URL') ? ',' . parse_url(env('DASHBOARD_URL'), PHP_URL_HOST) : '',
+        env('WEB_URL') ? ',' . parse_url(env('WEB_URL'), PHP_URL_HOST) : ''
     ))),
 
     /*
