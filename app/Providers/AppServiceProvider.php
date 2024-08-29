@@ -25,10 +25,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
-            return config('app.frontend_url') . "/password/reset/$token?email={$notifiable->getEmailForPasswordReset()}";
+            $baseUrl = get_class($notifiable) === \App\Models\User::class ? config('app.store_url') : config('app.dashboard_url');
+
+            return $baseUrl . "/password/reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
 
         VerifyEmail::createUrlUsing(function (object $notifiable) {
+            $baseUrl = get_class($notifiable) === \App\Models\User::class ? config('app.store_url') : config('app.dashboard_url');
             $type = 'verify-email';
             $id = $notifiable->getKey();
             $hash = sha1($notifiable->getEmailForVerification());
@@ -41,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
 
             $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-            return config('app.frontend_url') . "/auth/confirm?type={$type}&id={$id}&token={$hash}&{$query}";
+            return $baseUrl . "/auth/confirm?type={$type}&id={$id}&token={$hash}&{$query}";
         });
     }
 }

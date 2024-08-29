@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'verified' => \App\Domains\W\Http\Middleware\EnsureEmailIsVerified::class,
+            'verified' => \App\Domains\Store\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
 
         //

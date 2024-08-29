@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('DASHBOARD_URL', 'http://localhost:3000'), env('WEB_URL', 'http://localhost:3001')],
+    'allowed_origins' => [env('DASHBOARD_URL', 'http://localhost:3000'), env('STORE_URL', 'http://localhost:3001')],
 
     'allowed_origins_patterns' => [],
 
