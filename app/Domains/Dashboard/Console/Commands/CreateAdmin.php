@@ -5,21 +5,21 @@ namespace App\Domains\Dashboard\Console\Commands;
 use App\Domains\Dashboard\Http\Controllers\Auth\AuthController;
 use Illuminate\Console\Command;
 
-class RegisterAdmin extends Command
+class CreateAdmin extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'dashboard:admin';
+    protected $signature = 'make:admin';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Register a new admin user.';
+    protected $description = 'Create a new admin user.';
 
     /**
      * Execute the console command.
