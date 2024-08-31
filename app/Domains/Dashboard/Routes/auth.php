@@ -17,7 +17,13 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware(['auth:dashboard'])->group(function () {
         Route::post('/logout', [AuthController::class, 'destroy']);
+
         Route::get('/admin', [AdminController::class, 'index']);
+        Route::post('/admin/email/notification', [AdminController::class, 'sendEmailVerificationNotification'])
+            ->middleware(['throttle:6,1']);
+        Route::get('/admin/email/verify/{id}/{hash}', [AdminController::class, 'verifyEmail'])
+            ->middleware(['signed', 'throttle:6,1'])
+            ->name('auth.admin.email.verify');
 
         Route::middleware(['verified'])->group(function () {
             Route::put('/admin', [AdminController::class, 'update']);

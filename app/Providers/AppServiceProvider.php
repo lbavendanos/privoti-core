@@ -32,12 +32,14 @@ class AppServiceProvider extends ServiceProvider
 
         VerifyEmail::createUrlUsing(function (object $notifiable) {
             $baseUrl = get_class($notifiable) === \App\Models\User::class ? config('app.store_url') : config('app.dashboard_url');
+            $modelName = get_class($notifiable) === \App\Models\User::class ? 'user' : 'admin';
+
             $type = 'verify-email';
             $id = $notifiable->getKey();
             $hash = sha1($notifiable->getEmailForVerification());
 
             $temporarySignedRoute = URL::temporarySignedRoute(
-                'auth.user.email.verify',
+                "auth.{$modelName}.email.verify",
                 Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                 ['id' => $id, 'hash' => $hash]
             );
