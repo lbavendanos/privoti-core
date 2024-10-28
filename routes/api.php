@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('d')->group(function () {
+Route::prefix('c')->group(function () {
     require __DIR__ . '/../app/Domains/Cms/Routes/auth.php';
 });
 
