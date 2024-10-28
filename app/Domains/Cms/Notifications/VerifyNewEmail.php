@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Dashboard\Notifications;
+namespace App\Domains\Cms\Notifications;
 
 use App\Models\Admin;
 use Illuminate\Bus\Queueable;
@@ -80,6 +80,6 @@ class VerifyNewEmail extends Notification
 
         $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-        return config('app.dashboard_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
+        return config('app.cms_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
     }
 }

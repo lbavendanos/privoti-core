@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('d')->group(function () {
-    require __DIR__ . '/../app/Domains/Dashboard/Routes/auth.php';
+    require __DIR__ . '/../app/Domains/Cms/Routes/auth.php';
 });
 
 Route::prefix('s')->group(function () {

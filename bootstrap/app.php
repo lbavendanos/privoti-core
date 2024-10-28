@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withCommands([
-        __DIR__ . '/../app/Domains/Dashboard/Console/Commands',
+        __DIR__ . '/../app/Domains/Cms/Console/Commands',
         __DIR__ . '/../app/Domains/Store/Console/Commands',
     ])
     ->withExceptions(function (Exceptions $exceptions) {

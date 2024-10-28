@@ -53,7 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'dashboard_url' => env('DASHBOARD_URL', 'http://localhost:3000'),
+    'cms_url' => env('CMS_URL', 'http://localhost:3000'),
     'store_url' => env('STORE_URL', 'http://localhost:3001'),
 
     /*

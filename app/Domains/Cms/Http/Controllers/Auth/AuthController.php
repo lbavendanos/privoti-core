@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domains\Dashboard\Http\Controllers\Auth;
+namespace App\Domains\Cms\Http\Controllers\Auth;
 
-use App\Domains\Dashboard\Http\Controllers\Controller;
-use App\Domains\Dashboard\Http\Requests\Auth\LoginRequest;
-use App\Domains\Dashboard\Http\Resources\AdminResource;
+use App\Domains\Cms\Http\Controllers\Controller;
+use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
+use App\Domains\Cms\Http\Resources\AdminResource;
 use App\Models\Admin;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
@@ -64,7 +64,7 @@ class AuthController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        Auth::guard('dashboard')->logout();
+        Auth::guard('cms')->logout();
 
         $request->session()->invalidate();
 
@@ -130,7 +130,7 @@ class AuthController extends Controller
 
                 event(new PasswordReset($user));
 
-                Auth::guard('dashboard')->login($user);
+                Auth::guard('cms')->login($user);
             }
         );
 
@@ -140,6 +140,6 @@ class AuthController extends Controller
             ]);
         }
 
-        return new AdminResource(Auth::guard('dashboard')->user());
+        return new AdminResource(Auth::guard('cms')->user());
     }
 }

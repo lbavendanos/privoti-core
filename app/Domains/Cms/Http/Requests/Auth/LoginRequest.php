@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Dashboard\Http\Requests\Auth;
+namespace App\Domains\Cms\Http\Requests\Auth;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
@@ -41,7 +41,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::guard('dashboard')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::guard('cms')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

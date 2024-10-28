@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domains\Dashboard\Console\Commands;
+namespace App\Domains\Cms\Console\Commands;
 
-use App\Domains\Dashboard\Http\Controllers\Auth\AuthController;
+use App\Domains\Cms\Http\Controllers\Auth\AuthController;
 use Illuminate\Console\Command;
 
 class CreateAdmin extends Command

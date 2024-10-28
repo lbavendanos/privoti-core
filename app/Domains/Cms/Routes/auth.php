@@ -1,7 +1,7 @@
 <?php
 
-use App\Domains\Dashboard\Http\Controllers\Auth\AuthController;
-use App\Domains\Dashboard\Http\Controllers\Auth\AdminController;
+use App\Domains\Cms\Http\Controllers\Auth\AuthController;
+use App\Domains\Cms\Http\Controllers\Auth\AdminController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
@@ -9,13 +9,13 @@ Route::prefix('auth')->group(function () {
 
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show']);
 
-    Route::middleware(['guest:dashboard'])->group(function () {
+    Route::middleware(['guest:cms'])->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
-    Route::middleware(['auth:dashboard'])->group(function () {
+    Route::middleware(['auth:cms'])->group(function () {
         Route::post('/logout', [AuthController::class, 'destroy']);
 
         Route::get('/admin', [AdminController::class, 'index']);
