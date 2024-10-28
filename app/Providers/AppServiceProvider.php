@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function isUser(object $notifiable): bool
+    private function isUser(object $notifiable): bool
     {
         return get_class($notifiable) === \App\Models\User::class;
     }
