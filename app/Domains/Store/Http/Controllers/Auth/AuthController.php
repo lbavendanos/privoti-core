@@ -58,7 +58,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return new UserResource($request->user());
+        return new UserResource(Auth::guard('store')->user());
     }
 
     /**

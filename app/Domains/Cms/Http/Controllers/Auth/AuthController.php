@@ -56,7 +56,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return new AdminResource($request->user());
+        return new AdminResource(Auth::guard('cms')->user());
     }
 
     /**
