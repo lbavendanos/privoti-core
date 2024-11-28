@@ -2,7 +2,7 @@
 
 namespace App\Domains\Cms\Notifications;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,14 +14,14 @@ class VerifyNewEmail extends Notification
 {
     use Queueable;
 
-    public $admin;
+    public $user;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Admin $admin)
+    public function __construct(User $user)
     {
-        $this->admin = $admin;
+        $this->user = $user;
     }
 
     /**
@@ -68,12 +68,12 @@ class VerifyNewEmail extends Notification
     protected function verificationUrl($notifiable)
     {
         $type = 'verify-new-email';
-        $id = $this->admin->getKey();
+        $id = $this->user->getKey();
         $email = $notifiable->routes['mail'];
         $hash = sha1($notifiable->routes['mail']);
 
         $temporarySignedRoute = URL::temporarySignedRoute(
-            'auth.admin.email.new.verify',
+            'auth.user.email.new.verify',
             now()->addMinutes(config('auth.verification.expire', 60)),
             ['id' => $id, 'email' => $email, 'hash' => $hash]
         );

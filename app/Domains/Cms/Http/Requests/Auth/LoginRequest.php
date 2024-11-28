@@ -37,11 +37,11 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate()
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::guard('cms')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! $token = Auth::guard('cms')->attempt($this->only('email', 'password'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -50,6 +50,8 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        return $token;
     }
 
     /**

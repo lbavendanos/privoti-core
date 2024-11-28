@@ -5,28 +5,28 @@ namespace App\Domains\Cms\Console\Commands;
 use App\Domains\Cms\Http\Controllers\Auth\AuthController;
 use Illuminate\Console\Command;
 
-class CreateAdmin extends Command
+class CreateUser extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:admin';
+    protected $signature = 'make:user';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new admin user.';
+    protected $description = 'Create a new user.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $firstName = $this->ask('What is your fist name?');
+        $firstName = $this->ask('What is your first name?');
         $lastName = $this->ask('What is your last name?');
         $email = $this->ask('What is your email?');
         $password = $this->secret('What is your password?');
@@ -44,6 +44,6 @@ class CreateAdmin extends Command
 
         app()->call([$controller, 'register'], ['request' => $request]);
 
-        $this->info('Admin created successfully!');
+        $this->info('User created successfully!');
     }
 }

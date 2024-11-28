@@ -3,7 +3,7 @@
 namespace App\Domains\Cms\Http\Controllers\Auth;
 
 use App\Domains\Cms\Http\Controllers\Controller;
-use App\Domains\Cms\Http\Resources\AdminResource;
+use App\Domains\Cms\Http\Resources\UserResource;
 use App\Domains\Cms\Notifications\VerifyNewEmail;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return new AdminResource($request->user());
+        return new UserResource($request->user());
     }
 
     /**
@@ -38,7 +38,7 @@ class AdminController extends Controller
 
         $request->user()->update($request->only('first_name', 'last_name', 'phone', 'dob'));
 
-        return new AdminResource($request->user());
+        return new UserResource($request->user());
     }
 
     /**
@@ -98,7 +98,7 @@ class AdminController extends Controller
     public function sendEmailChangeVerificationNotification(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'string', 'email', Rule::unique('admins')],
+            'email' => ['required', 'string', 'email', Rule::unique('users')],
         ]);
 
         Notification::route('mail', $request->string('email'))

@@ -4,11 +4,8 @@ use App\Domains\Store\Http\Controllers\Auth\AddressController;
 use App\Domains\Store\Http\Controllers\Auth\AuthController;
 use App\Domains\Store\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::prefix('auth')->group(function () {
-
-    Route::get('/csrf-cookie', [CsrfCookieController::class, 'show']);
 
     Route::middleware(['guest:store'])->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
@@ -25,7 +22,7 @@ Route::prefix('auth')->group(function () {
             ->middleware(['throttle:6,1']);
         Route::get('/user/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])
             ->middleware(['signed', 'throttle:6,1'])
-            ->name('auth.user.email.verify');
+            ->name('auth.customer.email.verify');
 
         Route::middleware(['verified'])->group(function () {
             Route::put('/user', [UserController::class, 'update']);
@@ -34,7 +31,7 @@ Route::prefix('auth')->group(function () {
                 ->middleware(['throttle:6,1']);
             Route::get('/user/email/new/verify/{id}/{email}/{hash}', [UserController::class, 'verifyNewEmail'])
                 ->middleware(['signed', 'throttle:6,1'])
-                ->name('auth.user.email.new.verify');
+                ->name('auth.customer.email.new.verify');
 
             Route::apiResource('/addresses', AddressController::class);
             Route::put('/addresses/{address}/default', [AddressController::class, 'setDefault']);

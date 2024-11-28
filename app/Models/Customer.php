@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class Admin extends Authenticatable implements MustVerifyEmail
+class Customer extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
     use HasFactory, Notifiable;
 
@@ -49,24 +50,31 @@ class Admin extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    protected function fullName(): Attribute
+    /**
+     * Get the user's addresses.
+     */
+    public function addresses(): HasMany
     {
-        return Attribute::make(
-            get: fn(mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name']
-        );
+        return $this->hasMany(Address::class);
     }
 
-    protected function shortName(): Attribute
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
     {
-        return Attribute::make(
-            get: fn(mixed $value, array $attributes) => trim(ucwords(explode(' ', $attributes['first_name'])[0] . ' ' . explode(' ', $attributes['last_name'])[0]))
-        );
+        return $this->getKey();
     }
 
-    protected function initials(): Attribute
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
     {
-        return Attribute::make(
-            get: fn(mixed $value, array $attributes) => strtoupper($attributes['first_name'][0] . strtoupper($attributes['last_name'][0]))
-        );
+        return [];
     }
 }
