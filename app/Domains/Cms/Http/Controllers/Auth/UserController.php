@@ -30,13 +30,12 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'dob' => ['nullable', 'date'],
         ]);
 
-        $request->user()->update($request->only('first_name', 'last_name', 'phone', 'dob'));
+        $request->user()->update($request->only('name', 'phone', 'dob'));
 
         return new UserResource($request->user());
     }

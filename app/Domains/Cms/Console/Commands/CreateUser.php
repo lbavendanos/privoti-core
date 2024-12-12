@@ -26,15 +26,13 @@ class CreateUser extends Command
      */
     public function handle()
     {
-        $firstName = $this->ask('What is your first name?');
-        $lastName = $this->ask('What is your last name?');
+        $name = $this->ask('What is your name?');
         $email = $this->ask('What is your email?');
         $password = $this->secret('What is your password?');
         $passwordConfirmation = $this->secret('Please confirm your password');
 
         $request = request()->merge([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
+            'name' => $name,
             'email' => $email,
             'password' => $password,
             'password_confirmation' => $passwordConfirmation,

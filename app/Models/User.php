@@ -19,8 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'phone',
         'dob',
@@ -50,24 +49,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         ];
     }
 
-    protected function fullName(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name']
-        );
-    }
-
-    protected function shortName(): Attribute
-    {
-        return Attribute::make(
-            get: fn(mixed $value, array $attributes) => trim(ucwords(explode(' ', $attributes['first_name'])[0] . ' ' . explode(' ', $attributes['last_name'])[0]))
-        );
-    }
-
-    protected function initials(): Attribute
-    {
-        return Attribute::make(
-            get: fn(mixed $value, array $attributes) => strtoupper($attributes['first_name'][0] . strtoupper($attributes['last_name'][0]))
+            get: fn(mixed $value) => ucwords($value),
+            set: fn(mixed $value) => ucwords($value)
         );
     }
 
