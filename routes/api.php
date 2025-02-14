@@ -1,11 +1,4 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-Route::prefix('c')->group(function () {
-    require __DIR__ . '/../app/Domains/Cms/Routes/auth.php';
-});
-
-Route::prefix('s')->group(function () {
-    require __DIR__ . '/../app/Domains/Store/Routes/auth.php';
-});
+require __DIR__ . '/../app/Domains/Cms/Routes/api.php';
+require __DIR__ . '/../app/Domains/Store/Routes/api.php';
