@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->enum('status', ['draft', 'active', 'archived'])->default('draft');
             $table->string('tags')->nullable();
+            $table->foreignId('vendor_id')->nullable()->constrained();
             $table->foreignId('category_id')->nullable()->constrained();
             $table->foreignId('collection_id')->nullable()->constrained();
             $table->timestamps();
