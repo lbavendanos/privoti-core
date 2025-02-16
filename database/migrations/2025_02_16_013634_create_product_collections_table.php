@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_media', function (Blueprint $table) {
-            $table->id();
-            $table->string('path');
-            $table->enum('type', ['image', 'video']);
-            $table->integer('position')->default(0);
+        Schema::create('product_collections', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained();
+            $table->foreignId('collection_id')->constrained();
+            $table->primary(['product_id', 'collection_id']);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_media');
+        Schema::dropIfExists('product_collections');
     }
 };

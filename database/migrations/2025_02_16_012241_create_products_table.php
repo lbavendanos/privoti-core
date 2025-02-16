@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('subtitle')->nullable();
+            $table->string('handle')->unique();
             $table->string('description')->nullable();
-            $table->string('slug')->unique();
             $table->enum('status', ['draft', 'active', 'archived'])->default('draft');
             $table->string('tags')->nullable();
+            $table->jsonb('metadata')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('product_categories');
+            $table->foreignId('type_id')->nullable()->constrained('product_types');
             $table->foreignId('vendor_id')->nullable()->constrained();
-            $table->foreignId('category_id')->nullable()->constrained();
-            $table->foreignId('collection_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
