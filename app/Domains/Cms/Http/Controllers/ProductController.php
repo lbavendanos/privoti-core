@@ -2,9 +2,13 @@
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class ProductController
 {
@@ -30,7 +34,44 @@ class ProductController
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')],
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')],
+            'media' => ['nullable', Rule::array()],
+            'media.*.file' => ['required_with:media', File::image()->max('1mb')],
+            // 'media.*.url' => ['required_with:media', 'url'],
+            'media.*.rank' => ['required_with:media', 'integer'],
         ]);
+
+        // Create a handle from the title and unique
+        $handle = Str::slug($request->input('title'));
+
+        // Check if the handle already exists
+        if (Product::where('handle', $handle)->exists()) {
+            $handle = $handle . '-' . Str::random(5);
+        }
+
+        $request->merge(['handle' => $handle]);
+
+        $product = Product::create($request->all());
+
+        if ($request->has('media')) {
+            $mediaFiles = $request->file('media');
+            $mediaInputs = $request->input('media');
+
+            foreach ($mediaInputs as $key => $media) {
+                $rank = $media['rank'];
+                $file = $mediaFiles[$key]['file'];
+
+                $extension = $file->extension();
+                $path  = $file->storePubliclyAs('products', $handle . '-' . $key . '.' . $extension);
+                $url = Storage::url($path);
+
+                $product->media()->create([
+                    'url' => $url,
+                    'rank' => $rank,
+                ]);
+            }
+        }
+
+        return new ProductResource($product->load('media'));
     }
 
     /**
@@ -54,6 +95,13 @@ class ProductController
      */
     public function destroy(Product $product)
     {
-        //
+        $product->media->each(function ($media) {
+            Storage::delete($media->path);
+            $media->delete();
+        });
+
+        $product->delete();
+
+        return response()->noContent();
     }
 }

@@ -49,6 +49,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         ];
     }
 
+    /**
+     * Get the name attribute.
+     *
+     * @return Attribute
+     */
     protected function name(): Attribute
     {
         return Attribute::make(

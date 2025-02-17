@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('product_media', function (Blueprint $table) {
             $table->id();
             $table->string('url');
-            $table->enum('type', ['image', 'video']);
             $table->integer('rank')->default(0);
             $table->foreignId('product_id')->constrained();
             $table->timestamps();
