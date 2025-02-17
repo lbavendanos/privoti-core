@@ -26,6 +26,7 @@ class ProductResource extends JsonResource
             'type_id' => $this->type_id,
             'vendor_id' => $this->vendor_id,
             'media' => ProductMediaResource::collection($this->whenLoaded('media')),
+            'options' => ProductOptionResource::collection($this->whenLoaded('options')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
