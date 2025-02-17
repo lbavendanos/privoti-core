@@ -57,4 +57,20 @@ class Product extends Model
     {
         return $this->hasMany(ProductMedia::class);
     }
+
+    /**
+     * Get the options for the product.
+     */
+    public function options(): HasMany
+    {
+        return $this->hasMany(ProductOption::class);
+    }
+
+    /**
+     * Get the variants for the product.
+     */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }
