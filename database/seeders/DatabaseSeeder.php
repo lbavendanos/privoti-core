@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -42,6 +43,17 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'Party'],
                 ['name' => 'Outerwear'],
                 ['name' => 'Footwear'],
+            )
+            ->create();
+
+        Vendor::factory()
+            ->count(5)
+            ->sequence(
+                ['name' => 'Nike'],
+                ['name' => 'Adidas'],
+                ['name' => 'Puma'],
+                ['name' => 'Reebok'],
+                ['name' => 'Under Armour'],
             )
             ->create();
     }
