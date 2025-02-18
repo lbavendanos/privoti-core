@@ -67,7 +67,10 @@ class Product extends Model
         return $this->hasMany(ProductOption::class);
     }
 
-    public function optionValues(): HasManyThrough
+    /**
+     * Get the values for the product.
+     */
+    public function values(): HasManyThrough
     {
         return $this->hasManyThrough(ProductOptionValue::class, ProductOption::class, 'product_id', 'option_id');
     }

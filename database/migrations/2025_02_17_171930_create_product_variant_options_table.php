@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_variant_options', function (Blueprint $table) {
             $table->foreignId('variant_id')->constrained('product_variants');
-            $table->foreignId('option_value_id')->constrained('product_option_values');
-            $table->primary(['variant_id', 'option_value_id']);
+            $table->foreignId('value_id')->constrained('product_option_values');
+            $table->primary(['variant_id', 'value_id']);
         });
     }
 

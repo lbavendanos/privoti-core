@@ -14,7 +14,7 @@ class ProductVariantOption extends Model
      */
     protected $fillable = [
         'variant_id',
-        'option_value_id',
+        'value_id',
     ];
 
     /**
@@ -26,9 +26,9 @@ class ProductVariantOption extends Model
     }
 
     /**
-     * Get the option value that owns the option.
+     * Get the value that owns the option.
      */
-    public function optionValue(): BelongsTo
+    public function value(): BelongsTo
     {
         return $this->belongsTo(ProductOptionValue::class);
     }

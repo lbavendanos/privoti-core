@@ -24,7 +24,7 @@ class ProductVariantResource extends JsonResource
             'product_id' => $this->product_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'option_values' => ProductOptionValueResource::collection($this->whenLoaded('optionValues')),
+            'values' => ProductOptionValueResource::collection($this->whenLoaded('values')),
         ];
     }
 }

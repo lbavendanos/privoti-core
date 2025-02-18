@@ -94,23 +94,23 @@ class ProductController
             }
         }
 
-        $product->loadMissing('media', 'options.values', 'optionValues');
-
         // Create product variants
         if ($request->filled('variants')) {
             $variants = $request->input('variants');
+
+            $product->load('values');
 
             foreach ($variants as $variant) {
                 $productVariant = $product->variants()->create($variant);
 
                 $optionValues = collect($variant['options'])
-                    ->map(fn($option) => $product->optionValues->firstWhere('value', $option['value']));
+                    ->map(fn($option) => $product->values->firstWhere('value', $option['value']));
 
-                $productVariant->optionValues()->attach($optionValues->pluck('id'));
+                $productVariant->values()->attach($optionValues->pluck('id'));
             }
         }
 
-        return new ProductResource($product->loadMissing('variants', 'optionValues'));
+        return new ProductResource($product->load('media', 'options.values', 'variants.values'));
     }
 
     /**
