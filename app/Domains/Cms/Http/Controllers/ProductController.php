@@ -41,6 +41,13 @@ class ProductController
             'options' => ['nullable', Rule::array()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
             'options.*.values' => ['required_with:options', Rule::array()],
+            'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
+            'variants' => ['nullable', Rule::array()],
+            'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
+            'variants.*.price' => ['required_with:variants', 'numeric'],
+            'variants.*.quantity' => ['required_with:variants', 'integer'],
+            'variants.*.options' => ['required_with:variants', Rule::array()],
+            'variants.*.options.*.value' => ['required_with:variants', 'string', 'max:255'],
         ]);
 
         // Create a handle from the title and unique
@@ -81,13 +88,29 @@ class ProductController
 
             foreach ($options as $option) {
                 $productOption = $product->options()->create(['name' => $option['name']]);
-                $productOptionValues = array_map(fn($value) => ['value' => $value], $option['values']);
+                $valueArray = array_map(fn($value) => ['value' => $value], $option['values']);
 
-                $productOption->values()->createMany($productOptionValues);
+                $productOption->values()->createMany($valueArray);
             }
         }
 
-        return new ProductResource($product->load('media', 'options.values'));
+        $product->loadMissing('media', 'options.values', 'optionValues');
+
+        // Create product variants
+        if ($request->filled('variants')) {
+            $variants = $request->input('variants');
+
+            foreach ($variants as $variant) {
+                $productVariant = $product->variants()->create($variant);
+
+                $optionValues = collect($variant['options'])
+                    ->map(fn($option) => $product->optionValues->firstWhere('value', $option['value']));
+
+                $productVariant->optionValues()->attach($optionValues->pluck('id'));
+            }
+        }
+
+        return new ProductResource($product->loadMissing('variants', 'optionValues'));
     }
 
     /**
@@ -111,11 +134,13 @@ class ProductController
      */
     public function destroy(Product $product)
     {
+        // Delete product media and options
         $product->options->each(function ($option) {
             $option->values()->delete();
             $option->delete();
         });
 
+        // Delete product media
         $product->media->each(function ($media) {
             Storage::delete($media->path);
             $media->delete();

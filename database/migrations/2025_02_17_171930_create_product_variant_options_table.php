@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignId('variant_id')->constrained('product_variants');
             $table->foreignId('option_value_id')->constrained('product_option_values');
             $table->primary(['variant_id', 'option_value_id']);
-            $table->timestamps();
         });
     }
 

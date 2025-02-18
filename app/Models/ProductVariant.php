@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductVariant extends Model
 {
@@ -13,7 +14,7 @@ class ProductVariant extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
+        'name',
         'price',
         'quantity',
         'sku',
@@ -27,5 +28,13 @@ class ProductVariant extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * The option values that belong to the variant.
+     */
+    public function optionValues(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductOptionValue::class, 'product_variant_options', 'variant_id', 'option_value_id');
     }
 }
