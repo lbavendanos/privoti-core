@@ -123,7 +123,13 @@ class ProductController
      */
     public function show(Product $product)
     {
-        //
+        return new ProductResource($product->load(
+            'category',
+            'type',
+            'media',
+            'options.values',
+            'variants.values'
+        ));
     }
 
     /**
