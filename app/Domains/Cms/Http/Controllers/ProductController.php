@@ -36,7 +36,6 @@ class ProductController
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')],
             'media' => ['nullable', Rule::array()],
             'media.*.file' => ['required_with:media', File::image()->max('1mb')],
-            // 'media.*.url' => ['required_with:media', 'url'],
             'media.*.rank' => ['required_with:media', 'integer'],
             'options' => ['nullable', Rule::array()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
@@ -110,7 +109,13 @@ class ProductController
             }
         }
 
-        return new ProductResource($product->load('media', 'options.values', 'variants.values'));
+        return new ProductResource($product->load(
+            'category',
+            'type',
+            'media',
+            'options.values',
+            'variants.values'
+        ));
     }
 
     /**

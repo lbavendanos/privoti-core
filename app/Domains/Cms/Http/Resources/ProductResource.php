@@ -27,6 +27,8 @@ class ProductResource extends JsonResource
             'vendor_id' => $this->vendor_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'category' => new ProductCategoryResource($this->whenLoaded('category')),
+            'type' => new ProductTypeResource($this->whenLoaded('type')),
             'media' => ProductMediaResource::collection($this->whenLoaded('media')),
             'options' => ProductOptionResource::collection($this->whenLoaded('options')),
             'variants' => ProductVariantResource::collection($this->whenLoaded('variants')),
