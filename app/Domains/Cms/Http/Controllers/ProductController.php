@@ -38,7 +38,14 @@ class ProductController
         $this->createOrUpdateOptions($product, $request);
         $this->createOrUpdateVariants($product, $request);
 
-        return new ProductResource($product->load('category', 'type', 'media', 'options.values', 'variants.values'));
+        return new ProductResource($product->load(
+            'category',
+            'type',
+            'vendor',
+            'media',
+            'options.values',
+            'variants.values'
+        ));
     }
 
     /**
@@ -49,6 +56,7 @@ class ProductController
         return new ProductResource($product->load(
             'category',
             'type',
+            'vendor',
             'media',
             'options.values',
             'variants.values'
@@ -73,7 +81,14 @@ class ProductController
         // $this->createOrUpdateOptions($product, $request);
         // $this->createOrUpdateVariants($product, $request);
 
-        return new ProductResource($product->load('category', 'type', 'media', 'options.values', 'variants.values'));
+        return new ProductResource($product->load(
+            'category',
+            'type',
+            'vendor',
+            'media',
+            'options.values',
+            'variants.values'
+        ));
     }
 
     /**
@@ -177,9 +192,9 @@ class ProductController
      */
     private function updateMedia(Request $request, Product $product)
     {
-        dd($request->has('media'));
         if (! $request->has('media')) {
             $product->media()->delete();
+
             return;
         }
 
