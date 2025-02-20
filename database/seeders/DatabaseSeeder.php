@@ -7,7 +7,6 @@ use App\Models\ProductType;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'email' => 'abc@abc.com',
-            'password' => Hash::make('abc123..'),
         ]);
 
         $categories = [

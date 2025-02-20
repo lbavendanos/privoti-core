@@ -5,6 +5,7 @@ namespace App\Domains\Cms\Http\Controllers;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,7 @@ class ProductController
      */
     public function store(Request $request)
     {
-        $this->validateProduct($request);
+        $this->validateCreateProduct($request);
 
         $handle = Str::slug($request->input('title'));
 
@@ -33,7 +34,7 @@ class ProductController
 
         $product = Product::create($request->all());
 
-        $this->createOrUpdateMedia($product, $request);
+        $this->createMedia($request, $product);
         $this->createOrUpdateOptions($product, $request);
         $this->createOrUpdateVariants($product, $request);
 
@@ -59,7 +60,7 @@ class ProductController
      */
     public function update(Request $request, Product $product)
     {
-        $this->validateProduct($request, $product);
+        $this->validateUpdateProduct($request, $product);
 
         if ($request->input('title') !== $product->title) {
             $handle = Str::slug($request->input('title'));
@@ -68,9 +69,9 @@ class ProductController
 
         $product->update($request->all());
 
-        $this->createOrUpdateMedia($product, $request);
-        $this->createOrUpdateOptions($product, $request);
-        $this->createOrUpdateVariants($product, $request);
+        $this->updateMedia($request, $product);
+        // $this->createOrUpdateOptions($product, $request);
+        // $this->createOrUpdateVariants($product, $request);
 
         return new ProductResource($product->load('category', 'type', 'media', 'options.values', 'variants.values'));
     }
@@ -89,20 +90,41 @@ class ProductController
         return response()->noContent();
     }
 
-    /**
-     * Restore the specified resource from storage.
-     */
-    private function validateProduct(Request $request, Product $product = null)
+    private function validateCreateProduct(Request $request)
     {
-        $uniqueTitleRule = Rule::unique('products')->withoutTrashed();
-
-        // If product exists, ignore the current product id
-        if ($product) {
-            $uniqueTitleRule->ignore($product->id);
-        }
-
         $request->validate([
-            'title' => ['required', 'string', 'max:255', $uniqueTitleRule],
+            'title' => ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
+            'tags' => ['nullable', 'string', 'max:255'],
+
+            'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
+            'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
+            'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
+
+            'media' => ['nullable', Rule::array()],
+            'media.*.file' => ['required_with:media', File::image()->max('1mb')],
+            'media.*.rank' => ['required_with:media', 'integer'],
+
+            'options' => ['nullable', Rule::array()],
+            'options.*.name' => ['required_with:options', 'string', 'max:255'],
+            'options.*.values' => ['required_with:options', Rule::array()],
+            'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
+
+            'variants' => ['nullable', Rule::array()],
+            'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
+            'variants.*.price' => ['required_with:variants', 'numeric'],
+            'variants.*.quantity' => ['required_with:variants', 'integer'],
+            'variants.*.options' => ['required_with:variants', Rule::array()],
+            'variants.*.options.*.value' => ['required_with:variants', 'string', 'max:255'],
+        ]);
+    }
+
+    private function validateUpdateProduct(Request $request, Product $product)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
@@ -110,13 +132,17 @@ class ProductController
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
+
             'media' => ['nullable', Rule::array()],
-            'media.*.file' => ['required_with:media', File::image()->max('1mb')],
+            'media.*.id' => ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()],
+            'media.*.file' => ['required_without:media.*.id', File::image()->max('1mb')],
             'media.*.rank' => ['required_with:media', 'integer'],
+
             'options' => ['nullable', Rule::array()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
             'options.*.values' => ['required_with:options', Rule::array()],
             'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
+
             'variants' => ['nullable', Rule::array()],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
             'variants.*.price' => ['required_with:variants', 'numeric'],
@@ -127,31 +153,73 @@ class ProductController
     }
 
     /**
-     * Create or update product media.
+     * Create product media.
      */
-    private function createOrUpdateMedia(Product $product, Request $request)
+    private function createMedia(Request $request, Product $product)
     {
         if ($request->has('media')) {
-            $product->media()->delete();
+            $inputMedia = $request->input('media');
 
-            $mediaFiles = $request->file('media');
-            $mediaInputs = $request->input('media');
-
-            foreach ($mediaInputs as $key => $media) {
-                $rank = $media['rank'];
-                $file = $mediaFiles[$key]['file'];
-
-                $extension = $file->extension();
-                $filename = $product->handle . '-' . ($key + 1) . '-' . Str::uuid() . '.' . $extension;
-                $path  = $file->storePubliclyAs('products', $filename);
-                $url = Storage::url($path);
+            foreach ($inputMedia as $key => $media) {
+                $file = $request->file("media.{$key}.file");
+                $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
 
                 $product->media()->create([
                     'url' => $url,
-                    'rank' => $rank,
+                    'rank' => $media['rank'],
                 ]);
             }
         }
+    }
+
+    /**
+     * Update product media.
+     */
+    private function updateMedia(Request $request, Product $product)
+    {
+        dd($request->has('media'));
+        if (! $request->has('media')) {
+            $product->media()->delete();
+            return;
+        }
+
+        $existingMedia = $product->media()->pluck('id')->toArray();
+        $inputMedia = collect($request->input('media'));
+
+        $mediaToKeep = $inputMedia->filter(fn($media) => isset($media['id']))->pluck('id')->toArray();
+        $mediaToDelete = array_diff($existingMedia, $mediaToKeep);
+
+        $product->media()->whereIn('id', $mediaToDelete)->delete();
+
+        foreach ($inputMedia as $key => $media) {
+            if (isset($media['id'])) {
+                $existingMedia = $product->media()->find($media['id']);
+                $existingMedia->update(['rank' => $media['rank']]);
+
+                continue;
+            }
+
+            $file = $request->file("media.{$key}.file");
+            $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
+
+            $product->media()->create([
+                'url' => $url,
+                'rank' => $media['rank'],
+            ]);
+        }
+    }
+
+    /**
+     * Store media file.
+     */
+    private function storeMediaFile(UploadedFile $file, string $name)
+    {
+        $extension = $file->extension();
+        $filename = $name . '-' . Str::uuid() . '.' . $extension;
+        $path = $file->storePubliclyAs('products', $filename);
+        $url = Storage::url($path);
+
+        return $url;
     }
 
     /**
