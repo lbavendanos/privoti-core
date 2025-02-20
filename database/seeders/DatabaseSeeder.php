@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -68,13 +69,21 @@ class DatabaseSeeder extends Seeder
     {
         foreach ($categories as $category => $subcategories) {
             if (is_array($subcategories)) {
-                $parent = ProductCategory::factory()->create(['name' => $category, 'parent_id' => $parent_id]);
+                $parent = ProductCategory::factory()->create([
+                    'name' => $category,
+                    'handle' => Str::slug($category),
+                    'parent_id' => $parent_id
+                ]);
 
                 $this->createCategory($subcategories, $parent->id);
                 continue;
             }
 
-            $parent = ProductCategory::factory()->create(['name' => $subcategories, 'parent_id' => $parent_id]);
+            $parent = ProductCategory::factory()->create([
+                'name' => $subcategories,
+                'handle' => Str::slug($subcategories),
+                'parent_id' => $parent_id
+            ]);
         }
     }
 }

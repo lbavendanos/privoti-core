@@ -24,22 +24,16 @@ class ProductCategoryController
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('product_categories')->withoutTrashed()],
             'description' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],
             'is_public' => ['required', 'boolean'],
             'rank' => ['required', 'integer'],
             'metadata' => ['nullable', 'array'],
-            'parent_id' => ['nullable', Rule::exists('product_categories', 'id')],
+            'parent_id' => ['nullable', Rule::exists('product_categories', 'id')->withoutTrashed()],
         ]);
 
-        // Create a handle from the name and unique
         $handle = Str::slug($request->input('name'));
-
-        // Check if the handle already exists
-        if (ProductCategory::where('handle', $handle)->exists()) {
-            $handle = $handle . '-' . Str::random(5);
-        }
 
         $request->merge(['handle' => $handle]);
 
@@ -53,7 +47,7 @@ class ProductCategoryController
      */
     public function show(ProductCategory $category)
     {
-        //
+        return new ProductCategoryResource($category);
     }
 
     /**
