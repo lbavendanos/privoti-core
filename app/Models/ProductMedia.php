@@ -43,30 +43,6 @@ class ProductMedia extends Model
     }
 
     /**
-     * Get the path attribute.
-     *
-     * @return Attribute
-     */
-    protected function path(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $path = ltrim(parse_url($this->url, PHP_URL_PATH), '/');
-
-                if (env('FILESYSTEM_DISK') === 's3' && env('AWS_ENDPOINT')) {
-                    $bucket = env('AWS_BUCKET');
-
-                    if (str_starts_with($path, $bucket . '/')) {
-                        $path = substr($path, strlen($bucket) + 1);
-                    }
-                }
-
-                return $path;
-            },
-        );
-    }
-
-    /**
      * Get the type attribute.
      *
      * @return Attribute

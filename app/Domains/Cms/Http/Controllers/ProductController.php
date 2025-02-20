@@ -26,7 +26,7 @@ class ProductController
     public function store(Request $request)
     {
         $request->validate([
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
@@ -49,13 +49,7 @@ class ProductController
             'variants.*.options.*.value' => ['required_with:variants', 'string', 'max:255'],
         ]);
 
-        // Create a handle from the title and unique
         $handle = Str::slug($request->input('title'));
-
-        // Check if the handle already exists
-        if (Product::where('handle', $handle)->exists()) {
-            $handle = $handle . '-' . Str::random(5);
-        }
 
         $request->merge(['handle' => $handle]);
 
@@ -71,7 +65,8 @@ class ProductController
                 $file = $mediaFiles[$key]['file'];
 
                 $extension = $file->extension();
-                $path  = $file->storePubliclyAs('products', $handle . '-' . $key . '.' . $extension);
+                $filename = $handle . '-' . ($key + 1) . '-' . Str::uuid() . '.' . $extension;
+                $path  = $file->storePubliclyAs('products', $filename);
                 $url = Storage::url($path);
 
                 $product->media()->create([
@@ -138,7 +133,7 @@ class ProductController
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
@@ -164,10 +159,6 @@ class ProductController
         // Update handle if title is changed
         if ($request->input('title') !== $product->title) {
             $handle = Str::slug($request->input('title'));
-
-            if (Product::where('handle', $handle)->exists()) {
-                $handle = $handle . '-' . Str::random(5);
-            }
 
             $request->merge(['handle' => $handle]);
         }
