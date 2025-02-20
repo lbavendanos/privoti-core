@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('handle')->unique();
+            $table->string('handle');
             $table->string('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_public')->default(true);
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->jsonb('metadata')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('product_categories');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

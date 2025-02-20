@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('rank')->default(0);
             $table->foreignId('product_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -242,18 +242,17 @@ class ProductController
      */
     public function destroy(Product $product)
     {
+        // Delete product variants
+        $product->variants()->delete();
+
         // Delete product media and options
-        $product->options->each(function ($option) {
-            $option->values()->delete();
-            $option->delete();
-        });
+        $product->values()->delete();
+        $product->options()->delete();
 
         // Delete product media
-        $product->media->each(function ($media) {
-            Storage::delete($media->path);
-            $media->delete();
-        });
+        $product->media()->delete();
 
+        // Delete product
         $product->delete();
 
         return response()->noContent();

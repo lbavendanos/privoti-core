@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('handle')->unique();
+            $table->string('handle');
             $table->string('description')->nullable();
             $table->jsonb('metadata')->nullable();
             $table->timestamps();
