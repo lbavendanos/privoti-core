@@ -129,8 +129,8 @@ class ProductController
 
             'options' => ['nullable', Rule::array()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
-            'options.*.values' => ['required_with:options', Rule::array()],
-            'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
+            'options.*.values' => ['nullable', Rule::array()],
+            'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
 
             'variants' => ['nullable', Rule::array()],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
@@ -161,8 +161,8 @@ class ProductController
             'options' => ['nullable', Rule::array()],
             'options.*.id' => ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
-            'options.*.values' => ['required_with:options', Rule::array()],
-            'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
+            'options.*.values' => ['nullable', Rule::array()],
+            'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
 
             'variants' => ['nullable', Rule::array()],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
