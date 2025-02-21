@@ -35,7 +35,7 @@ class ProductController
         $product = Product::create($request->all());
 
         $this->createMedia($request, $product);
-        $this->createOrUpdateOptions($product, $request);
+        $this->createOptions($product, $request);
         $this->createOrUpdateVariants($product, $request);
 
         return new ProductResource($product->load(
@@ -78,7 +78,7 @@ class ProductController
         $product->update($request->all());
 
         $this->updateMedia($request, $product);
-        // $this->createOrUpdateOptions($product, $request);
+        $this->updateOptions($product, $request);
         // $this->createOrUpdateVariants($product, $request);
 
         return new ProductResource($product->load(
@@ -154,6 +154,7 @@ class ProductController
             'media.*.rank' => ['required_with:media', 'integer'],
 
             'options' => ['nullable', Rule::array()],
+            'options.*.id' => ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
             'options.*.values' => ['required_with:options', Rule::array()],
             'options.*.values.*' => ['required_with:options', 'string', 'max:255'],
@@ -172,16 +173,16 @@ class ProductController
      */
     private function createMedia(Request $request, Product $product)
     {
-        if ($request->has('media')) {
+        if ($request->filled('media')) {
             $inputMedia = $request->input('media');
 
-            foreach ($inputMedia as $key => $media) {
+            foreach ($inputMedia as $key => $input) {
                 $file = $request->file("media.{$key}.file");
                 $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
 
                 $product->media()->create([
                     'url' => $url,
-                    'rank' => $media['rank'],
+                    'rank' => $input['rank'],
                 ]);
             }
         }
@@ -192,35 +193,39 @@ class ProductController
      */
     private function updateMedia(Request $request, Product $product)
     {
-        if (! $request->has('media')) {
-            $product->media()->delete();
+        if ($request->has('media')) {
+            if ($request->isNotFilled('media')) {
+                $product->media()->delete();
 
-            return;
-        }
-
-        $existingMedia = $product->media()->pluck('id')->toArray();
-        $inputMedia = collect($request->input('media'));
-
-        $mediaToKeep = $inputMedia->filter(fn($media) => isset($media['id']))->pluck('id')->toArray();
-        $mediaToDelete = array_diff($existingMedia, $mediaToKeep);
-
-        $product->media()->whereIn('id', $mediaToDelete)->delete();
-
-        foreach ($inputMedia as $key => $media) {
-            if (isset($media['id'])) {
-                $existingMedia = $product->media()->find($media['id']);
-                $existingMedia->update(['rank' => $media['rank']]);
-
-                continue;
+                return;
             }
 
-            $file = $request->file("media.{$key}.file");
-            $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
+            $existingMedia = $product->media()->pluck('id')->toArray();
+            $inputMedia = collect($request->input('media'));
 
-            $product->media()->create([
-                'url' => $url,
-                'rank' => $media['rank'],
-            ]);
+            $mediaToKeep = $inputMedia->filter(fn($media) => isset($media['id']))->pluck('id')->toArray();
+            $mediaToDelete = array_diff($existingMedia, $mediaToKeep);
+
+            if (filled($mediaToDelete)) {
+                $product->media()->whereIn('id', $mediaToDelete)->delete();
+            }
+
+            foreach ($inputMedia as $key => $input) {
+                if (isset($input['id'])) {
+                    $existingMedia = $product->media()->find($input['id']);
+                    $existingMedia->update(['rank' => $input['rank']]);
+
+                    continue;
+                }
+
+                $file = $request->file("media.{$key}.file");
+                $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
+
+                $product->media()->create([
+                    'url' => $url,
+                    'rank' => $input['rank'],
+                ]);
+            }
         }
     }
 
@@ -238,20 +243,79 @@ class ProductController
     }
 
     /**
-     * Create or update product options.
+     * Create product options.
      */
-    private function createOrUpdateOptions(Product $product, Request $request)
+    private function createOptions(Product $product, Request $request)
     {
         if ($request->filled('options')) {
-            $product->options()->delete();
+            $inputOptions = $request->input('options');
 
-            $options = $request->input('options');
+            foreach ($inputOptions as $input) {
+                $option = $product->options()->create(['name' => $input['name']]);
+                $values = array_map(fn($value) => ['value' => $value], $input['values']);
 
-            foreach ($options as $option) {
-                $productOption = $product->options()->create(['name' => $option['name']]);
-                $valueArray = array_map(fn($value) => ['value' => $value], $option['values']);
+                $option->values()->createMany($values);
+            }
+        }
+    }
 
-                $productOption->values()->createMany($valueArray);
+    /**
+     * Update product options.
+     */
+    private function updateOptions(Product $product, Request $request)
+    {
+        if ($request->has('options')) {
+            if ($request->isNotFilled('options')) {
+                $product->values()->delete();
+                $product->options()->delete();
+
+                return;
+            }
+
+            $existingOptions = $product->options()->pluck('id')->toArray();
+            $inputOptions = collect($request->input('options'));
+
+            $optionsToKeep = $inputOptions->filter(fn($option) => isset($option['id']))->pluck('id')->toArray();
+            $optionsToDelete = array_diff($existingOptions, $optionsToKeep);
+
+            if (filled($optionsToDelete)) {
+                $product->values()->whereIn('option_id', $optionsToDelete)->delete();
+                $product->options()->whereIn('id', $optionsToDelete)->delete();
+            }
+
+            foreach ($inputOptions as $input) {
+                if (isset($input['id'])) {
+                    $option = $product->options()->find($input['id']);
+
+                    $option->update(['name' => $input['name']]);
+
+                    $existingValues = $option->values()->pluck('value')->toArray();
+                    $inputValues = collect($input['values']);
+                    // $valuesToKeep = $inputValues->filter(fn($value) => isset($value['id']))->pluck('id')->toArray();
+                    $valuesToKeep = $input['values'];
+                    $valuesToDelete = array_diff($existingValues, $valuesToKeep);
+
+                    if (filled($valuesToDelete)) {
+                        $option->values()->whereIn('value', $valuesToDelete)->delete();
+                    }
+
+                    foreach ($inputValues as $value) {
+                        if (isset($value['id'])) {
+                            $option->values()->find($value['id'])->update(['value' => $value['value']]);
+
+                            continue;
+                        }
+
+                        $option->values()->create(['value' => $value['value']]);
+                    }
+
+                    continue;
+                }
+
+                $option = $product->options()->create(['name' => $input['name']]);
+                $values = array_map(fn($value) => ['value' => $value], $input['values']);
+
+                $option->values()->createMany($values);
             }
         }
     }
