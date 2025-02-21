@@ -72,9 +72,12 @@ class ProductController
     {
         $this->validateUpdateProduct($request, $product);
 
-        if ($request->input('title') !== $product->title) {
-            $handle = Str::slug($request->input('title'));
-            $request->merge(['handle' => $handle]);
+        if ($request->has('title')) {
+            if ($request->filled('title') && $request->input('title') !== $product->title) {
+                $handle = Str::slug($request->input('title'));
+
+                $request->merge(['handle' => $handle]);
+            }
         }
 
         $product->update($request->all());
@@ -141,10 +144,10 @@ class ProductController
     private function validateUpdateProduct(Request $request, Product $product)
     {
         $request->validate([
-            'title' => ['required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()],
+            'title' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
+            'status' => ['sometimes', 'required', Rule::in(['draft', 'active', 'archived'])],
             'tags' => ['nullable', 'string', 'max:255'],
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
