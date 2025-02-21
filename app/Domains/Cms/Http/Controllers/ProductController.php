@@ -84,7 +84,7 @@ class ProductController
 
         $this->updateOrCreateMedia($request, $product);
         $this->updateOrCreateOptions($request, $product);
-        // $this->updateOrCreateVariants($request, $product);
+        $this->updateOrCreateVariants($request, $product);
 
         return new ProductResource($product->load(
             'category',
@@ -165,6 +165,7 @@ class ProductController
             'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
 
             'variants' => ['nullable', Rule::array()],
+            'variants.*.id' => ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
             'variants.*.price' => ['required_with:variants', 'numeric'],
             'variants.*.quantity' => ['required_with:variants', 'integer'],
@@ -348,12 +349,10 @@ class ProductController
         if ($request->filled('variants')) {
             $inputVariants = $request->input('variants');
 
-            $product->loadMissing('values');
-
             foreach ($inputVariants as $input) {
                 $variant = $product->variants()->create($input);
                 $values = collect($input['options'])
-                    ->map(fn($option) => $product->values->firstWhere('value', $option['value']));
+                    ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
 
                 $variant->values()->attach($values->pluck('id'));
             }
@@ -363,22 +362,45 @@ class ProductController
     /**
      * Update or create product variants.
      */
-    private function updateOrCreateVariants(Product $product, Request $request)
+    private function updateOrCreateVariants(Request $request, Product $product)
     {
-        if ($request->filled('variants')) {
-            $product->variants()->delete();
+        if ($request->has('variants')) {
+            if ($request->isNotFilled('variants')) {
+                $product->variants()->delete();
 
-            $variants = $request->input('variants');
+                return;
+            }
 
-            $product->load('values');
+            $existingVariants = $product->variants()->pluck('id')->toArray();
+            $inputVariants = collect($request->input('variants'));
 
-            foreach ($variants as $variant) {
-                $productVariant = $product->variants()->create($variant);
+            $variantsToKeep = $inputVariants->filter(fn($variant) => isset($variant['id']))->pluck('id')->toArray();
+            $variantsToDelete = array_diff($existingVariants, $variantsToKeep);
 
-                $optionValues = collect($variant['options'])
-                    ->map(fn($option) => $product->values->firstWhere('value', $option['value']));
+            if (filled($variantsToDelete)) {
+                $product->variants()->whereIn('id', $variantsToDelete)->delete();
+            }
 
-                $productVariant->values()->attach($optionValues->pluck('id'));
+            foreach ($inputVariants as $input) {
+                if (isset($input['id'])) {
+                    $existingVariant = $product->variants()->find($input['id']);
+
+                    if ($existingVariant) {
+                        $existingVariant->update($input);
+                        $values = collect($input['options'])
+                            ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
+
+                        $existingVariant->values()->sync($values->pluck('id'));
+                    }
+
+                    continue;
+                }
+
+                $variant = $product->variants()->create($input);
+                $values = collect($input['options'])
+                    ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
+
+                $variant->values()->attach($values->pluck('id'));
             }
         }
     }
