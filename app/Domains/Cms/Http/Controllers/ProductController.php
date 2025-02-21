@@ -4,8 +4,10 @@ namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\ProductOption;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -35,8 +37,8 @@ class ProductController
         $product = Product::create($request->all());
 
         $this->createMedia($request, $product);
-        $this->createOptions($product, $request);
-        $this->createOrUpdateVariants($product, $request);
+        $this->createOptions($request, $product);
+        $this->createVariants($request, $product);
 
         return new ProductResource($product->load(
             'category',
@@ -77,9 +79,9 @@ class ProductController
 
         $product->update($request->all());
 
-        $this->updateMedia($request, $product);
-        $this->updateOptions($product, $request);
-        // $this->createOrUpdateVariants($product, $request);
+        $this->updateOrCreateMedia($request, $product);
+        $this->updateOrCreateOptions($request, $product);
+        // $this->updateOrCreateVariants($request, $product);
 
         return new ProductResource($product->load(
             'category',
@@ -189,9 +191,9 @@ class ProductController
     }
 
     /**
-     * Update product media.
+     * Update or create product media.
      */
-    private function updateMedia(Request $request, Product $product)
+    private function updateOrCreateMedia(Request $request, Product $product)
     {
         if ($request->has('media')) {
             if ($request->isNotFilled('media')) {
@@ -213,7 +215,10 @@ class ProductController
             foreach ($inputMedia as $key => $input) {
                 if (isset($input['id'])) {
                     $existingMedia = $product->media()->find($input['id']);
-                    $existingMedia->update(['rank' => $input['rank']]);
+
+                    if ($existingMedia) {
+                        $existingMedia->update(['rank' => $input['rank']]);
+                    }
 
                     continue;
                 }
@@ -245,7 +250,7 @@ class ProductController
     /**
      * Create product options.
      */
-    private function createOptions(Product $product, Request $request)
+    private function createOptions(Request $request, Product $product)
     {
         if ($request->filled('options')) {
             $inputOptions = $request->input('options');
@@ -260,9 +265,9 @@ class ProductController
     }
 
     /**
-     * Update product options.
+     * Update or create product options.
      */
-    private function updateOptions(Product $product, Request $request)
+    private function updateOrCreateOptions(Request $request, Product $product)
     {
         if ($request->has('options')) {
             if ($request->isNotFilled('options')) {
@@ -285,28 +290,12 @@ class ProductController
 
             foreach ($inputOptions as $input) {
                 if (isset($input['id'])) {
-                    $option = $product->options()->find($input['id']);
+                    $existingOption = $product->options()->find($input['id']);
 
-                    $option->update(['name' => $input['name']]);
+                    if ($existingOption) {
+                        $existingOption->update(['name' => $input['name']]);
 
-                    $existingValues = $option->values()->pluck('value')->toArray();
-                    $inputValues = collect($input['values']);
-                    // $valuesToKeep = $inputValues->filter(fn($value) => isset($value['id']))->pluck('id')->toArray();
-                    $valuesToKeep = $input['values'];
-                    $valuesToDelete = array_diff($existingValues, $valuesToKeep);
-
-                    if (filled($valuesToDelete)) {
-                        $option->values()->whereIn('value', $valuesToDelete)->delete();
-                    }
-
-                    foreach ($inputValues as $value) {
-                        if (isset($value['id'])) {
-                            $option->values()->find($value['id'])->update(['value' => $value['value']]);
-
-                            continue;
-                        }
-
-                        $option->values()->create(['value' => $value['value']]);
+                        $this->updateOrCreateValues($input, $existingOption);
                     }
 
                     continue;
@@ -321,9 +310,57 @@ class ProductController
     }
 
     /**
-     * Create or update product variants.
+     * Update or create option values.
      */
-    private function createOrUpdateVariants(Product $product, Request $request)
+    private function updateOrCreateValues(array $inputOption, ProductOption $option)
+    {
+        if (Arr::has($inputOption, 'values')) {
+            if (blank($inputOption['values'])) {
+                $option->values()->delete();
+
+                return;
+            }
+
+            $existingValues = $option->values()->pluck('value')->toArray();
+
+            $valuesToKeep = $inputOption['values'];
+            $valuesToDelete = array_diff($existingValues, $valuesToKeep);
+
+            if (filled($valuesToDelete)) {
+                $option->values()->whereIn('value', $valuesToDelete)->delete();
+            }
+
+            $valuesToCreate = array_diff($valuesToKeep, $existingValues);
+            $values = array_map(fn($value) => ['value' => $value], $valuesToCreate);
+
+            $option->values()->createMany($values);
+        }
+    }
+
+    /**
+     * Create product variants.
+     */
+    private function createVariants(Request $request, Product $product)
+    {
+        if ($request->filled('variants')) {
+            $inputVariants = $request->input('variants');
+
+            $product->loadMissing('values');
+
+            foreach ($inputVariants as $input) {
+                $variant = $product->variants()->create($input);
+                $values = collect($input['options'])
+                    ->map(fn($option) => $product->values->firstWhere('value', $option['value']));
+
+                $variant->values()->attach($values->pluck('id'));
+            }
+        }
+    }
+
+    /**
+     * Update or create product variants.
+     */
+    private function updateOrCreateVariants(Product $product, Request $request)
     {
         if ($request->filled('variants')) {
             $product->variants()->delete();
