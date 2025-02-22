@@ -78,10 +78,10 @@ class ProductController
     public function update(Request $request, Product $product)
     {
         $rules = array_merge(
-            $this->productRules($product->id),
-            $this->mediaRules($product->id),
-            $this->optionRules($product->id),
-            $this->variantRules($product->id)
+            $this->productRules($product),
+            $this->mediaRules($product),
+            $this->optionRules($product),
+            $this->variantRules($product)
         );
 
         $request->validate($rules);
