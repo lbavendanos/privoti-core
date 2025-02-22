@@ -387,6 +387,7 @@ class ProductController
 
                     if ($existingVariant) {
                         $existingVariant->update($input);
+
                         $values = collect($input['options'])
                             ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
 
