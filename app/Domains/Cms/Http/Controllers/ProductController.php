@@ -28,7 +28,14 @@ class ProductController
      */
     public function store(Request $request)
     {
-        $this->validateCreateProduct($request);
+        $rules = array_merge(
+            $this->productRules(),
+            $this->mediaRules(),
+            $this->optionRules(),
+            $this->variantRules()
+        );
+
+        $request->validate($rules);
 
         $handle = Str::slug($request->input('title'));
 
@@ -70,7 +77,14 @@ class ProductController
      */
     public function update(Request $request, Product $product)
     {
-        $this->validateUpdateProduct($request, $product);
+        $rules = array_merge(
+            $this->productRules($product->id),
+            $this->mediaRules($product->id),
+            $this->optionRules($product->id),
+            $this->variantRules($product->id)
+        );
+
+        $request->validate($rules);
 
         if ($request->has('title')) {
             if ($request->filled('title') && $request->input('title') !== $product->title) {
@@ -110,68 +124,64 @@ class ProductController
         return response()->noContent();
     }
 
-    private function validateCreateProduct(Request $request)
+    /**
+     * Product rules.
+     */
+    private function productRules(Product $product = null)
     {
-        $request->validate([
-            'title' => ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
+        return [
+            'title' => $product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['required', Rule::in(['draft', 'active', 'archived'])],
+            'status' => $product ? ['sometimes', 'required', Rule::in(['draft', 'active', 'archived'])] : ['required', Rule::in(['draft', 'active', 'archived'])],
             'tags' => ['nullable', 'string', 'max:255'],
-
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
-
-            'media' => ['nullable', Rule::array()],
-            'media.*.file' => ['required_with:media', File::image()->max('1mb')],
-            'media.*.rank' => ['required_with:media', 'integer'],
-
-            'options' => ['nullable', Rule::array()],
-            'options.*.name' => ['required_with:options', 'string', 'max:255'],
-            'options.*.values' => ['nullable', Rule::array()],
-            'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
-
-            'variants' => ['nullable', Rule::array()],
-            'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
-            'variants.*.price' => ['required_with:variants', 'numeric'],
-            'variants.*.quantity' => ['required_with:variants', 'integer'],
-            'variants.*.options' => ['required_with:variants', Rule::array()],
-            'variants.*.options.*.value' => ['required_with:variants', 'string', 'max:255'],
-        ]);
+        ];
     }
 
-    private function validateUpdateProduct(Request $request, Product $product)
+    /**
+     * Media rules.
+     */
+    private function mediaRules(Product $product = null)
     {
-        $request->validate([
-            'title' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()],
-            'subtitle' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'status' => ['sometimes', 'required', Rule::in(['draft', 'active', 'archived'])],
-            'tags' => ['nullable', 'string', 'max:255'],
-            'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
-            'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
-            'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
-
-            'media' => ['nullable', Rule::array()],
-            'media.*.id' => ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()],
+        return [
+            'media' => ['nullable', 'array'],
+            'media.*.id' => $product ? ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'media.*.file' => ['required_without:media.*.id', File::image()->max('1mb')],
             'media.*.rank' => ['required_with:media', 'integer'],
+        ];
+    }
 
-            'options' => ['nullable', Rule::array()],
-            'options.*.id' => ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()],
+    /**
+     * Option rules.
+     */
+    private function optionRules(Product $product = null)
+    {
+        return [
+            'options' => ['nullable', 'array'],
+            'options.*.id' => $product ? ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
-            'options.*.values' => ['nullable', Rule::array()],
+            'options.*.values' => ['nullable', 'array'],
             'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
+        ];
+    }
 
-            'variants' => ['nullable', Rule::array()],
-            'variants.*.id' => ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()],
+    /**
+     * Variant rules.
+     */
+    private function variantRules(Product $product = null)
+    {
+        return [
+            'variants' => ['nullable', 'array'],
+            'variants.*.id' => $product ? ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
             'variants.*.price' => ['required_with:variants', 'numeric'],
             'variants.*.quantity' => ['required_with:variants', 'integer'],
-            'variants.*.options' => ['required_with:variants', Rule::array()],
+            'variants.*.options' => ['required_with:variants', 'array'],
             'variants.*.options.*.value' => ['required_with:variants', 'string', 'max:255'],
-        ]);
+        ];
     }
 
     /**
