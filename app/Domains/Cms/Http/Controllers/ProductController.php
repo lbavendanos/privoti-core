@@ -271,9 +271,12 @@ class ProductController
 
             foreach ($inputOptions as $input) {
                 $option = $product->options()->create(['name' => $input['name']]);
-                $values = array_map(fn($value) => ['value' => $value], $input['values']);
 
-                $option->values()->createMany($values);
+                if (isset($input['values'])) {
+                    $values = array_map(fn($value) => ['value' => $value], $input['values']);
+
+                    $option->values()->createMany($values);
+                }
             }
         }
     }
@@ -316,9 +319,12 @@ class ProductController
                 }
 
                 $option = $product->options()->create(['name' => $input['name']]);
-                $values = array_map(fn($value) => ['value' => $value], $input['values']);
 
-                $option->values()->createMany($values);
+                if (isset($input['values'])) {
+                    $values = array_map(fn($value) => ['value' => $value], $input['values']);
+
+                    $option->values()->createMany($values);
+                }
             }
         }
     }
