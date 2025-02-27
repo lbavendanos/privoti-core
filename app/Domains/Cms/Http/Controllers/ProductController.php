@@ -133,7 +133,7 @@ class ProductController
             'title' => $product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => $product ? ['sometimes', 'required', Rule::in(['draft', 'active', 'archived'])] : ['required', Rule::in(['draft', 'active', 'archived'])],
+            'status' => ['nullable', Rule::in(['draft', 'active', 'archived'])],
             'tags' => ['nullable', 'string', 'max:255'],
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
