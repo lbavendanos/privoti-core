@@ -2,6 +2,7 @@
 
 use App\Domains\Cms\Http\Controllers\ProductCategoryController;
 use App\Domains\Cms\Http\Controllers\ProductController;
+use App\Domains\Cms\Http\Controllers\ProductTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('c')->group(function () {
@@ -10,5 +11,6 @@ Route::prefix('c')->group(function () {
     Route::middleware(['auth:cms'])->group(function () {
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', ProductCategoryController::class);
+        Route::apiResource('types', ProductTypeController::class);
     });
 });
