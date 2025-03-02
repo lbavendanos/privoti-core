@@ -127,7 +127,7 @@ class ProductController
     /**
      * Product rules.
      */
-    private function productRules(Product $product = null)
+    private function productRules(?Product $product = null)
     {
         return [
             'title' => $product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
@@ -144,7 +144,7 @@ class ProductController
     /**
      * Media rules.
      */
-    private function mediaRules(Product $product = null)
+    private function mediaRules(?Product $product = null)
     {
         return [
             'media' => ['nullable', 'array'],
@@ -157,7 +157,7 @@ class ProductController
     /**
      * Option rules.
      */
-    private function optionRules(Product $product = null)
+    private function optionRules(?Product $product = null)
     {
         return [
             'options' => ['nullable', 'array'],
@@ -171,7 +171,7 @@ class ProductController
     /**
      * Variant rules.
      */
-    private function variantRules(Product $product = null)
+    private function variantRules(?Product $product = null)
     {
         return [
             'variants' => ['nullable', 'array'],
