@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignId('collection_id')->constrained();
             $table->foreignId('product_id')->constrained();
             $table->primary(['collection_id', 'product_id']);
-            $table->timestamps();
         });
     }
 
