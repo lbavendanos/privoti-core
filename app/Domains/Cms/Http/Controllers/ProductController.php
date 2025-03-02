@@ -46,6 +46,7 @@ class ProductController
         $this->createMedia($request, $product);
         $this->createOptions($request, $product);
         $this->createVariants($request, $product);
+        $this->attachCollections($request, $product);
 
         return new ProductResource($product->load(
             'category',
@@ -99,6 +100,7 @@ class ProductController
         $this->updateOrCreateMedia($request, $product);
         $this->updateOrCreateOptions($request, $product);
         $this->updateOrCreateVariants($request, $product);
+        $this->syncCollections($request, $product);
 
         return new ProductResource($product->load(
             'category',
@@ -138,6 +140,7 @@ class ProductController
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
+            'collections' => ['nullable', 'array'],
         ];
     }
 
@@ -419,6 +422,30 @@ class ProductController
 
                 $variant->values()->attach($values->pluck('id'));
             }
+        }
+    }
+
+    /**
+     * Attach collections to product.
+     */
+    private function attachCollections(Request $request, Product $product)
+    {
+        if ($request->filled('collections')) {
+            $collections = $request->input('collections');
+
+            $product->collections()->attach($collections);
+        }
+    }
+
+    /**
+     * Sync collections with product.
+     */
+    private function syncCollections(Request $request, Product $product)
+    {
+        if ($request->has('collections')) {
+            $collections = $request->input('collections', []);
+
+            $product->collections()->sync($collections);
         }
     }
 }
