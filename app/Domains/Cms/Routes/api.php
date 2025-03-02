@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Cms\Http\Controllers\CollectionController;
 use App\Domains\Cms\Http\Controllers\ProductCategoryController;
 use App\Domains\Cms\Http\Controllers\ProductController;
 use App\Domains\Cms\Http\Controllers\ProductTypeController;
@@ -10,6 +11,7 @@ Route::prefix('c')->group(function () {
     require __DIR__ . '/auth.php';
 
     Route::middleware(['auth:cms'])->group(function () {
+        Route::apiResource('collections', CollectionController::class);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', ProductCategoryController::class);
         Route::apiResource('types', ProductTypeController::class);

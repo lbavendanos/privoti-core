@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'tags' => $this->tags,
+            'metadata' => $this->metadata,
             'category_id' => $this->category_id,
             'type_id' => $this->type_id,
             'vendor_id' => $this->vendor_id,

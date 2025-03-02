@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->jsonb('metadata')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
