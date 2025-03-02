@@ -134,7 +134,7 @@ class ProductController
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(['draft', 'active', 'archived'])],
-            'tags' => ['nullable', 'string', 'max:255'],
+            'tags' => ['nullable', 'array'],
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],
             'vendor_id' => ['nullable', Rule::exists('vendors', 'id')->withoutTrashed()],
