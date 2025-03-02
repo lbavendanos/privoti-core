@@ -2,21 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ProductVariantOption extends Model
+class ProductVariantOption extends Pivot
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'variant_id',
-        'value_id',
-    ];
-
     /**
      * Get the variant that owns the option.
      */

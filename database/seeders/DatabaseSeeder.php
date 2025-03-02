@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Collection;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
 use App\Models\User;
@@ -19,6 +20,17 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'email' => 'abc@abc.com',
         ]);
+
+        Collection::factory()
+            ->count(5)
+            ->sequence(
+                ['title' => 'Summer Collection', 'handle' => 'summer-collection'],
+                ['title' => 'Winter Collection', 'handle' => 'winter-collection'],
+                ['title' => 'Spring Collection', 'handle' => 'spring-collection'],
+                ['title' => 'Autumn Collection', 'handle' => 'autumn-collection'],
+                ['title' => 'Fall Collection', 'handle' => 'fall-collection'],
+            )
+            ->create();
 
         $categories = [
             'Men' => ['Shirts', 'T-Shirts', 'Pants', 'Jackets', 'Shoes'],
