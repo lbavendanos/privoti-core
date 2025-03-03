@@ -2,6 +2,7 @@
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Domains\Cms\Http\Resources\ProductCategoryCollection;
 use App\Domains\Cms\Http\Resources\ProductCategoryResource;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
@@ -13,9 +14,37 @@ class ProductCategoryController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->validate([
+            'all' => ['nullable', 'boolean'],
+            'search' => ['nullable', 'string'],
+            'per_page' => ['nullable', 'integer'],
+            'page' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'sort_order' => ['nullable', 'string'],
+        ]);
+
+        if ($request->boolean('all', false)) {
+            return new ProductCategoryCollection(ProductCategory::all());
+        }
+
+        $query = ProductCategory::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where('name', 'like', "%$search%");
+        }
+
+        $sortBy = $request->input('sort_by', 'id');
+        $sortOrder = $request->input('sort_order', 'asc');
+        $perPage = $request->input('per_page', 15);
+        $page = $request->input('page', 1);
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        return new ProductCategoryCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
 
     /**

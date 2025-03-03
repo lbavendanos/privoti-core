@@ -15,15 +15,15 @@ class CollectionCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(function ($type) {
+            'data' => $this->collection->map(function ($collection) {
                 return [
-                    'id' => $type->id,
-                    'title' => $type->title,
-                    'handle' => $type->handle,
-                    'description' => $type->description,
-                    'metadata' => $type->metadata,
-                    'created_at' => $type->created_at,
-                    'updated_at' => $type->updated_at,
+                    'id' => $collection->id,
+                    'title' => $collection->title,
+                    'handle' => $collection->handle,
+                    'description' => $collection->description,
+                    'metadata' => $collection->metadata,
+                    'created_at' => $collection->created_at,
+                    'updated_at' => $collection->updated_at,
                 ];
             }),
         ];

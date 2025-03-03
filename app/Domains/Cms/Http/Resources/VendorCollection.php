@@ -15,12 +15,12 @@ class VendorCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(function ($type) {
+            'data' => $this->collection->map(function ($vendor) {
                 return [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                    'created_at' => $type->created_at,
-                    'updated_at' => $type->updated_at,
+                    'id' => $vendor->id,
+                    'name' => $vendor->name,
+                    'created_at' => $vendor->created_at,
+                    'updated_at' => $vendor->updated_at,
                 ];
             }),
         ];

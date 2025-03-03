@@ -29,6 +29,19 @@ class ProductCategory extends Model
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'is_public' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the parent category that owns the category.
      */
     public function parent(): BelongsTo
