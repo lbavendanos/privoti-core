@@ -31,7 +31,7 @@ class CollectionController
         if ($request->filled('search')) {
             $search = $request->input('search');
 
-            $query->where('name', 'like', "%$search%");
+            $query->where('title', 'like', "%$search%");
         }
 
         $sortBy = $request->input('sort_by', 'id');
