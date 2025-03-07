@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 
-class ProductTypeResource extends JsonResource
+class CollectionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,10 @@ class ProductTypeResource extends JsonResource
     {
         $data = [
             'id' => $this->id,
-            'name' => $this->name,
+            'title' => $this->title,
+            'handle' => $this->handle,
+            'description' => $this->description,
+            'metadata' => $this->metadata,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

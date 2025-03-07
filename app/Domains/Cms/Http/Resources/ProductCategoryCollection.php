@@ -18,4 +18,24 @@ class ProductCategoryCollection extends ResourceCollection
             'data' => $this->collection->map(fn($category) => new ProductCategoryResource($category))
         ];
     }
+
+    /**
+     * Create an HTTP response that represents the object.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toResponse($request)
+    {
+        $response = parent::toResponse($request);
+        $data = $response->getData(true);
+
+        unset($data['links']);
+        unset($data['meta']['path']);
+        unset($data['meta']['links']);
+
+        $response->setData($data);
+
+        return $response;
+    }
 }

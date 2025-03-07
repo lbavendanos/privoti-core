@@ -19,7 +19,6 @@ class ProductCategoryController
         $request->validate([
             'all' => ['nullable', 'boolean'],
             'fields' => ['nullable', 'string'],
-            'id' => ['nullable', 'integer'],
             'parent_id' => ['nullable', 'integer'],
             'roots' => ['nullable', 'boolean'],
             'children' => ['nullable', 'boolean'],
@@ -36,7 +35,6 @@ class ProductCategoryController
             $query->select(explode(',', $request->input('fields')));
         }
 
-        $query->when($request->filled('id'), fn($q) => $q->where('id', $request->input('id')));
         $query->when($request->filled('parent_id'), fn($q) => $q->where('parent_id', $request->input('parent_id')));
         $query->when($request->boolean('roots'), fn($q) => $q->whereNull('parent_id'));
         $query->when($request->filled('search'), fn($q) => $q->where('name', 'like', "%{$request->input('search')}%"));

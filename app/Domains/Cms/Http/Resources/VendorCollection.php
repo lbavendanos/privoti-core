@@ -15,14 +15,27 @@ class VendorCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(function ($vendor) {
-                return [
-                    'id' => $vendor->id,
-                    'name' => $vendor->name,
-                    'created_at' => $vendor->created_at,
-                    'updated_at' => $vendor->updated_at,
-                ];
-            }),
+            'data' => $this->collection->map(fn($vendor) => new VendorResource($vendor))
         ];
+    }
+
+    /**
+     * Create an HTTP response that represents the object.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toResponse($request)
+    {
+        $response = parent::toResponse($request);
+        $data = $response->getData(true);
+
+        unset($data['links']);
+        unset($data['meta']['path']);
+        unset($data['meta']['links']);
+
+        $response->setData($data);
+
+        return $response;
     }
 }

@@ -15,6 +15,7 @@ class CollectionController
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
+            'fields' => ['nullable', 'string'],
             'search' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
@@ -22,24 +23,25 @@ class CollectionController
             'sort_order' => ['nullable', 'string'],
         ]);
 
-        if ($request->boolean('all', false)) {
-            return new CollectionCollection(Collection::all());
-        }
-
         $query = Collection::query();
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-
-            $query->where('title', 'like', "%$search%");
+        if ($request->filled('fields')) {
+            $query->select(explode(',', $request->input('fields')));
         }
+
+        $query->when($request->filled('search'), fn($q) => $q->where('title', 'like', "%{$request->input('search')}%"));
 
         $sortBy = $request->input('sort_by', 'id');
         $sortOrder = $request->input('sort_order', 'asc');
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
 
         $query->orderBy($sortBy, $sortOrder);
+
+        if ($request->boolean('all', false)) {
+            return new CollectionCollection($query->get());
+        }
+
+        $perPage = $request->input('per_page', 15);
+        $page = $request->input('page', 1);
 
         return new CollectionCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
