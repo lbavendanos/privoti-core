@@ -27,18 +27,17 @@ class ProductCategoryResource extends JsonResource
             'parent_id' => $this->parent_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            // 'children' => ProductCategoryResource::collection($this->whenLoaded('children')),
-            // 'parent' => new ProductCategoryResource($this->whenLoaded('parent')),
-            // 'products' => ProductResource::collection($this->whenLoaded('products')),
         ];
 
-        $fields = $request->input('fields');
-        $fieldsArray = $fields ? explode(',', $fields) : [];
+        if ($request->filled('fields')) {
+            $fields = explode(',', $request->input('fields'));
+            $data = Arr::only($data, $fields);
+        }
 
-        $data = !empty($fieldsArray) ? Arr::only($data, $fieldsArray) : $data;
-
-        $data['children'] = ProductCategoryResource::collection($this->whenLoaded('children'));
-
-        return $data;
+        return array_merge($data, [
+            'children' => ProductCategoryResource::collection($this->whenLoaded('children')),
+            // 'parent' => new ProductCategoryResource($this->whenLoaded('parent')),
+            // 'products' => ProductResource::collection($this->whenLoaded('products')),
+        ]);
     }
 }
