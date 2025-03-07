@@ -18,6 +18,11 @@ class ProductCategoryController
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
+            'fields' => ['nullable', 'string'],
+            'id' => ['nullable', 'integer'],
+            'parent_id' => ['nullable', 'integer'],
+            'roots' => ['nullable', 'boolean'],
+            'children' => ['nullable', 'boolean'],
             'search' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
@@ -25,24 +30,32 @@ class ProductCategoryController
             'sort_order' => ['nullable', 'string'],
         ]);
 
-        if ($request->boolean('all', false)) {
-            return new ProductCategoryCollection(ProductCategory::all());
-        }
-
         $query = ProductCategory::query();
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
+        if ($request->filled('fields')) {
+            $query->select(explode(',', $request->input('fields')));
+        }
 
-            $query->where('name', 'like', "%$search%");
+        $query->when($request->filled('id'), fn($q) => $q->where('id', $request->input('id')));
+        $query->when($request->filled('parent_id'), fn($q) => $q->where('parent_id', $request->input('parent_id')));
+        $query->when($request->boolean('roots'), fn($q) => $q->whereNull('parent_id'));
+        $query->when($request->filled('search'), fn($q) => $q->where('name', 'like', "%{$request->input('search')}%"));
+
+        if ($request->boolean('children')) {
+            $query->with('children');
         }
 
         $sortBy = $request->input('sort_by', 'id');
         $sortOrder = $request->input('sort_order', 'asc');
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
 
         $query->orderBy($sortBy, $sortOrder);
+
+        if ($request->boolean('all', false)) {
+            return new ProductCategoryCollection($query->get());
+        }
+
+        $perPage = $request->input('per_page', 15);
+        $page = $request->input('page', 1);
 
         return new ProductCategoryCollection($query->paginate($perPage, ['*'], 'page', $page));
     }

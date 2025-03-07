@@ -15,21 +15,7 @@ class ProductCategoryCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(function ($category) {
-                return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'handle' => $category->handle,
-                    'description' => $category->description,
-                    'is_active' => $category->is_active,
-                    'is_public' => $category->is_public,
-                    'rank' => $category->rank,
-                    'parent_id' => $category->parent_id,
-                    'metadata' => $category->metadata,
-                    'created_at' => $category->created_at,
-                    'updated_at' => $category->updated_at,
-                ];
-            }),
+            'data' => $this->collection->map(fn($category) => new ProductCategoryResource($category))
         ];
     }
 }

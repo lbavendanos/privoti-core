@@ -50,6 +50,14 @@ class ProductCategory extends Model
     }
 
     /**
+     * Get the children categories for the category.
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(ProductCategory::class, 'parent_id')->with('children');
+    }
+
+    /**
      * Get the products for the category.
      */
     public function products(): HasMany

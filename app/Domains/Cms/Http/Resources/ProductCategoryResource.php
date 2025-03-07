@@ -4,6 +4,7 @@ namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 
 class ProductCategoryResource extends JsonResource
 {
@@ -14,7 +15,7 @@ class ProductCategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'handle' => $this->handle,
@@ -26,8 +27,18 @@ class ProductCategoryResource extends JsonResource
             'parent_id' => $this->parent_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            // 'children' => ProductCategoryResource::collection($this->whenLoaded('children')),
             // 'parent' => new ProductCategoryResource($this->whenLoaded('parent')),
             // 'products' => ProductResource::collection($this->whenLoaded('products')),
         ];
+
+        $fields = $request->input('fields');
+        $fieldsArray = $fields ? explode(',', $fields) : [];
+
+        $data = !empty($fieldsArray) ? Arr::only($data, $fieldsArray) : $data;
+
+        $data['children'] = ProductCategoryResource::collection($this->whenLoaded('children'));
+
+        return $data;
     }
 }
