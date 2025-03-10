@@ -38,7 +38,7 @@ class Product extends Model
     protected function tags(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value) => explode(',', $value),
+            get: fn(mixed $value) => filled($value) ? explode(',', $value) : null,
             set: fn(mixed $value) => implode(',', $value)
         );
     }

@@ -68,6 +68,7 @@ class ProductController
             'type',
             'vendor',
             'media',
+            'collections',
             'options.values',
             'variants.values'
         ));
