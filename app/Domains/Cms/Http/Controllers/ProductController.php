@@ -239,17 +239,15 @@ class ProductController
                     if ($existingMedia) {
                         $existingMedia->update(['rank' => $input['rank']]);
                     }
+                } else {
+                    $file = $request->file("media.{$key}.file");
+                    $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
 
-                    continue;
+                    $product->media()->create([
+                        'url' => $url,
+                        'rank' => $input['rank'],
+                    ]);
                 }
-
-                $file = $request->file("media.{$key}.file");
-                $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
-
-                $product->media()->create([
-                    'url' => $url,
-                    'rank' => $input['rank'],
-                ]);
             }
         }
     }
@@ -320,16 +318,14 @@ class ProductController
 
                         $this->updateOrCreateValues($input, $existingOption);
                     }
+                } else {
+                    $option = $product->options()->create(['name' => $input['name']]);
 
-                    continue;
-                }
+                    if (isset($input['values'])) {
+                        $values = array_map(fn($value) => ['value' => $value], $input['values']);
 
-                $option = $product->options()->create(['name' => $input['name']]);
-
-                if (isset($input['values'])) {
-                    $values = array_map(fn($value) => ['value' => $value], $input['values']);
-
-                    $option->values()->createMany($values);
+                        $option->values()->createMany($values);
+                    }
                 }
             }
         }
@@ -415,15 +411,13 @@ class ProductController
 
                         $existingVariant->values()->sync($values->pluck('id'));
                     }
+                } else {
+                    $variant = $product->variants()->create($input);
+                    $values = collect($input['options'])
+                        ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
 
-                    continue;
+                    $variant->values()->attach($values->pluck('id'));
                 }
-
-                $variant = $product->variants()->create($input);
-                $values = collect($input['options'])
-                    ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
-
-                $variant->values()->attach($values->pluck('id'));
             }
         }
     }
