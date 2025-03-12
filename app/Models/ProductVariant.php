@@ -26,6 +26,18 @@ class ProductVariant extends Model
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'price' => 'float',
+        ];
+    }
+
+    /**
      * Get the product that owns the variant.
      */
     public function product(): BelongsTo
