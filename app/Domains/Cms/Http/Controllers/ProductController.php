@@ -2,6 +2,7 @@
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Domains\Cms\Http\Resources\ProductCollection;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -18,9 +19,45 @@ class ProductController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $request->validate([
+            'all' => ['nullable', 'boolean'],
+            'fields' => ['nullable', 'string'],
+            'search' => ['nullable', 'string'],
+            'per_page' => ['nullable', 'integer'],
+            'page' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'sort_order' => ['nullable', 'string'],
+        ]);
+
+        $query = Product::query();
+
+        $query->with([
+            'category',
+            'type',
+            'vendor',
+            'media',
+            'collections',
+            'options.values',
+            'variants.values'
+        ]);
+
+        $query->when($request->filled('search'), fn($q) => $q->where('title', 'like', "%{$request->input('search')}%"));
+
+        $sortBy = $request->input('sort_by', 'id');
+        $sortOrder = $request->input('sort_order', 'asc');
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        if ($request->boolean('all', false)) {
+            return new ProductCollection($query->get());
+        }
+
+        $perPage = $request->input('per_page', 15);
+        $page = $request->input('page', 1);
+
+        return new ProductCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
 
     /**
