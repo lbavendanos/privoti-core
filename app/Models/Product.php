@@ -44,6 +44,16 @@ class Product extends Model
     }
 
     /**
+     * Get the product's thumbnail.
+     */
+    protected function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->media()->orderBy('rank')->value('url')
+        );
+    }
+
+    /**
      * Get the category that owns the product.
      */
     public function category(): BelongsTo
