@@ -33,6 +33,26 @@ class Product extends Model
     ];
 
     /**
+     * Get the product's thumbnail.
+     */
+    protected function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->media()->orderBy('rank')->value('url')
+        );
+    }
+
+    /**
+     * Get the product's stock.
+     */
+    protected function stock(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->variants()->sum('quantity')
+        );
+    }
+
+    /**
      * Get the product's tags.
      */
     protected function tags(): Attribute
@@ -40,16 +60,6 @@ class Product extends Model
         return Attribute::make(
             get: fn(mixed $value) => filled($value) ? explode(',', $value) : null,
             set: fn(mixed $value) => implode(',', $value)
-        );
-    }
-
-    /**
-     * Get the product's thumbnail.
-     */
-    protected function thumbnail(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->media()->orderBy('rank')->value('url')
         );
     }
 
