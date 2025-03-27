@@ -23,9 +23,9 @@ class ProductCategoryController
             'roots' => ['nullable', 'boolean'],
             'children' => ['nullable', 'boolean'],
             'q' => ['nullable', 'string'],
+            'order' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
-            'order' => ['nullable', 'string'],
         ]);
 
         $query = ProductCategory::query();

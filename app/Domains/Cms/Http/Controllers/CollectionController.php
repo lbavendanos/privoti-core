@@ -17,9 +17,9 @@ class CollectionController
             'all' => ['nullable', 'boolean'],
             'fields' => ['nullable', 'string'],
             'q' => ['nullable', 'string'],
+            'order' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
-            'order' => ['nullable', 'string'],
         ]);
 
         $query = Collection::query();
