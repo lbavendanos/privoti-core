@@ -27,8 +27,7 @@ class ProductController
             'search' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
-            'sort_by' => ['nullable', 'string'],
-            'sort_order' => ['nullable', 'string'],
+            'order' => ['nullable', 'string'],
         ]);
 
         $query = Product::query();
@@ -45,10 +44,14 @@ class ProductController
 
         $query->when($request->filled('search'), fn($q) => $q->where('title', 'like', "%{$request->input('search')}%"));
 
-        $sortBy = $request->input('sort_by', 'id');
-        $sortOrder = $request->input('sort_order', 'asc');
+        $orders = explode(',', $request->input('order', 'id'));
 
-        $query->orderBy($sortBy, $sortOrder);
+        foreach ($orders as $order) {
+            $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
+            $column = ltrim($order, '-');
+
+            $query->orderBy($column, $direction);
+        }
 
         if ($request->boolean('all', false)) {
             return new ProductCollection($query->get());
