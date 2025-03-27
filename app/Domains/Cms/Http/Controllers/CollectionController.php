@@ -16,7 +16,7 @@ class CollectionController
         $request->validate([
             'all' => ['nullable', 'boolean'],
             'fields' => ['nullable', 'string'],
-            'search' => ['nullable', 'string'],
+            'q' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
             'order' => ['nullable', 'string'],
@@ -28,7 +28,7 @@ class CollectionController
             $query->select(explode(',', $request->input('fields')));
         }
 
-        $query->when($request->filled('search'), fn($q) => $q->where('title', 'like', "%{$request->input('search')}%"));
+        $query->when($request->filled('q'), fn($q) => $q->where('title', 'like', "%{$request->input('q')}%"));
 
         $orders = explode(',', $request->input('order', 'id'));
 
