@@ -25,6 +25,7 @@ class ProductController
             'all' => ['nullable', 'boolean'],
             'fields' => ['nullable', 'string'],
             'q' => ['nullable', 'string'],
+            'status' => ['nullable', 'string'],
             'order' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
@@ -43,6 +44,7 @@ class ProductController
         ]);
 
         $query->when($request->filled('q'), fn($q) => $q->where('title', 'like', "%{$request->input('q')}%"));
+        $query->when($request->filled('status'), fn($q) => $q->whereIn('status', explode(',', $request->input('status'))));
 
         $orders = explode(',', $request->input('order', 'id'));
 
