@@ -83,6 +83,10 @@ class ProductController
 
         $request->merge(['handle' => $handle]);
 
+        if ($request->missing('status')) {
+            $request->merge(['status' => 'draft']);
+        }
+
         $product = Product::create($request->all());
 
         $this->createMedia($request, $product);
