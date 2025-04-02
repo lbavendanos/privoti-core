@@ -166,11 +166,27 @@ class ProductController
      */
     public function destroy(Product $product)
     {
-        $product->variants()->delete();
-        $product->values()->delete();
-        $product->options()->delete();
-        $product->media()->delete();
-        $product->delete();
+        $this->deleteProduct($product);
+
+        return response()->noContent();
+    }
+
+    /**
+     * Remove multiple resources from storage.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['required', Rule::exists('products', 'id')->withoutTrashed()],
+        ]);
+
+        Product::whereIn('id', $request->input('ids'))
+            ->chunkById(100, function ($products) {
+                foreach ($products as $product) {
+                    $this->deleteProduct($product);
+                }
+            });
 
         return response()->noContent();
     }
@@ -490,5 +506,17 @@ class ProductController
 
             $product->collections()->sync($collections);
         }
+    }
+
+    /**
+     * Delete product and its related data.
+     */
+    private function deleteProduct(Product $product)
+    {
+        $product->variants()->delete();
+        $product->values()->delete();
+        $product->options()->delete();
+        $product->media()->delete();
+        $product->delete();
     }
 }

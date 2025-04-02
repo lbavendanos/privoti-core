@@ -12,7 +12,10 @@ Route::prefix('c')->group(function () {
 
     Route::middleware(['auth:cms'])->group(function () {
         Route::apiResource('collections', CollectionController::class);
+
+        Route::delete('products', [ProductController::class, 'bulkDestroy'])->name('products.bulk-destroy');
         Route::apiResource('products', ProductController::class);
+
         Route::apiResource('categories', ProductCategoryController::class);
         Route::apiResource('types', ProductTypeController::class);
         Route::apiResource('vendors', VendorController::class);
