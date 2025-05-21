@@ -4,8 +4,11 @@ use App\Domains\Store\Http\Controllers\Auth\AddressController;
 use App\Domains\Store\Http\Controllers\Auth\AuthController;
 use App\Domains\Store\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::prefix('auth')->group(function () {
+
+    Route::get('/csrf-cookie', [CsrfCookieController::class, 'show']);
 
     Route::middleware(['guest:store'])->group(function () {
         Route::post('/register', [AuthController::class, 'register']);

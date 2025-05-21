@@ -67,7 +67,6 @@ class VerifyNewEmail extends Notification
      */
     protected function verificationUrl($notifiable)
     {
-        $type = 'verify-new-email';
         $id = $this->user->getKey();
         $email = $notifiable->routes['mail'];
         $hash = sha1($notifiable->routes['mail']);
@@ -80,6 +79,6 @@ class VerifyNewEmail extends Notification
 
         $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-        return config('app.cms_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
+        return config('app.cms_url') . "/confirm-email?id={$id}&email={$email}&hash={$hash}&{$query}";
     }
 }

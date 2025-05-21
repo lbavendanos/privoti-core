@@ -37,11 +37,11 @@ return [
 
     'guards' => [
         'cms' => [
-            'driver' => 'jwt',
+            'driver' => 'session',
             'provider' => 'users',
         ],
         'store' => [
-            'driver' => 'jwt',
+            'driver' => 'session',
             'provider' => 'customers',
         ],
     ],

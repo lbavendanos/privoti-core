@@ -39,7 +39,6 @@ class AppServiceProvider extends ServiceProvider
             $baseUrl = $this->isUser($notifiable) ? config('app.cms_url') : config('app.store_url');
             $modelName = $this->isUser($notifiable) ? 'user' : 'customer';
 
-            $type = 'verify-email';
             $id = $notifiable->getKey();
             $hash = sha1($notifiable->getEmailForVerification());
 
@@ -51,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
 
             $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-            return $baseUrl . "/auth/confirm?type={$type}&id={$id}&token={$hash}&{$query}";
+            return $baseUrl . "/confirm-email?id={$id}&hash={$hash}&{$query}";
         });
     }
 }

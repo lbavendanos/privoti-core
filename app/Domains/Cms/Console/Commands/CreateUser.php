@@ -2,7 +2,7 @@
 
 namespace App\Domains\Cms\Console\Commands;
 
-use App\Domains\Cms\Http\Controllers\Auth\AuthController;
+use App\Domains\Cms\Http\Controllers\AuthController;
 use Illuminate\Console\Command;
 
 class CreateUser extends Command
