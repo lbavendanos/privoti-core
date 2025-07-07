@@ -6,6 +6,7 @@ use App\Domains\Cms\Http\Resources\ProductCollection;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductOption;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -31,6 +32,12 @@ class ProductController
             'type.*' => [Rule::exists('product_types', 'name')->withoutTrashed()],
             'vendor' => ['nullable', 'array'],
             'vendor.*' => [Rule::exists('vendors', 'name')->withoutTrashed()],
+            'created_at' => ['nullable', 'array', 'max:2'],
+            'created_at.*' => ['date'],
+            'created_at.1' => ['nullable', 'after_or_equal:created_at.0'],
+            'updated_at' => ['nullable', 'array', 'max:2'],
+            'updated_at.*' => ['date'],
+            'updated_at.1' => ['nullable', 'after_or_equal:updated_at.0'],
             'order' => ['nullable', 'string'],
             'per_page' => ['nullable', 'integer'],
             'page' => ['nullable', 'integer'],
@@ -48,10 +55,29 @@ class ProductController
             'variants.values'
         ]);
 
-        $query->when($request->filled('q'), fn($q) => $q->where('title', 'like', "%{$request->input('q')}%"));
+        $query->when($request->filled('q'), fn($q) => $q->whereLike('title', "%{$request->input('q')}%"));
         $query->when($request->filled('status'), fn($q) => $q->whereIn('status', $request->input('status')));
         $query->when($request->filled('type'), fn($q) => $q->whereHas('type', fn($q) => $q->whereIn('name', $request->input('type'))));
         $query->when($request->filled('vendor'), fn($q) => $q->whereHas('vendor', fn($q) => $q->whereIn('name', $request->input('vendor'))));
+        $query->when($request->filled('created_at'), function ($q) use ($request) {
+            $dates = $request->input('created_at');
+
+            if (count($dates) === 2) {
+                $q->createdBetween($dates);
+            } elseif (count($dates) === 1) {
+                $q->createdAt($dates[0]);
+            }
+        });
+
+        $query->when($request->filled('updated_at'), function ($q) use ($request) {
+            $dates = $request->input('updated_at');
+
+            if (count($dates) === 2) {
+                $q->updatedBetween($dates);
+            } elseif (count($dates) === 1) {
+                $q->updatedAt($dates[0]);
+            }
+        });
 
         $orders = explode(',', $request->input('order', 'id'));
 
