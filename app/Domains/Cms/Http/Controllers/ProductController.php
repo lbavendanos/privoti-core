@@ -6,7 +6,6 @@ use App\Domains\Cms\Http\Resources\ProductCollection;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductOption;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -192,6 +191,30 @@ class ProductController
             'options.values',
             'variants.values'
         ));
+    }
+
+    /**
+     * Bulk update multiple products, each with its own data.
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $request->validate([
+            'items' => ['required', 'array'],
+            'items.*.id' => ['required', Rule::exists('products', 'id')->withoutTrashed()],
+            'items.*' => ['required', 'array'],
+        ]);
+
+        $updatedProducts = [];
+
+        foreach ($request->input('items') as $item) {
+            $product = Product::findOrFail($item['id']);
+            $data = Arr::except($item, ['id']);
+            $updateRequest = new Request($data);
+
+            $updatedProducts[] = $this->update($updateRequest, $product);
+        }
+
+        return ProductResource::collection($updatedProducts);
     }
 
     /**
