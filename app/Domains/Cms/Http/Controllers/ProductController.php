@@ -24,7 +24,7 @@ class ProductController
         $request->validate([
             'all' => ['nullable', 'boolean'],
             'fields' => ['nullable', 'string'],
-            'q' => ['nullable', 'string'],
+            'title' => ['nullable', 'string'],
             'status' => ['nullable', 'array'],
             'status.*' => [Rule::in(['draft', 'active', 'archived'])],
             'type' => ['nullable', 'array'],
@@ -54,7 +54,7 @@ class ProductController
             'variants.values'
         ]);
 
-        $query->when($request->filled('q'), fn($q) => $q->whereLike('title', "%{$request->input('q')}%"));
+        $query->when($request->filled('title'), fn($q) => $q->whereLike('title', "%{$request->input('title')}%"));
         $query->when($request->filled('status'), fn($q) => $q->whereIn('status', $request->input('status')));
         $query->when($request->filled('type'), fn($q) => $q->whereHas('type', fn($q) => $q->whereIn('name', $request->input('type'))));
         $query->when($request->filled('vendor'), fn($q) => $q->whereHas('vendor', fn($q) => $q->whereIn('name', $request->input('vendor'))));
