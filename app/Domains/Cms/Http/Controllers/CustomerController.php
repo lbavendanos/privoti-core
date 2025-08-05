@@ -120,7 +120,29 @@ class CustomerController
      */
     public function destroy(Customer $customer)
     {
-        //
+        $this->deleteCustomer($customer);
+
+        return response()->noContent();
+    }
+
+    /**
+     * Remove multiple resources from storage.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['required', Rule::exists('customers', 'id')->withoutTrashed()],
+        ]);
+
+        Customer::whereIn('id', $request->input('ids'))
+            ->chunkById(100, function ($customers) {
+                foreach ($customers as $customer) {
+                    $this->deleteCustomer($customer);
+                }
+            });
+
+        return response()->noContent();
     }
 
     /**
@@ -135,5 +157,14 @@ class CustomerController
             'phone' => ['nullable', 'string', (new Phone)->country([config('app.country_code')]), 'max:255'],
             'dob' => ['nullable', 'date'],
         ];
+    }
+
+    /**
+     * Delete customer and its related data.
+     */
+    private function deleteCustomer(Customer $customer)
+    {
+        $customer->addresses();
+        $customer->delete();
     }
 }

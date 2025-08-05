@@ -39,6 +39,7 @@ Route::prefix('c')->group(function () {
             Route::delete('products', [ProductController::class, 'bulkDestroy'])->name('products.bulk-destroy');
             Route::apiResource('products', ProductController::class);
             Route::apiResource('vendors', VendorController::class);
+            Route::delete('customers', [CustomerController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
             Route::apiResource('customers', CustomerController::class);
         });
     });
