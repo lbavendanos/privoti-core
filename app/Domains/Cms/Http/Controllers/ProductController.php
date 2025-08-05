@@ -26,7 +26,7 @@ class ProductController
             'fields' => ['nullable', 'string'],
             'title' => ['nullable', 'string'],
             'status' => ['nullable', 'array'],
-            'status.*' => [Rule::in(['draft', 'active', 'archived'])],
+            'status.*' => [Rule::in(Product::STATUS_LIST)],
             'type' => ['nullable', 'array'],
             'type.*' => [Rule::exists('product_types', 'name')->withoutTrashed()],
             'vendor' => ['nullable', 'array'],
@@ -116,7 +116,7 @@ class ProductController
         $request->merge(['handle' => $handle]);
 
         if ($request->missing('status')) {
-            $request->merge(['status' => 'draft']);
+            $request->merge(['status' => Product::STATUS_DEFAULT]);
         }
 
         $product = Product::create($request->all());
@@ -256,7 +256,7 @@ class ProductController
             'title' => $product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['nullable', Rule::in(['draft', 'active', 'archived'])],
+            'status' => ['nullable', Rule::in(Product::STATUS_LIST)],
             'tags' => ['nullable', 'array'],
             'category_id' => ['nullable', Rule::exists('product_categories', 'id')->where('is_active', true)->withoutTrashed()],
             'type_id' => ['nullable', Rule::exists('product_types', 'id')->withoutTrashed()],

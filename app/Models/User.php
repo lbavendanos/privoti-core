@@ -51,15 +51,13 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the name attribute.
-     *
-     * @return Attribute
+     * Get the user's name attribute with proper formatting.
      */
     protected function name(): Attribute
     {
         return Attribute::make(
             get: fn(mixed $value) => ucwords($value),
-            set: fn(mixed $value) => ucwords($value)
+            set: fn(mixed $value) => strtolower($value)
         );
     }
 }

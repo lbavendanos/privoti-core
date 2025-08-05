@@ -2,6 +2,7 @@
 
 use App\Domains\Cms\Http\Controllers\AuthController;
 use App\Domains\Cms\Http\Controllers\CollectionController;
+use App\Domains\Cms\Http\Controllers\CustomerController;
 use App\Domains\Cms\Http\Controllers\ProductCategoryController;
 use App\Domains\Cms\Http\Controllers\ProductController;
 use App\Domains\Cms\Http\Controllers\ProductTypeController;
@@ -38,6 +39,7 @@ Route::prefix('c')->group(function () {
             Route::delete('products', [ProductController::class, 'bulkDestroy'])->name('products.bulk-destroy');
             Route::apiResource('products', ProductController::class);
             Route::apiResource('vendors', VendorController::class);
+            Route::apiResource('customers', CustomerController::class);
         });
     });
 });

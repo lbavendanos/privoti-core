@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Collection;
+use App\Models\Customer;
+use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
 use App\Models\User;
@@ -66,6 +68,18 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'Reebok'],
                 ['name' => 'Under Armour'],
             )
+            ->create();
+
+        Product::factory()
+            ->count(100)
+            ->sequence(fn($sequence) => [
+                'type_id' => ProductType::all()->random(),
+                'vendor_id' => Vendor::all()->random(),
+            ])
+            ->create();
+
+        Customer::factory()
+            ->count(100)
             ->create();
     }
 

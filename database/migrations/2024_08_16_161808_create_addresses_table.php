@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('state');
             $table->boolean('default')->default(false);
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('customer_id')->constrained();
             $table->timestamps();
         });
     }

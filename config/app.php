@@ -58,6 +58,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Country Code
+    |--------------------------------------------------------------------------
+    |
+    | This value is used to determine the country code for your application.
+    | It can be used for localization, currency formatting, and other
+    | region-specific functionalities. Set this in your ".env" file.
+    |
+    */
+
+    'country_code' => env('APP_COUNTRY_CODE', 'US'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

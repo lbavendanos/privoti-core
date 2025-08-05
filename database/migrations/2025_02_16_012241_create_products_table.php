@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->string('subtitle')->nullable();
             $table->string('handle');
             $table->string('description')->nullable();
-            $table->enum('status', ['draft', 'active', 'archived'])->default('draft');
+            $table->enum('status', Product::STATUS_LIST)->default(Product::STATUS_DEFAULT);
             $table->string('tags')->nullable();
             $table->jsonb('metadata')->nullable();
             $table->foreignId('category_id')->nullable()->constrained('product_categories');
