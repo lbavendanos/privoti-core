@@ -112,7 +112,15 @@ class CustomerController
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $rules = array_merge(
+            $this->customerRules($customer),
+        );
+
+        $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
+
+        $customer->update($request->all());
+
+        return new CustomerResource($customer->load('addresses'));
     }
 
     /**
