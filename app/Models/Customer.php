@@ -66,8 +66,8 @@ class Customer extends Authenticatable implements MustVerifyEmail
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucwords($value),
-            set: fn (string $value) => strtolower($value),
+            get: fn(string $value) => ucwords($value),
+            set: fn(string $value) => strtolower($value),
         );
     }
 
@@ -77,8 +77,8 @@ class Customer extends Authenticatable implements MustVerifyEmail
     protected function lastName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => ucwords($value),
-            set: fn (string $value) => strtolower($value),
+            get: fn(string $value) => ucwords($value),
+            set: fn(string $value) => strtolower($value),
         );
     }
 
@@ -93,13 +93,24 @@ class Customer extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-    * Get the customer's phone.
-    */
+     * Get the customer's phone.
+     */
     protected function phone(): Attribute
     {
         return Attribute::make(
+            get: function (?string $value) {
+                if (blank($value)) return null;
+
+                $phoneNumber = new PhoneNumber($value, config('app.country_code'));
+
+                return [
+                    'e164' => $phoneNumber->formatE164(),
+                    'international' => $phoneNumber->formatInternational(),
+                    'national' => $phoneNumber->formatNational(),
+                ];
+            },
             set: fn(mixed $value) => filled($value) ?
-                (new PhoneNumber($value, config('app.country_code')))->formatInternational()
+                (new PhoneNumber($value, config('app.country_code')))->formatE164()
                 : null
         );
     }
