@@ -160,7 +160,7 @@ class CustomerController
             'first_name' => $customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
             'last_name' => $customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
             'email' => $customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
-            'phone' => ['nullable', 'string', (new Phone)->country([config('app.country_code')]), 'max:255'],
+            'phone' => ['nullable', 'string', (new Phone)->country([config('core.country_code')]), 'max:255'],
             'dob' => ['nullable', 'date'],
         ];
     }

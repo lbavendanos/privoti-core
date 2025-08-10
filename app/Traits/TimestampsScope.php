@@ -15,7 +15,7 @@ trait TimestampsScope
     protected function createdBetween(Builder $query, array $dates)
     {
         $appTimezone = config('app.timezone');
-        $coreTimezone = 'America/Lima';
+        $coreTimezone = config('core.timezone');
         $dates = array_map(fn($date) => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
@@ -31,7 +31,7 @@ trait TimestampsScope
     protected function createdAt(Builder $query, $date)
     {
         $appTimezone = config('app.timezone');
-        $coreTimezone = 'America/Lima';
+        $coreTimezone = config('core.timezone');
 
         $date = Carbon::parse($date)->setTimezone($appTimezone);
 
@@ -48,7 +48,7 @@ trait TimestampsScope
     protected function updatedBetween(Builder $query, array $dates)
     {
         $appTimezone = config('app.timezone');
-        $coreTimezone = 'America/Lima';
+        $coreTimezone = config('core.timezone');
         $dates = array_map(fn($date) => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
@@ -64,7 +64,7 @@ trait TimestampsScope
     protected function updatedAt(Builder $query, $date)
     {
         $appTimezone = config('app.timezone');
-        $coreTimezone = 'America/Lima';
+        $coreTimezone = config('core.timezone');
 
         $date = Carbon::parse($date)->setTimezone($appTimezone);
 

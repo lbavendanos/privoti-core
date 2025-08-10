@@ -80,6 +80,6 @@ class VerifyNewEmail extends Notification
 
         $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-        return config('app.store_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
+        return config('core.store_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
     }
 }

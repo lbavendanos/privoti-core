@@ -98,7 +98,7 @@ class Customer extends Authenticatable implements MustVerifyEmail
             get: function (?string $value) {
                 if (blank($value)) return null;
 
-                $countryCode = config('app.country_code');
+                $countryCode = config('core.country_code');
                 $phoneNumber = new PhoneNumber($value, $countryCode);
 
                 return [
@@ -109,7 +109,7 @@ class Customer extends Authenticatable implements MustVerifyEmail
                 ];
             },
             set: fn(mixed $value) => filled($value) ?
-                (new PhoneNumber($value, config('app.country_code')))->formatE164()
+                (new PhoneNumber($value, config('core.country_code')))->formatE164()
                 : null
         );
     }

@@ -53,21 +53,6 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'cms_url' => env('CMS_URL', 'http://localhost:3000'),
-    'store_url' => env('STORE_URL', 'http://localhost:3001'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application Country Code
-    |--------------------------------------------------------------------------
-    |
-    | This value is used to determine the country code for your application.
-    | It can be used for localization, currency formatting, and other
-    | region-specific functionalities. Set this in your ".env" file.
-    |
-    */
-
-    'country_code' => env('APP_COUNTRY_CODE', 'US'),
 
     /*
     |--------------------------------------------------------------------------

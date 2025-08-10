@@ -30,13 +30,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
-            $baseUrl = $this->isUser($notifiable) ? config('app.cms_url') : config('app.store_url');
+            $baseUrl = $this->isUser($notifiable) ? config('core.cms_url') : config('core.store_url');
 
             return $baseUrl . "/password/reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
 
         VerifyEmail::createUrlUsing(function (object $notifiable) {
-            $baseUrl = $this->isUser($notifiable) ? config('app.cms_url') : config('app.store_url');
+            $baseUrl = $this->isUser($notifiable) ? config('core.cms_url') : config('core.store_url');
             $modelName = $this->isUser($notifiable) ? 'user' : 'customer';
 
             $id = $notifiable->getKey();
