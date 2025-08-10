@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Traits\TimestampsScope;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,8 +14,7 @@ use Propaganistas\LaravelPhone\PhoneNumber;
 
 class Customer extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\CustomerrFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use TimestampsScope, HasFactory, Notifiable, SoftDeletes;
 
     const ACCOUNT_LIST = ['guest', 'registered'];
     const ACCOUNT_DEFAULT = 'guest';
@@ -123,55 +120,5 @@ class Customer extends Authenticatable implements MustVerifyEmail
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
-    }
-
-    /**
-     * Scope a query to only include products created between the given dates.
-     */
-    #[Scope]
-    protected function createdBetween(Builder $query, array $dates)
-    {
-        $timezone = config('app.timezone');
-        [$start, $end] = array_map(fn($date) => Carbon::parse($date)->setTimezone($timezone), $dates);
-
-        $query->whereDate('created_at', '>=', $start)
-            ->whereDate('created_at', '<=', $end);
-    }
-
-    /**
-     * Scope a query to only include products created on a specific date.
-     */
-    #[Scope]
-    protected function createdAt(Builder $query, $date)
-    {
-        $timezone = config('app.timezone');
-        $date = Carbon::parse($date)->setTimezone($timezone);
-
-        $query->whereDate('created_at', $date);
-    }
-
-    /**
-     * Scope a query to only include products updated between the given dates.
-     */
-    #[Scope]
-    protected function updatedBetween(Builder $query, array $dates)
-    {
-        $timezone = config('app.timezone');
-        [$start, $end] = array_map(fn($date) => Carbon::parse($date)->setTimezone($timezone), $dates);
-
-        $query->whereDate('updated_at', '>=', $start)
-            ->whereDate('updated_at', '<=', $end);
-    }
-
-    /**
-     * Scope a query to only include products updated on a specific date.
-     */
-    #[Scope]
-    protected function updatedAt(Builder $query, $date)
-    {
-        $timezone = config('app.timezone');
-        $date = Carbon::parse($date)->setTimezone($timezone);
-
-        $query->whereDate('updated_at', $date);
     }
 }

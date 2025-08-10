@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Attributes\Scope;
+use App\Traits\TimestampsScope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use TimestampsScope, HasFactory, SoftDeletes;
 
     const STATUS_LIST = ['draft', 'active', 'archived'];
     const STATUS_DEFAULT = 'draft';
@@ -132,55 +130,5 @@ class Product extends Model
     public function collections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class);
-    }
-
-    /**
-     * Scope a query to only include products created between the given dates.
-     */
-    #[Scope]
-    protected function createdBetween(Builder $query, array $dates)
-    {
-        $timezone = config('app.timezone');
-        [$start, $end] = array_map(fn($date) => Carbon::parse($date)->setTimezone($timezone), $dates);
-
-        $query->whereDate('created_at', '>=', $start)
-            ->whereDate('created_at', '<=', $end);
-    }
-
-    /**
-     * Scope a query to only include products created on a specific date.
-     */
-    #[Scope]
-    protected function createdAt(Builder $query, $date)
-    {
-        $timezone = config('app.timezone');
-        $date = Carbon::parse($date)->setTimezone($timezone);
-
-        $query->whereDate('created_at', $date);
-    }
-
-    /**
-     * Scope a query to only include products updated between the given dates.
-     */
-    #[Scope]
-    protected function updatedBetween(Builder $query, array $dates)
-    {
-        $timezone = config('app.timezone');
-        [$start, $end] = array_map(fn($date) => Carbon::parse($date)->setTimezone($timezone), $dates);
-
-        $query->whereDate('updated_at', '>=', $start)
-            ->whereDate('updated_at', '<=', $end);
-    }
-
-    /**
-     * Scope a query to only include products updated on a specific date.
-     */
-    #[Scope]
-    protected function updatedAt(Builder $query, $date)
-    {
-        $timezone = config('app.timezone');
-        $date = Carbon::parse($date)->setTimezone($timezone);
-
-        $query->whereDate('updated_at', $date);
     }
 }
