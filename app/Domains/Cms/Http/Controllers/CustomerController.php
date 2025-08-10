@@ -18,6 +18,8 @@ class CustomerController
     {
         $request->validate([
             'name' => ['nullable', 'string'],
+            'account' => ['nullable', 'array'],
+            'account.*' => [Rule::in(Customer::ACCOUNT_LIST)],
             'created_at' => ['nullable', 'array', 'max:2'],
             'created_at.*' => ['date'],
             'created_at.1' => ['nullable', 'after_or_equal:created_at.0'],
@@ -33,12 +35,8 @@ class CustomerController
 
         $query->with(['addresses']);
 
-        $query->when($request->filled('name'), function ($q) use ($request) {
-            $q->whereLike('first_name', "%{$request->input('name')}%")
-                ->orWhereLike('last_name', "%{$request->input('name')}%");
-        });
-
-        $query->when($request->filled('account'), fn($q) => $q->where('account', $request->input('account')));
+        $query->when($request->filled('name'), fn($q) => $q->whereAny(['first_name', 'last_name'], 'like', "%{$request->input('name')}%"));
+        $query->when($request->filled('account'), fn($q) => $q->whereIn('account', $request->input('account')));
 
         $query->when($request->filled('created_at'), function ($q) use ($request) {
             $dates = $request->input('created_at');
