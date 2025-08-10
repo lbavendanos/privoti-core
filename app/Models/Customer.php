@@ -101,12 +101,14 @@ class Customer extends Authenticatable implements MustVerifyEmail
             get: function (?string $value) {
                 if (blank($value)) return null;
 
-                $phoneNumber = new PhoneNumber($value, config('app.country_code'));
+                $countryCode = config('app.country_code');
+                $phoneNumber = new PhoneNumber($value, $countryCode);
 
                 return [
                     'e164' => $phoneNumber->formatE164(),
                     'international' => $phoneNumber->formatInternational(),
                     'national' => $phoneNumber->formatNational(),
+                    'mobile_dialing' => $phoneNumber->formatForMobileDialingInCountry($countryCode),
                 ];
             },
             set: fn(mixed $value) => filled($value) ?
