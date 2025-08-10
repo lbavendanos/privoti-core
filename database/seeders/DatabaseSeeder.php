@@ -78,9 +78,13 @@ class DatabaseSeeder extends Seeder
             ])
             ->create();
 
-        Customer::factory()
-            ->count(100)
-            ->create();
+        for ($i = 0; $i < 100; $i++) {
+            if (rand(0, 1)) {
+                Customer::factory()->guest()->create();
+            } else {
+                Customer::factory()->registered()->create();
+            }
+        }
     }
 
     /**
