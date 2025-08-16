@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
                 'Boys' => ['Shirts', 'Pants', 'Shoes'],
                 'Girls' => ['Dresses', 'Skirts', 'Shoes'],
             ],
-            'Accessories' => ['Bags', 'Hats', 'Scarves', 'Sunglasses']
+            'Accessories' => ['Bags', 'Hats', 'Scarves', 'Sunglasses'],
         ];
 
         $this->createCategory($categories);
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
         Product::factory()
             ->count(100)
-            ->sequence(fn($sequence) => [
+            ->sequence(fn ($sequence) => [
                 'type_id' => ProductType::all()->random(),
                 'vendor_id' => Vendor::all()->random(),
             ])
@@ -80,9 +80,9 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 0; $i < 100; $i++) {
             if (rand(0, 1)) {
-                Customer::factory()->guest()->create();
+                Customer::factory()->guest()->hasAddresses(4)->hasAddresses(1, ['default' => true])->create();
             } else {
-                Customer::factory()->registered()->create();
+                Customer::factory()->registered()->hasAddresses(4)->hasAddresses(1, ['default' => true])->create();
             }
         }
     }
@@ -90,27 +90,28 @@ class DatabaseSeeder extends Seeder
     /**
      * Create categories recursively.
      *
-     * @param array $categories
-     * @param int|null $parent_id
+     * @param  array  $categories
+     * @param  int|null  $parent_id
      */
-    function createCategory($categories, $parent_id = null)
+    public function createCategory($categories, $parent_id = null)
     {
         foreach ($categories as $category => $subcategories) {
             if (is_array($subcategories)) {
                 $parent = ProductCategory::factory()->create([
                     'name' => $category,
                     'handle' => Str::slug($category),
-                    'parent_id' => $parent_id
+                    'parent_id' => $parent_id,
                 ]);
 
                 $this->createCategory($subcategories, $parent->id);
+
                 continue;
             }
 
             $parent = ProductCategory::factory()->create([
                 'name' => $subcategories,
                 'handle' => Str::slug($subcategories),
-                'parent_id' => $parent_id
+                'parent_id' => $parent_id,
             ]);
         }
     }
