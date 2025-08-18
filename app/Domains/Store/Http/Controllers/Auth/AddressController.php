@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Store\Http\Controllers\Auth;
 
 use App\Domains\Store\Http\Controllers\Controller;
@@ -7,9 +9,9 @@ use App\Domains\Store\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Http\Request;
 
-class AddressController extends Controller
+final class AddressController extends Controller
 {
-    const ADDRESS_LIMIT = 5;
+    public const ADDRESS_LIMIT = 5;
 
     /**
      * Display a listing of the resource.
@@ -22,7 +24,7 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \App\Domains\Store\Http\Resources\AddressResource
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -38,7 +40,7 @@ class AddressController extends Controller
         $numberOfAddresses = $request->user()->addresses()->count();
 
         if ($numberOfAddresses === self::ADDRESS_LIMIT) {
-            abort(403, 'You can not add more than ' . self::ADDRESS_LIMIT . ' addresses.');
+            abort(403, 'You can not add more than '.self::ADDRESS_LIMIT.' addresses.');
         }
 
         $request->merge(['default' => $numberOfAddresses === 0]);
@@ -61,7 +63,7 @@ class AddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Address $address)
+    public function show(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);
@@ -73,7 +75,7 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address)
+    public function update(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);
@@ -125,7 +127,7 @@ class AddressController extends Controller
     /**
      * Set the specified address as default.
      */
-    public function setDefault(Request $request, Address $address)
+    public function setDefault(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);

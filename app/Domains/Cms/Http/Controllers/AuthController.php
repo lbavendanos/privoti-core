@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Controllers;
 
-use App\Domains\Cms\Http\Controllers\Controller;
 use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
 use App\Domains\Cms\Http\Resources\UserResource;
 use App\Domains\Cms\Notifications\VerifyNewEmail;
@@ -24,12 +25,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+final class AuthController extends Controller
 {
     /**
      * Display the authenticated user.
      */
-    public function getUser(Request $request)
+    public function getUser(Request $request): \App\Domains\Cms\Http\Resources\UserResource
     {
         return new UserResource($request->user());
     }
@@ -37,7 +38,7 @@ class AuthController extends Controller
     /**
      * Update the authenticated user.
      */
-    public function updateUser(Request $request)
+    public function updateUser(Request $request): \App\Domains\Cms\Http\Resources\UserResource
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -59,7 +60,7 @@ class AuthController extends Controller
             'current_password' => ['required', 'current_password', 'string'],
             'password' => ['required',  'string', Rules\Password::defaults()],
         ], [
-            'current_password.current_password' => 'The provided password does not match your current password.'
+            'current_password.current_password' => 'The provided password does not match your current password.',
         ]);
 
         $request->user()->update([
@@ -74,7 +75,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function register(Request $request): JsonResource
     {
@@ -124,7 +125,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming password reset link request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function forgotPassword(Request $request): JsonResponse
     {
@@ -141,7 +142,7 @@ class AuthController extends Controller
             $request->only('email')
         );
 
-        if ($status != Password::RESET_LINK_SENT) {
+        if ($status !== Password::RESET_LINK_SENT) {
             throw ValidationException::withMessages([
                 'email' => [__($status)],
             ]);
@@ -153,7 +154,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function resetPassword(Request $request): JsonResource
     {
@@ -170,7 +171,7 @@ class AuthController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
+            function ($user) use ($request): void {
                 $user->forceFill([
                     'password' => Hash::make($request->string('password')),
                     'remember_token' => Str::random(60),
@@ -182,7 +183,7 @@ class AuthController extends Controller
             }
         );
 
-        if ($status != Password::PASSWORD_RESET) {
+        if ($status !== Password::PASSWORD_RESET) {
             throw ValidationException::withMessages([
                 'email' => [__($status)],
             ]);

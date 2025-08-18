@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ProductTypeCollection extends ResourceCollection
+final class ProductTypeCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,14 +17,14 @@ class ProductTypeCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn($type) => new ProductTypeResource($type))
+            'data' => $this->collection->map(fn ($type): \App\Domains\Cms\Http\Resources\ProductTypeResource => new ProductTypeResource($type)),
         ];
     }
 
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function toResponse($request)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -9,12 +11,12 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
  */
-class CustomerFactory extends Factory
+final class CustomerFactory extends Factory
 {
     /**
      * The current password being used by the factory.
      */
-    protected static ?string $password;
+    private static ?string $password = null;
 
     /**
      * Define the model's default state.
@@ -36,7 +38,7 @@ class CustomerFactory extends Factory
      */
     public function guest(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'account' => 'guest',
             'email_verified_at' => null,
             'password' => null,
@@ -49,7 +51,7 @@ class CustomerFactory extends Factory
      */
     public function registered(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'account' => 'registered',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

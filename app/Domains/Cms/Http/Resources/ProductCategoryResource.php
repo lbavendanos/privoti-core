@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 
-class ProductCategoryResource extends JsonResource
+final class ProductCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -30,12 +32,12 @@ class ProductCategoryResource extends JsonResource
         ];
 
         if ($request->filled('fields')) {
-            $fields = explode(',', $request->input('fields'));
+            $fields = explode(',', (string) $request->input('fields'));
             $data = Arr::only($data, $fields);
         }
 
         return array_merge($data, [
-            'children' => ProductCategoryResource::collection($this->whenLoaded('children')),
+            'children' => self::collection($this->whenLoaded('children')),
             // 'parent' => new ProductCategoryResource($this->whenLoaded('parent')),
             // 'products' => ProductResource::collection($this->whenLoaded('products')),
         ]);

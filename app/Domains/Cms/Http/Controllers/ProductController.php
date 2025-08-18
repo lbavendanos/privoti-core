@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Resources\ProductCollection;
@@ -14,12 +16,12 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 
-class ProductController
+final class ProductController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \App\Domains\Cms\Http\Resources\ProductCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
@@ -51,14 +53,14 @@ class ProductController
             'media',
             'collections',
             'options.values',
-            'variants.values'
+            'variants.values',
         ]);
 
-        $query->when($request->filled('title'), fn($q) => $q->whereLike('title', "%{$request->input('title')}%"));
-        $query->when($request->filled('status'), fn($q) => $q->whereIn('status', $request->input('status')));
-        $query->when($request->filled('type'), fn($q) => $q->whereHas('type', fn($q) => $q->whereIn('name', $request->input('type'))));
-        $query->when($request->filled('vendor'), fn($q) => $q->whereHas('vendor', fn($q) => $q->whereIn('name', $request->input('vendor'))));
-        $query->when($request->filled('created_at'), function ($q) use ($request) {
+        $query->when($request->filled('title'), fn ($q) => $q->whereLike('title', "%{$request->input('title')}%"));
+        $query->when($request->filled('status'), fn ($q) => $q->whereIn('status', $request->input('status')));
+        $query->when($request->filled('type'), fn ($q) => $q->whereHas('type', fn ($q) => $q->whereIn('name', $request->input('type'))));
+        $query->when($request->filled('vendor'), fn ($q) => $q->whereHas('vendor', fn ($q) => $q->whereIn('name', $request->input('vendor'))));
+        $query->when($request->filled('created_at'), function ($q) use ($request): void {
             $dates = $request->input('created_at');
 
             if (count($dates) === 2) {
@@ -68,7 +70,7 @@ class ProductController
             }
         });
 
-        $query->when($request->filled('updated_at'), function ($q) use ($request) {
+        $query->when($request->filled('updated_at'), function ($q) use ($request): void {
             $dates = $request->input('updated_at');
 
             if (count($dates) === 2) {
@@ -78,11 +80,11 @@ class ProductController
             }
         });
 
-        $orders = explode(',', $request->input('order', 'id'));
+        $orders = explode(',', (string) $request->input('order', 'id'));
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = ltrim($order, '-');
+            $column = mb_ltrim($order, '-');
 
             $query->orderBy($column, $direction);
         }
@@ -100,7 +102,7 @@ class ProductController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \App\Domains\Cms\Http\Resources\ProductResource
     {
         $rules = array_merge(
             $this->productRules(),
@@ -140,7 +142,7 @@ class ProductController
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Product $product): \App\Domains\Cms\Http\Resources\ProductResource
     {
         return new ProductResource($product->load(
             'category',
@@ -156,7 +158,7 @@ class ProductController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): \App\Domains\Cms\Http\Resources\ProductResource
     {
         $rules = array_merge(
             $this->productRules($product),
@@ -167,12 +169,9 @@ class ProductController
 
         $request->validate($rules);
 
-        if ($request->has('title')) {
-            if ($request->filled('title') && $request->input('title') !== $product->title) {
-                $handle = Str::slug($request->input('title'));
-
-                $request->merge(['handle' => $handle]);
-            }
+        if ($request->has('title') && ($request->filled('title') && $request->input('title') !== $product->title)) {
+            $handle = Str::slug($request->input('title'));
+            $request->merge(['handle' => $handle]);
         }
 
         $product->update($request->all());
@@ -238,7 +237,7 @@ class ProductController
         ]);
 
         Product::whereIn('id', $request->input('ids'))
-            ->chunkById(100, function ($products) {
+            ->chunkById(100, function ($products): void {
                 foreach ($products as $product) {
                     $this->deleteProduct($product);
                 }
@@ -250,10 +249,10 @@ class ProductController
     /**
      * Product rules.
      */
-    private function productRules(?Product $product = null)
+    private function productRules(?Product $product = null): array
     {
         return [
-            'title' => $product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
+            'title' => $product instanceof \App\Models\Product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(Product::STATUS_LIST)],
@@ -268,11 +267,11 @@ class ProductController
     /**
      * Media rules.
      */
-    private function mediaRules(?Product $product = null)
+    private function mediaRules(?Product $product = null): array
     {
         return [
             'media' => ['nullable', 'array'],
-            'media.*.id' => $product ? ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'media.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'media.*.file' => ['required_without:media.*.id', File::image()->max('1mb')],
             'media.*.rank' => ['required_with:media', 'integer'],
         ];
@@ -281,11 +280,11 @@ class ProductController
     /**
      * Option rules.
      */
-    private function optionRules(?Product $product = null)
+    private function optionRules(?Product $product = null): array
     {
         return [
             'options' => ['nullable', 'array'],
-            'options.*.id' => $product ? ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'options.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
             'options.*.values' => ['nullable', 'array'],
             'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
@@ -295,11 +294,11 @@ class ProductController
     /**
      * Variant rules.
      */
-    private function variantRules(?Product $product = null)
+    private function variantRules(?Product $product = null): array
     {
         return [
             'variants' => ['nullable', 'array'],
-            'variants.*.id' => $product ? ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'variants.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
             'variants.*.price' => ['required_with:variants', 'numeric'],
             'variants.*.quantity' => ['required_with:variants', 'integer'],
@@ -311,14 +310,14 @@ class ProductController
     /**
      * Create product media.
      */
-    private function createMedia(Request $request, Product $product)
+    private function createMedia(Request $request, Product $product): void
     {
         if ($request->filled('media')) {
             $inputMedia = $request->input('media');
 
             foreach ($inputMedia as $key => $input) {
                 $file = $request->file("media.{$key}.file");
-                $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
+                $url = $this->storeMediaFile($file, $product->handle.'-'.($key + 1));
 
                 $product->media()->create([
                     'url' => $url,
@@ -331,7 +330,7 @@ class ProductController
     /**
      * Update or create product media.
      */
-    private function updateOrCreateMedia(Request $request, Product $product)
+    private function updateOrCreateMedia(Request $request, Product $product): void
     {
         if ($request->has('media')) {
             if ($request->isNotFilled('media')) {
@@ -343,7 +342,7 @@ class ProductController
             $existingMedia = $product->media()->pluck('id')->toArray();
             $inputMedia = collect($request->input('media'));
 
-            $mediaToKeep = $inputMedia->filter(fn($media) => isset($media['id']))->pluck('id')->toArray();
+            $mediaToKeep = $inputMedia->filter(fn ($media): bool => isset($media['id']))->pluck('id')->toArray();
             $mediaToDelete = array_diff($existingMedia, $mediaToKeep);
 
             if (filled($mediaToDelete)) {
@@ -359,7 +358,7 @@ class ProductController
                     }
                 } else {
                     $file = $request->file("media.{$key}.file");
-                    $url = $this->storeMediaFile($file, $product->handle . '-' . ($key + 1));
+                    $url = $this->storeMediaFile($file, $product->handle.'-'.($key + 1));
 
                     $product->media()->create([
                         'url' => $url,
@@ -376,17 +375,16 @@ class ProductController
     private function storeMediaFile(UploadedFile $file, string $name)
     {
         $extension = $file->extension();
-        $filename = $name . '-' . Str::uuid() . '.' . $extension;
+        $filename = $name.'-'.Str::uuid().'.'.$extension;
         $path = $file->storePubliclyAs('products', $filename);
-        $url = Storage::url($path);
 
-        return $url;
+        return Storage::url($path);
     }
 
     /**
      * Create product options.
      */
-    private function createOptions(Request $request, Product $product)
+    private function createOptions(Request $request, Product $product): void
     {
         if ($request->filled('options')) {
             $inputOptions = $request->input('options');
@@ -395,7 +393,7 @@ class ProductController
                 $option = $product->options()->create(['name' => $input['name']]);
 
                 if (isset($input['values'])) {
-                    $values = array_map(fn($value) => ['value' => $value], $input['values']);
+                    $values = array_map(fn ($value): array => ['value' => $value], $input['values']);
 
                     $option->values()->createMany($values);
                 }
@@ -406,7 +404,7 @@ class ProductController
     /**
      * Update or create product options.
      */
-    private function updateOrCreateOptions(Request $request, Product $product)
+    private function updateOrCreateOptions(Request $request, Product $product): void
     {
         if ($request->has('options')) {
             if ($request->isNotFilled('options')) {
@@ -419,7 +417,7 @@ class ProductController
             $existingOptions = $product->options()->pluck('id')->toArray();
             $inputOptions = collect($request->input('options'));
 
-            $optionsToKeep = $inputOptions->filter(fn($option) => isset($option['id']))->pluck('id')->toArray();
+            $optionsToKeep = $inputOptions->filter(fn ($option): bool => isset($option['id']))->pluck('id')->toArray();
             $optionsToDelete = array_diff($existingOptions, $optionsToKeep);
 
             if (filled($optionsToDelete)) {
@@ -440,7 +438,7 @@ class ProductController
                     $option = $product->options()->create(['name' => $input['name']]);
 
                     if (isset($input['values'])) {
-                        $values = array_map(fn($value) => ['value' => $value], $input['values']);
+                        $values = array_map(fn ($value): array => ['value' => $value], $input['values']);
 
                         $option->values()->createMany($values);
                     }
@@ -452,7 +450,7 @@ class ProductController
     /**
      * Update or create option values.
      */
-    private function updateOrCreateValues(array $inputOption, ProductOption $option)
+    private function updateOrCreateValues(array $inputOption, ProductOption $option): void
     {
         if (Arr::has($inputOption, 'values')) {
             if (blank($inputOption['values'])) {
@@ -471,7 +469,7 @@ class ProductController
             }
 
             $valuesToCreate = array_diff($valuesToKeep, $existingValues);
-            $values = array_map(fn($value) => ['value' => $value], $valuesToCreate);
+            $values = array_map(fn ($value): array => ['value' => $value], $valuesToCreate);
 
             $option->values()->createMany($values);
         }
@@ -480,7 +478,7 @@ class ProductController
     /**
      * Create product variants.
      */
-    private function createVariants(Request $request, Product $product)
+    private function createVariants(Request $request, Product $product): void
     {
         if ($request->filled('variants')) {
             $inputVariants = $request->input('variants');
@@ -488,7 +486,7 @@ class ProductController
             foreach ($inputVariants as $input) {
                 $variant = $product->variants()->create($input);
                 $values = collect($input['options'])
-                    ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
+                    ->map(fn ($option) => $product->values()->firstWhere('value', $option['value']));
 
                 $variant->values()->attach($values->pluck('id'));
             }
@@ -498,7 +496,7 @@ class ProductController
     /**
      * Update or create product variants.
      */
-    private function updateOrCreateVariants(Request $request, Product $product)
+    private function updateOrCreateVariants(Request $request, Product $product): void
     {
         if ($request->has('variants')) {
             if ($request->isNotFilled('variants')) {
@@ -510,7 +508,7 @@ class ProductController
             $existingVariants = $product->variants()->pluck('id')->toArray();
             $inputVariants = collect($request->input('variants'));
 
-            $variantsToKeep = $inputVariants->filter(fn($variant) => isset($variant['id']))->pluck('id')->toArray();
+            $variantsToKeep = $inputVariants->filter(fn ($variant): bool => isset($variant['id']))->pluck('id')->toArray();
             $variantsToDelete = array_diff($existingVariants, $variantsToKeep);
 
             if (filled($variantsToDelete)) {
@@ -525,14 +523,14 @@ class ProductController
                         $existingVariant->update($input);
 
                         $values = collect($input['options'])
-                            ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
+                            ->map(fn ($option) => $product->values()->firstWhere('value', $option['value']));
 
                         $existingVariant->values()->sync($values->pluck('id'));
                     }
                 } else {
                     $variant = $product->variants()->create($input);
                     $values = collect($input['options'])
-                        ->map(fn($option) => $product->values()->firstWhere('value', $option['value']));
+                        ->map(fn ($option) => $product->values()->firstWhere('value', $option['value']));
 
                     $variant->values()->attach($values->pluck('id'));
                 }
@@ -543,7 +541,7 @@ class ProductController
     /**
      * Attach collections to product.
      */
-    private function attachCollections(Request $request, Product $product)
+    private function attachCollections(Request $request, Product $product): void
     {
         if ($request->filled('collections')) {
             $collections = $request->input('collections');
@@ -555,7 +553,7 @@ class ProductController
     /**
      * Sync collections with product.
      */
-    private function syncCollections(Request $request, Product $product)
+    private function syncCollections(Request $request, Product $product): void
     {
         if ($request->has('collections')) {
             $collections = $request->input('collections', []);
@@ -567,7 +565,7 @@ class ProductController
     /**
      * Delete product and its related data.
      */
-    private function deleteProduct(Product $product)
+    private function deleteProduct(Product $product): void
     {
         $product->variants()->delete();
         $product->values()->delete();

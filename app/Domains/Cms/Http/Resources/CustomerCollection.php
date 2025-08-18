@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CustomerCollection extends ResourceCollection
+final class CustomerCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,14 +17,14 @@ class CustomerCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn($customer) => new CustomerResource($customer))
+            'data' => $this->collection->map(fn ($customer): \App\Domains\Cms\Http\Resources\CustomerResource => new CustomerResource($customer)),
         ];
     }
 
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function toResponse($request)

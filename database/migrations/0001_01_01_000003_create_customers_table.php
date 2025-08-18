@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\Customer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table): void {
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
@@ -27,7 +29,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('customer_password_reset_tokens', function (Blueprint $table) {
+        Schema::create('customer_password_reset_tokens', function (Blueprint $table): void {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();

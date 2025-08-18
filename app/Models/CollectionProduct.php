@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class CollectionProduct extends Pivot
+final class CollectionProduct extends Pivot
 {
     /**
      * Get the collection that owns the product.

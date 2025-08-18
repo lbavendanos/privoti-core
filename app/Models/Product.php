@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\TimestampsScope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+final class Product extends Model
 {
-    use TimestampsScope, HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TimestampsScope;
 
-    const STATUS_LIST = ['draft', 'active', 'archived'];
-    const STATUS_DEFAULT = 'draft';
+    public const STATUS_LIST = ['draft', 'active', 'archived'];
+
+    public const STATUS_DEFAULT = 'draft';
 
     /**
      * The attributes that are mass assignable.
@@ -36,37 +39,6 @@ class Product extends Model
         'type_id',
         'vendor_id',
     ];
-
-    /**
-     * Get the product's thumbnail.
-     */
-    protected function thumbnail(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->media()->orderBy('rank')->value('url')
-        );
-    }
-
-    /**
-     * Get the product's stock.
-     */
-    protected function stock(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->variants()->sum('quantity')
-        );
-    }
-
-    /**
-     * Get the product's tags.
-     */
-    protected function tags(): Attribute
-    {
-        return Attribute::make(
-            get: fn(mixed $value) => filled($value) ? explode(',', $value) : null,
-            set: fn(mixed $value) => filled($value) ? implode(',', $value) : null
-        );
-    }
 
     /**
      * Get the category that owns the product.
@@ -130,5 +102,36 @@ class Product extends Model
     public function collections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class);
+    }
+
+    /**
+     * Get the product's thumbnail.
+     */
+    private function thumbnail(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->media()->orderBy('rank')->value('url')
+        );
+    }
+
+    /**
+     * Get the product's stock.
+     */
+    private function stock(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->variants()->sum('quantity')
+        );
+    }
+
+    /**
+     * Get the product's tags.
+     */
+    private function tags(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value) => filled($value) ? explode(',', (string) $value) : null,
+            set: fn (mixed $value): ?string => filled($value) ? implode(',', $value) : null
+        );
     }
 }

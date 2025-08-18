@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Console\Commands;
 
 use App\Domains\Cms\Http\Controllers\AuthController;
 use Illuminate\Console\Command;
 
-class CreateUser extends Command
+final class CreateUser extends Command
 {
     /**
      * The name and signature of the console command.
@@ -24,7 +26,7 @@ class CreateUser extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $name = $this->ask('What is your name?');
         $email = $this->ask('What is your email?');
@@ -40,7 +42,7 @@ class CreateUser extends Command
 
         $controller = app()->make(AuthController::class);
 
-        app()->call([$controller, 'register'], ['request' => $request]);
+        app()->call($controller->register(...), ['request' => $request]);
 
         $this->info('User created successfully!');
     }

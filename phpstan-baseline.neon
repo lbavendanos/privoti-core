@@ -1,0 +1,2335 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot call method forceFill\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method getKey\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method hasVerifiedEmail\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method markEmailAsVerified\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method save\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method sendEmailVerificationNotification\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\AuthController\:\:sendEmailChangeVerificationNotification\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\AuthController\:\:sendEmailVerificationNotification\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\AuthController\:\:updateUserPassword\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\AuthController\:\:verifyEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\AuthController\:\:verifyNewEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$key of function __ expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class App\\Domains\\Cms\\Notifications\\VerifyNewEmail constructor expects App\\Models\\User, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\PasswordReset constructor expects Illuminate\\Contracts\\Auth\\Authenticatable, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\PasswordReset constructor expects Illuminate\\Contracts\\Auth\\Authenticatable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of method Illuminate\\Contracts\\Auth\\StatefulGuard\:\:login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Facades\\Hash\:\:make\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/AuthController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/CollectionController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Collection\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CollectionController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Collection\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CollectionController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''q''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CollectionController.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\CustomerController\:\:bulkDestroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\CustomerController\:\:customerRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\CustomerController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Model\:\:update\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Customer\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$country of method Propaganistas\\LaravelPhone\\Rules\\Phone\:\:country\(\) expects array\<string\>\|string, array\<int, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$dates of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Customer\>\:\:createdBetween\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$dates of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Customer\>\:\:updatedBetween\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Customer\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Customer\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''name''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/CustomerController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductCategoryController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductCategory\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductCategory\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductCategory\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''q''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductCategoryController.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 4
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Binary operation "\+" between mixed and 1 results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\:\:sync\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\:\:update\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\:\:values\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:values\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 7
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''name'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''options'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''rank'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''value'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset ''values'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot call method attach\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot call method createMany\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:bulkDestroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:bulkUpdate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:mediaRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:optionRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:productRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:storeMediaFile\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:updateOrCreateValues\(\) has parameter \$inputOption with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:variantRules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_diff expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$array of static method Illuminate\\Support\\Arr\:\:except\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Model\:\:update\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Relations\\HasOneOrMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\>\:\:create\(\) expects array\<string, mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$dates of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:createdBetween\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$dates of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:updatedBetween\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$ids of method Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\:\:sync\(\) expects array\|Illuminate\\Database\\Eloquent\\Model\|Illuminate\\Support\\Collection\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$inputOption of method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:updateOrCreateValues\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$path of static method Illuminate\\Filesystem\\AwsS3V3Adapter\:\:url\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$value of function collect expects Illuminate\\Contracts\\Support\\Arrayable\<\(int\|string\), mixed\>\|iterable\<\(int\|string\), mixed\>\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 6
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#2 \$option of method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:updateOrCreateValues\(\) expects App\\Models\\ProductOption, Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#2 \$product of method App\\Domains\\Cms\\Http\\Controllers\\ProductController\:\:update\(\) expects App\\Models\\Product, App\\Models\\Product\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Product\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$arrays of function array_diff expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Product\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Part \$key \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''title''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Unable to resolve the template type TKey in call to function collect$#'
+			identifier: argument.templateType
+			count: 6
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Unable to resolve the template type TValue in call to function collect$#'
+			identifier: argument.templateType
+			count: 6
+			path: app/Domains/Cms/Http/Controllers/ProductController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/ProductTypeController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductType\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductTypeController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\ProductType\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductTypeController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''q''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/ProductTypeController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: app/Domains/Cms/Http/Controllers/VendorController.php
+
+		-
+			message: '#^Parameter \#1 \$perPage of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Vendor\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/VendorController.php
+
+		-
+			message: '#^Parameter \#4 \$page of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Vendor\>\:\:paginate\(\) expects int\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/VendorController.php
+
+		-
+			message: '#^Part \$request\-\>input\(''q''\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Http/Controllers/VendorController.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Requests\\Auth\\LoginRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Cms/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:lower\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/CollectionCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/CollectionCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$handle\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\CollectionResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CollectionResource.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/CustomerCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/CustomerCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$account\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$dob\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$email_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$first_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$last_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\CustomerResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/CustomerResource.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductCategoryCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductCategoryCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$handle\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$is_public\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$parent_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$rank\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\ProductCategoryResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCategoryResource.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$product_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$rank\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:\$url\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\ProductMediaResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductMediaResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionResource\:\:\$product_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionValueResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionValueResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionValueResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionValueResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionValueResource\:\:\$option_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionValueResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionValueResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionValueResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductOptionValueResource\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductOptionValueResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$category_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$handle\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$metadata\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$subtitle\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$tags\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$type_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:\$vendor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\ProductResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductResource.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductTypeCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/ProductTypeCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductTypeResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductTypeResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductTypeResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductTypeResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\ProductTypeResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductTypeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$barcode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$product_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$sku\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\ProductVariantResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/ProductVariantResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$dob\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$email_verified_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\UserResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/UserResource.php
+
+		-
+			message: '#^Cannot access offset ''links'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/VendorCollection.php
+
+		-
+			message: '#^Cannot access offset ''meta'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Http/Resources/VendorCollection.php
+
+		-
+			message: '#^Cannot access offset ''path'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorCollection.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\VendorResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\VendorResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\VendorResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Domains\\Cms\\Http\\Resources\\VendorResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Method App\\Domains\\Cms\\Http\\Resources\\VendorResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Cms/Http/Resources/VendorResource.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$routes\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Binary operation "\." between mixed and non\-falsy\-string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Cannot access offset ''mail'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$notifiable with type mixed is not subtype of native type object\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Parameter \#1 \$value of method Carbon\\CarbonImmutable\:\:addMinutes\(\) expects float\|int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Part \$email \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Part \$id \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Access to property \$default on an unknown class App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Access to property \$user_id on an unknown class App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 4
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Call to method delete\(\) on an unknown class App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Call to method update\(\) on an unknown class App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 2
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Cannot access property \$addresses on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Cannot access property \$id on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Cannot call method addresses\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Relations\\HasOneOrMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:destroy\(\) has invalid type App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:setDefault\(\) has invalid type App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:show\(\) has invalid type App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:update\(\) has invalid type App\\Models\\Address\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
+
+		-
+			message: '#^Cannot call method forceFill\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Cannot call method save\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$key of function __ expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\PasswordReset constructor expects Illuminate\\Contracts\\Auth\\Authenticatable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$user of method Illuminate\\Contracts\\Auth\\StatefulGuard\:\:login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Facades\\Hash\:\:make\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Store/Http/Controllers/Auth/AuthController.php
+
+		-
+			message: '#^Cannot call method getKey\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Cannot call method hasVerifiedEmail\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Cannot call method markEmailAsVerified\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Cannot call method sendEmailVerificationNotification\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Cannot call method update\(\) on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\UserController\:\:sendEmailChangeVerificationNotification\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\UserController\:\:sendEmailVerificationNotification\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\UserController\:\:updatePassword\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\UserController\:\:verifyEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Controllers\\Auth\\UserController\:\:verifyNewEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class App\\Domains\\Store\\Notifications\\VerifyNewEmail constructor expects App\\Models\\User, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\PasswordReset constructor expects Illuminate\\Contracts\\Auth\\Authenticatable, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\Customer\|App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Facades\\Hash\:\:make\(\) expects string, Illuminate\\Support\\Stringable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Controllers/Auth/UserController.php
+
+		-
+			message: '#^Instanceof between App\\Models\\Customer\|App\\Models\\User and Illuminate\\Contracts\\Auth\\MustVerifyEmail will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: app/Domains/Store/Http/Middleware/EnsureEmailIsVerified.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Requests\\Auth\\LoginRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Domains/Store/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:lower\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Http/Requests/Auth/LoginRequest.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Resources\\AddressResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\|Illuminate\\Contracts\\Support\\Arrayable\|JsonSerializable\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Store/Http/Resources/AddressResource.php
+
+		-
+			message: '#^Method App\\Domains\\Store\\Http\\Resources\\UserResource\:\:toArray\(\) should return array\<string, mixed\> but returns array\|Illuminate\\Contracts\\Support\\Arrayable\|JsonSerializable\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Domains/Store/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$routes\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Binary operation "\." between mixed and non\-falsy\-string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Cannot access offset ''mail'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$notifiable with type mixed is not subtype of native type object\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Parameter \#1 \$value of method Carbon\\CarbonImmutable\:\:addMinutes\(\) expects float\|int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Part \$email \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Part \$id \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Domains/Store/Notifications/VerifyNewEmail.php
+
+		-
+			message: '#^Class App\\Models\\Collection uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Collection.php
+
+		-
+			message: '#^Method App\\Models\\Collection\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Collection.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Collection\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Collection.php
+
+		-
+			message: '#^Method App\\Models\\CollectionProduct\:\:collection\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CollectionProduct.php
+
+		-
+			message: '#^Method App\\Models\\CollectionProduct\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CollectionProduct.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:addresses\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdAt\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdAt\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdAt\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdBetween\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdBetween\(\) has parameter \$dates with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:createdBetween\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:firstName\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:firstName\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:lastName\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:lastName\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:name\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:name\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:phone\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:phone\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedAt\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedAt\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedAt\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedBetween\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedBetween\(\) has parameter \$dates with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Method App\\Models\\Customer\:\:updatedBetween\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Customer\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Customer\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$country of method Propaganistas\\LaravelPhone\\PhoneNumber\:\:formatForMobileDialingInCountry\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$number of class Propaganistas\\LaravelPhone\\PhoneNumber constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$time of static method Carbon\\Carbon\:\:parse\(\) expects Carbon\\Month\|Carbon\\WeekDay\|DateTimeInterface\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$timeZone of method Carbon\\Carbon\:\:setTimezone\(\) expects DateTimeZone\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 20
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \#2 \$country of class Propaganistas\\LaravelPhone\\PhoneNumber constructor expects array\<string\>\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \$get of static method Illuminate\\Database\\Eloquent\\Casts\\Attribute\<mixed,mixed\>\:\:make\(\) expects \(callable\(mixed, array\<string, mixed\>\)\: \(array\{e164\: string, international\: string, national\: string, mobile_dialing\: string\}\|null\)\)\|null, Closure\(string\|null\)\: \(array\{e164\: string, international\: string, national\: string, mobile_dialing\: string\}\|null\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Parameter \$get of static method Illuminate\\Database\\Eloquent\\Casts\\Attribute\<mixed,mixed\>\:\:make\(\) expects \(callable\(mixed, array\<string, mixed\>\)\: string\)\|null, Closure\(string\)\: string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Models/Customer.php
+
+		-
+			message: '#^Class App\\Models\\CustomerAddress uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CustomerAddress.php
+
+		-
+			message: '#^Method App\\Models\\CustomerAddress\:\:customer\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CustomerAddress.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\CustomerAddress\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/CustomerAddress.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Class App\\Models\\Product uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:category\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:collections\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdAt\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdAt\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdAt\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdBetween\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdBetween\(\) has parameter \$dates with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:createdBetween\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:media\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:options\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:stock\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:stock\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:tags\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:tags\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:thumbnail\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:thumbnail\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:type\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedAt\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedAt\(\) has parameter \$date with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedAt\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedBetween\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedBetween\(\) has parameter \$dates with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:updatedBetween\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:values\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough does not specify its types\: TRelatedModel, TIntermediateModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:variants\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Method App\\Models\\Product\:\:vendor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Product\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Parameter \#1 \$time of static method Carbon\\Carbon\:\:parse\(\) expects Carbon\\Month\|Carbon\\WeekDay\|DateTimeInterface\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: app/Models/Product.php
+
+		-
+			message: '#^Parameter \#1 \$timeZone of method Carbon\\Carbon\:\:setTimezone\(\) expects DateTimeZone\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 20
+			path: app/Models/Product.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/Product.php
+
+		-
+			message: '#^Class App\\Models\\ProductCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Method App\\Models\\ProductCategory\:\:children\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Method App\\Models\\ProductCategory\:\:parent\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Method App\\Models\\ProductCategory\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductCategory\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductCategory.php
+
+		-
+			message: '#^Method App\\Models\\ProductMedia\:\:name\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Method App\\Models\\ProductMedia\:\:name\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Method App\\Models\\ProductMedia\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Method App\\Models\\ProductMedia\:\:type\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Method App\\Models\\ProductMedia\:\:type\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductMedia\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Parameter \#1 \$path of function pathinfo expects string, string\|false\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Models/ProductMedia.php
+
+		-
+			message: '#^Method App\\Models\\ProductOption\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductOption.php
+
+		-
+			message: '#^Method App\\Models\\ProductOption\:\:values\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductOption.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductOption\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductOption.php
+
+		-
+			message: '#^Method App\\Models\\ProductOptionValue\:\:option\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductOptionValue.php
+
+		-
+			message: '#^Method App\\Models\\ProductOptionValue\:\:variants\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductOptionValue.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductOptionValue\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductOptionValue.php
+
+		-
+			message: '#^Class App\\Models\\ProductType uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductType.php
+
+		-
+			message: '#^Method App\\Models\\ProductType\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductType.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductType\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductType.php
+
+		-
+			message: '#^Method App\\Models\\ProductVariant\:\:product\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductVariant.php
+
+		-
+			message: '#^Method App\\Models\\ProductVariant\:\:values\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductVariant.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\ProductVariant\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ProductVariant.php
+
+		-
+			message: '#^Method App\\Models\\ProductVariantOption\:\:value\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductVariantOption.php
+
+		-
+			message: '#^Method App\\Models\\ProductVariantOption\:\:variant\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ProductVariantOption.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:name\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:name\(\) return type with generic class Illuminate\\Database\\Eloquent\\Casts\\Attribute does not specify its types\: TGet, TSet$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Class App\\Models\\Vendor uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Vendor.php
+
+		-
+			message: '#^Method App\\Models\\Vendor\:\:products\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Vendor.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\Vendor\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Vendor.php
+
+		-
+			message: '#^Binary operation "\." between mixed and non\-falsy\-string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getEmailForPasswordReset\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getEmailForVerification\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$callback of static method Illuminate\\Auth\\Notifications\\ResetPassword\:\:createUrlUsing\(\) expects Closure\(mixed, string\)\: string, Closure\(object, string\)\: non\-falsy\-string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$string of function sha1 expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$value of method Carbon\\Carbon\:\:addMinutes\(\) expects float\|int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Part \$id \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Part \$notifiable\-\>getEmailForPasswordReset\(\) \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Providers/AppServiceProvider.php

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductVariant extends Model
+final class ProductVariant extends Model
 {
     use SoftDeletes;
 
@@ -26,18 +28,6 @@ class ProductVariant extends Model
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'price' => 'float',
-        ];
-    }
-
-    /**
      * Get the product that owns the variant.
      */
     public function product(): BelongsTo
@@ -51,5 +41,17 @@ class ProductVariant extends Model
     public function values(): BelongsToMany
     {
         return $this->belongsToMany(ProductOptionValue::class, 'product_variant_options', 'variant_id', 'value_id');
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'price' => 'float',
+        ];
     }
 }

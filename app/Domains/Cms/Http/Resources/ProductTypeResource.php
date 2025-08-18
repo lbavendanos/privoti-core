@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 
-class ProductTypeResource extends JsonResource
+final class ProductTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -23,7 +25,7 @@ class ProductTypeResource extends JsonResource
         ];
 
         if ($request->filled('fields')) {
-            $fields = explode(',', $request->input('fields'));
+            $fields = explode(',', (string) $request->input('fields'));
             $data = Arr::only($data, $fields);
         }
 

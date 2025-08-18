@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 use Carbon\Carbon;
@@ -16,7 +18,7 @@ trait TimestampsScope
     {
         $appTimezone = config('app.timezone');
         $coreTimezone = config('core.timezone');
-        $dates = array_map(fn($date) => Carbon::parse($date)->setTimezone($appTimezone), $dates);
+        $dates = array_map(fn ($date): \Carbon\Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
         $end = $dates[1]->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
@@ -49,7 +51,7 @@ trait TimestampsScope
     {
         $appTimezone = config('app.timezone');
         $coreTimezone = config('core.timezone');
-        $dates = array_map(fn($date) => Carbon::parse($date)->setTimezone($appTimezone), $dates);
+        $dates = array_map(fn ($date): \Carbon\Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
         $end = $dates[1]->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);

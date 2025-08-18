@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -71,7 +73,7 @@ return [
         'customers' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_CUSTOMER_MODEL', App\Models\Customer::class),
-        ]
+        ],
 
         // 'users' => [
         //     'driver' => 'database',

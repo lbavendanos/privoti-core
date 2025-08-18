@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Resources\ProductCategoryCollection;
@@ -9,12 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ProductCategoryController
+final class ProductCategoryController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \App\Domains\Cms\Http\Resources\ProductCategoryCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
@@ -31,22 +33,22 @@ class ProductCategoryController
         $query = ProductCategory::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', $request->input('fields')));
+            $query->select(explode(',', (string) $request->input('fields')));
         }
 
-        $query->when($request->filled('parent_id'), fn($q) => $q->where('parent_id', $request->input('parent_id')));
-        $query->when($request->boolean('roots'), fn($q) => $q->whereNull('parent_id'));
-        $query->when($request->filled('q'), fn($q) => $q->where('name', 'like', "%{$request->input('q')}%"));
+        $query->when($request->filled('parent_id'), fn ($q) => $q->where('parent_id', $request->input('parent_id')));
+        $query->when($request->boolean('roots'), fn ($q) => $q->whereNull('parent_id'));
+        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', "%{$request->input('q')}%"));
 
         if ($request->boolean('children')) {
             $query->with('children');
         }
 
-        $orders = explode(',', $request->input('order', 'id'));
+        $orders = explode(',', (string) $request->input('order', 'id'));
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = ltrim($order, '-');
+            $column = mb_ltrim($order, '-');
 
             $query->orderBy($column, $direction);
         }
@@ -64,7 +66,7 @@ class ProductCategoryController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \App\Domains\Cms\Http\Resources\ProductCategoryResource
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('product_categories')->withoutTrashed()],
@@ -88,7 +90,7 @@ class ProductCategoryController
     /**
      * Display the specified resource.
      */
-    public function show(ProductCategory $category)
+    public function show(ProductCategory $category): \App\Domains\Cms\Http\Resources\ProductCategoryResource
     {
         return new ProductCategoryResource($category);
     }
@@ -96,7 +98,7 @@ class ProductCategoryController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductCategory $category)
+    public function update(): void
     {
         //
     }

@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Resources\CollectionCollection;
 use App\Models\Collection;
 use Illuminate\Http\Request;
 
-class CollectionController
+final class CollectionController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \App\Domains\Cms\Http\Resources\CollectionCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
@@ -25,16 +27,16 @@ class CollectionController
         $query = Collection::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', $request->input('fields')));
+            $query->select(explode(',', (string) $request->input('fields')));
         }
 
-        $query->when($request->filled('q'), fn($q) => $q->where('title', 'like', "%{$request->input('q')}%"));
+        $query->when($request->filled('q'), fn ($q) => $q->where('title', 'like', "%{$request->input('q')}%"));
 
-        $orders = explode(',', $request->input('order', 'id'));
+        $orders = explode(',', (string) $request->input('order', 'id'));
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = ltrim($order, '-');
+            $column = mb_ltrim($order, '-');
 
             $query->orderBy($column, $direction);
         }
@@ -52,7 +54,7 @@ class CollectionController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(): void
     {
         //
     }
@@ -60,7 +62,7 @@ class CollectionController
     /**
      * Display the specified resource.
      */
-    public function show(Collection $collection)
+    public function show(): void
     {
         //
     }
@@ -68,7 +70,7 @@ class CollectionController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Collection $collection)
+    public function update(): void
     {
         //
     }
@@ -76,7 +78,7 @@ class CollectionController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Collection $collection)
+    public function destroy(): void
     {
         //
     }

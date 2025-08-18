@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Collection;
@@ -12,7 +14,7 @@ use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class DatabaseSeeder extends Seeder
+final class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -72,14 +74,14 @@ class DatabaseSeeder extends Seeder
 
         Product::factory()
             ->count(100)
-            ->sequence(fn ($sequence) => [
+            ->sequence(fn ($sequence): array => [
                 'type_id' => ProductType::all()->random(),
                 'vendor_id' => Vendor::all()->random(),
             ])
             ->create();
 
         for ($i = 0; $i < 100; $i++) {
-            if (rand(0, 1)) {
+            if (random_int(0, 1) !== 0) {
                 Customer::factory()->guest()->hasAddresses(4)->hasAddresses(1, ['default' => true])->create();
             } else {
                 Customer::factory()->registered()->hasAddresses(4)->hasAddresses(1, ['default' => true])->create();
@@ -93,7 +95,7 @@ class DatabaseSeeder extends Seeder
      * @param  array  $categories
      * @param  int|null  $parent_id
      */
-    public function createCategory($categories, $parent_id = null)
+    public function createCategory($categories, $parent_id = null): void
     {
         foreach ($categories as $category => $subcategories) {
             if (is_array($subcategories)) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\TimestampsScope;
@@ -12,12 +14,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
-class Customer extends Authenticatable implements MustVerifyEmail
+final class Customer extends Authenticatable implements MustVerifyEmail
 {
-    use TimestampsScope, HasFactory, Notifiable, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\CustomerFactory> */
+    use HasFactory, Notifiable, SoftDeletes, TimestampsScope;
 
-    const ACCOUNT_LIST = ['guest', 'registered'];
-    const ACCOUNT_DEFAULT = 'guest';
+    public const ACCOUNT_LIST = ['guest', 'registered'];
+
+    public const ACCOUNT_DEFAULT = 'guest';
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +49,14 @@ class Customer extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Get the customer's addresses.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -60,43 +72,45 @@ class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * Interact with the user's first name.
      */
-    protected function firstName(): Attribute
+    private function firstName(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => ucwords($value),
-            set: fn(string $value) => strtolower($value),
+            get: fn (string $value): string => ucwords($value),
+            set: fn (string $value) => mb_strtolower($value),
         );
     }
 
     /**
      * Interact with the user's last name.
      */
-    protected function lastName(): Attribute
+    private function lastName(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => ucwords($value),
-            set: fn(string $value) => strtolower($value),
+            get: fn (string $value): string => ucwords($value),
+            set: fn (string $value) => mb_strtolower($value),
         );
     }
 
     /**
      * Get the customer's name attribute with proper formatting.
      */
-    protected function name(): Attribute
+    private function name(): Attribute
     {
         return Attribute::make(
-            get: fn() => "{$this->first_name} {$this->last_name}",
+            get: fn (): string => "{$this->first_name} {$this->last_name}",
         );
     }
 
     /**
      * Get the customer's phone.
      */
-    protected function phone(): Attribute
+    private function phone(): Attribute
     {
         return Attribute::make(
-            get: function (?string $value) {
-                if (blank($value)) return null;
+            get: function (?string $value): ?array {
+                if (blank($value)) {
+                    return null;
+                }
 
                 $countryCode = config('core.country_code');
                 $phoneNumber = new PhoneNumber($value, $countryCode);
@@ -108,17 +122,9 @@ class Customer extends Authenticatable implements MustVerifyEmail
                     'mobile_dialing' => $phoneNumber->formatForMobileDialingInCountry($countryCode),
                 ];
             },
-            set: fn(mixed $value) => filled($value) ?
+            set: fn (mixed $value): ?string => filled($value) ?
                 (new PhoneNumber($value, config('core.country_code')))->formatE164()
                 : null
         );
-    }
-
-    /**
-     * Get the customer's addresses.
-     */
-    public function addresses(): HasMany
-    {
-        return $this->hasMany(CustomerAddress::class);
     }
 }

@@ -1,27 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Store\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 
-class VerifyNewEmail extends Notification
+final class VerifyNewEmail extends Notification
 {
     use Queueable;
-
-    public $user;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(User $user)
+    public function __construct(public User $user)
     {
-        $this->user = $user;
     }
 
     /**
@@ -47,10 +45,9 @@ class VerifyNewEmail extends Notification
     /**
      * Get the verify new email notification mail message for the given URL.
      *
-     * @param  string  $url
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
-    protected function buildMailMessage($url)
+    private function buildMailMessage(string $url)
     {
         return (new MailMessage)
             ->subject(Lang::get('Verify New Email Address'))
@@ -63,14 +60,13 @@ class VerifyNewEmail extends Notification
      * Get the verification URL for the given notifiable.
      *
      * @param  mixed  $notifiable
-     * @return string
      */
-    protected function verificationUrl($notifiable)
+    private function verificationUrl(object $notifiable): string
     {
         $type = 'verify-new-email';
         $id = $this->user->getKey();
         $email = $notifiable->routes['mail'];
-        $hash = sha1($notifiable->routes['mail']);
+        $hash = sha1((string) $notifiable->routes['mail']);
 
         $temporarySignedRoute = URL::temporarySignedRoute(
             'auth.customer.email.new.verify',
@@ -80,6 +76,6 @@ class VerifyNewEmail extends Notification
 
         $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-        return config('core.store_url') . "/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
+        return config('core.store_url')."/auth/confirm?type={$type}&id={$id}&email={$email}&token={$hash}&{$query}";
     }
 }

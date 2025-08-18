@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Domains\Cms\Http\Controllers\AuthController;
 use App\Domains\Cms\Http\Controllers\CollectionController;
 use App\Domains\Cms\Http\Controllers\CustomerController;
@@ -9,10 +11,10 @@ use App\Domains\Cms\Http\Controllers\ProductTypeController;
 use App\Domains\Cms\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('c')->group(function () {
+Route::prefix('c')->group(function (): void {
 
-    Route::middleware(['auth:cms'])->group(function () {
-        Route::prefix('auth')->group(function () {
+    Route::middleware(['auth:cms'])->group(function (): void {
+        Route::prefix('auth')->group(function (): void {
             Route::get('user', [AuthController::class, 'getUser']);
             Route::post('user/email/notification', [AuthController::class, 'sendEmailVerificationNotification'])
                 ->middleware(['throttle:6,1']);
@@ -20,7 +22,7 @@ Route::prefix('c')->group(function () {
                 ->middleware(['signed', 'throttle:6,1'])
                 ->name('auth.user.email.verify');
 
-            Route::middleware(['verified'])->group(function () {
+            Route::middleware(['verified'])->group(function (): void {
                 Route::put('user', [AuthController::class, 'updateUser']);
                 Route::put('user/password', [AuthController::class, 'updateUserPassword']);
                 Route::post('user/email/new/notification', [AuthController::class, 'sendEmailChangeVerificationNotification'])
@@ -31,7 +33,7 @@ Route::prefix('c')->group(function () {
             });
         });
 
-        Route::middleware(['verified'])->group(function () {
+        Route::middleware(['verified'])->group(function (): void {
             Route::apiResource('collections', CollectionController::class);
             Route::apiResource('products/categories', ProductCategoryController::class);
             Route::apiResource('products/types', ProductTypeController::class);

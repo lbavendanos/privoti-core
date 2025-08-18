@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Resources\CustomerCollection;
@@ -9,12 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Propaganistas\LaravelPhone\Rules\Phone;
 
-class CustomerController
+final class CustomerController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \App\Domains\Cms\Http\Resources\CustomerCollection
     {
         $request->validate([
             'name' => ['nullable', 'string'],
@@ -35,10 +37,10 @@ class CustomerController
 
         $query->with(['addresses']);
 
-        $query->when($request->filled('name'), fn($q) => $q->whereAny(['first_name', 'last_name'], 'like', "%{$request->input('name')}%"));
-        $query->when($request->filled('account'), fn($q) => $q->whereIn('account', $request->input('account')));
+        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', "%{$request->input('name')}%"));
+        $query->when($request->filled('account'), fn ($q) => $q->whereIn('account', $request->input('account')));
 
-        $query->when($request->filled('created_at'), function ($q) use ($request) {
+        $query->when($request->filled('created_at'), function ($q) use ($request): void {
             $dates = $request->input('created_at');
 
             if (count($dates) === 2) {
@@ -48,7 +50,7 @@ class CustomerController
             }
         });
 
-        $query->when($request->filled('updated_at'), function ($q) use ($request) {
+        $query->when($request->filled('updated_at'), function ($q) use ($request): void {
             $dates = $request->input('updated_at');
 
             if (count($dates) === 2) {
@@ -58,11 +60,11 @@ class CustomerController
             }
         });
 
-        $orders = explode(',', $request->input('order', 'id'));
+        $orders = explode(',', (string) $request->input('order', 'id'));
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = ltrim($order, '-');
+            $column = mb_ltrim($order, '-');
 
             if ($column === 'name') {
                 $query->orderByRaw("CONCAT(first_name, ' ', last_name) $direction");
@@ -80,7 +82,7 @@ class CustomerController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \App\Domains\Cms\Http\Resources\CustomerResource
     {
         $rules = array_merge(
             $this->customerRules(),
@@ -100,7 +102,7 @@ class CustomerController
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer): \App\Domains\Cms\Http\Resources\CustomerResource
     {
         return new CustomerResource($customer->load('addresses'));
     }
@@ -108,7 +110,7 @@ class CustomerController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Customer $customer): \App\Domains\Cms\Http\Resources\CustomerResource
     {
         $rules = array_merge(
             $this->customerRules($customer),
@@ -142,7 +144,7 @@ class CustomerController
         ]);
 
         Customer::whereIn('id', $request->input('ids'))
-            ->chunkById(100, function ($customers) {
+            ->chunkById(100, function ($customers): void {
                 foreach ($customers as $customer) {
                     $this->deleteCustomer($customer);
                 }
@@ -154,12 +156,12 @@ class CustomerController
     /**
      * Customer rules.
      */
-    private function customerRules(?Customer $customer = null)
+    private function customerRules(?Customer $customer = null): array
     {
         return [
-            'first_name' => $customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'last_name' => $customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'email' => $customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
+            'first_name' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
+            'last_name' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
+            'email' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
             'phone' => ['nullable', 'string', (new Phone)->country([config('core.country_code')]), 'max:255'],
             'dob' => ['nullable', 'date'],
         ];
@@ -168,7 +170,7 @@ class CustomerController
     /**
      * Delete customer and its related data.
      */
-    private function deleteCustomer(Customer $customer)
+    private function deleteCustomer(Customer $customer): void
     {
         $customer->addresses();
         $customer->delete();

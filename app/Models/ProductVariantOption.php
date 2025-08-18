@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ProductVariantOption extends Pivot
+final class ProductVariantOption extends Pivot
 {
     /**
      * Get the variant that owns the option.

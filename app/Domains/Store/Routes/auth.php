@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Domains\Store\Http\Controllers\Auth\AddressController;
 use App\Domains\Store\Http\Controllers\Auth\AuthController;
 use App\Domains\Store\Http\Controllers\Auth\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->group(function (): void {
 
     Route::get('/csrf-cookie', [CsrfCookieController::class, 'show']);
 
-    Route::middleware(['guest:store'])->group(function () {
+    Route::middleware(['guest:store'])->group(function (): void {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
-    Route::middleware(['auth:store'])->group(function () {
+    Route::middleware(['auth:store'])->group(function (): void {
         Route::post('/logout', [AuthController::class, 'destroy']);
 
         Route::get('/user', [UserController::class, 'index']);
@@ -27,7 +29,7 @@ Route::prefix('auth')->group(function () {
             ->middleware(['signed', 'throttle:6,1'])
             ->name('auth.customer.email.verify');
 
-        Route::middleware(['verified'])->group(function () {
+        Route::middleware(['verified'])->group(function (): void {
             Route::put('/user', [UserController::class, 'update']);
             Route::post('/user/password', [UserController::class, 'updatePassword']);
             Route::post('/user/email/new/notification', [UserController::class, 'sendEmailChangeVerificationNotification'])

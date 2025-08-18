@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domains\Store\Http\Controllers\Auth;
 
 use App\Domains\Store\Http\Controllers\Controller;
@@ -14,12 +16,12 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): \App\Domains\Store\Http\Resources\UserResource
     {
         return new UserResource($request->user());
     }
@@ -27,7 +29,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request): \App\Domains\Store\Http\Resources\UserResource
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -50,7 +52,7 @@ class UserController extends Controller
             'current_password' => ['required', 'current_password', 'string'],
             'password' => ['required',  'string', Rules\Password::defaults()],
         ], [
-            'current_password.current_password' => 'The provided password does not match your current password.'
+            'current_password.current_password' => 'The provided password does not match your current password.',
         ]);
 
         $request->user()->update([
