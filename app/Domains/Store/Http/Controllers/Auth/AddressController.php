@@ -65,7 +65,7 @@ final class AddressController extends Controller
      */
     public function show(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->user_id !== $request->user()->id) {
+        if ($address->customer_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -77,7 +77,7 @@ final class AddressController extends Controller
      */
     public function update(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->user_id !== $request->user()->id) {
+        if ($address->customer_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -111,7 +111,7 @@ final class AddressController extends Controller
      */
     public function destroy(Request $request, CustomerAddress $address)
     {
-        if ($address->user_id !== $request->user()->id) {
+        if ($address->customer_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -129,7 +129,7 @@ final class AddressController extends Controller
      */
     public function setDefault(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->user_id !== $request->user()->id) {
+        if ($address->customer_id !== $request->user()->id) {
             abort(403);
         }
 

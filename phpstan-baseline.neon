@@ -1369,30 +1369,6 @@ parameters:
 			path: app/Domains/Cms/Notifications/VerifyNewEmail.php
 
 		-
-			message: '#^Access to property \$default on an unknown class App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Access to property \$user_id on an unknown class App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Call to method delete\(\) on an unknown class App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Call to method update\(\) on an unknown class App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
 			message: '#^Cannot access property \$addresses on App\\Models\\Customer\|App\\Models\\User\|null\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -1423,32 +1399,14 @@ parameters:
 			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
 
 		-
-			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Relations\\HasOneOrMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Model\:\:update\(\) expects array\<string, mixed\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
 
 		-
-			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:destroy\(\) has invalid type App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:setDefault\(\) has invalid type App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:show\(\) has invalid type App\\Models\\Address\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
-
-		-
-			message: '#^Parameter \$address of method App\\Domains\\Store\\Http\\Controllers\\Auth\\AddressController\:\:update\(\) has invalid type App\\Models\\Address\.$#'
-			identifier: class.notFound
+			message: '#^Parameter \#1 \$attributes of method Illuminate\\Database\\Eloquent\\Relations\\HasOneOrMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\>\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Domains/Store/Http/Controllers/Auth/AddressController.php
 
