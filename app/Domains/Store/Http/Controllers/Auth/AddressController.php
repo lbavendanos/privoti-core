@@ -6,12 +6,12 @@ namespace App\Domains\Store\Http\Controllers\Auth;
 
 use App\Domains\Store\Http\Controllers\Controller;
 use App\Domains\Store\Http\Resources\AddressResource;
-use App\Models\Address;
+use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 
 final class AddressController extends Controller
 {
-    public const ADDRESS_LIMIT = 5;
+    public const int ADDRESS_LIMIT = 5;
 
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ final class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \App\Domains\Store\Http\Resources\AddressResource
+    public function store(Request $request): AddressResource
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -63,7 +63,7 @@ final class AddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
+    public function show(Request $request, CustomerAddress $address): AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);
@@ -75,7 +75,7 @@ final class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
+    public function update(Request $request, CustomerAddress $address): AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);
@@ -109,7 +109,7 @@ final class AddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Address $address)
+    public function destroy(Request $request, CustomerAddress $address)
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);
@@ -127,7 +127,7 @@ final class AddressController extends Controller
     /**
      * Set the specified address as default.
      */
-    public function setDefault(Request $request, Address $address): \App\Domains\Store\Http\Resources\AddressResource
+    public function setDefault(Request $request, CustomerAddress $address): AddressResource
     {
         if ($address->user_id !== $request->user()->id) {
             abort(403);

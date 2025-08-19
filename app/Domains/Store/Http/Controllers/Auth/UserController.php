@@ -21,7 +21,7 @@ final class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Store\Http\Resources\UserResource
+    public function index(Request $request): UserResource
     {
         return new UserResource($request->user());
     }
@@ -29,7 +29,7 @@ final class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request): \App\Domains\Store\Http\Resources\UserResource
+    public function update(Request $request): UserResource
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],

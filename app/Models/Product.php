@@ -18,9 +18,9 @@ final class Product extends Model
 {
     use HasFactory, SoftDeletes, TimestampsScope;
 
-    public const STATUS_LIST = ['draft', 'active', 'archived'];
+    public const array STATUS_LIST = ['draft', 'active', 'archived'];
 
-    public const STATUS_DEFAULT = 'draft';
+    public const string STATUS_DEFAULT = 'draft';
 
     /**
      * The attributes that are mass assignable.

@@ -21,7 +21,7 @@ final class ProductController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\ProductCollection
+    public function index(Request $request): ProductCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
@@ -102,7 +102,7 @@ final class ProductController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \App\Domains\Cms\Http\Resources\ProductResource
+    public function store(Request $request): ProductResource
     {
         $rules = array_merge(
             $this->productRules(),
@@ -142,7 +142,7 @@ final class ProductController
     /**
      * Display the specified resource.
      */
-    public function show(Product $product): \App\Domains\Cms\Http\Resources\ProductResource
+    public function show(Product $product): ProductResource
     {
         return new ProductResource($product->load(
             'category',
@@ -158,7 +158,7 @@ final class ProductController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product): \App\Domains\Cms\Http\Resources\ProductResource
+    public function update(Request $request, Product $product): ProductResource
     {
         $rules = array_merge(
             $this->productRules($product),
@@ -252,7 +252,7 @@ final class ProductController
     private function productRules(?Product $product = null): array
     {
         return [
-            'title' => $product instanceof \App\Models\Product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
+            'title' => $product instanceof Product ? ['sometimes', 'required', 'string', 'max:255', Rule::unique('products')->ignore($product->id)->withoutTrashed()] : ['required', 'string', 'max:255', Rule::unique('products')->withoutTrashed()],
             'subtitle' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['nullable', Rule::in(Product::STATUS_LIST)],
@@ -271,7 +271,7 @@ final class ProductController
     {
         return [
             'media' => ['nullable', 'array'],
-            'media.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'media.*.id' => $product instanceof Product ? ['nullable', Rule::exists('product_media', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'media.*.file' => ['required_without:media.*.id', File::image()->max('1mb')],
             'media.*.rank' => ['required_with:media', 'integer'],
         ];
@@ -284,7 +284,7 @@ final class ProductController
     {
         return [
             'options' => ['nullable', 'array'],
-            'options.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'options.*.id' => $product instanceof Product ? ['nullable', Rule::exists('product_options', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'options.*.name' => ['required_with:options', 'string', 'max:255'],
             'options.*.values' => ['nullable', 'array'],
             'options.*.values.*' => ['required_with:options.*.values', 'string', 'max:255'],
@@ -298,7 +298,7 @@ final class ProductController
     {
         return [
             'variants' => ['nullable', 'array'],
-            'variants.*.id' => $product instanceof \App\Models\Product ? ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
+            'variants.*.id' => $product instanceof Product ? ['nullable', Rule::exists('product_variants', 'id')->where('product_id', $product->id)->withoutTrashed()] : [],
             'variants.*.name' => ['required_with:variants', 'string', 'max:255'],
             'variants.*.price' => ['required_with:variants', 'numeric'],
             'variants.*.quantity' => ['required_with:variants', 'integer'],

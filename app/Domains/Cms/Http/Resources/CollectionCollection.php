@@ -17,7 +17,7 @@ final class CollectionCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn ($collection): \App\Domains\Cms\Http\Resources\CollectionResource => new CollectionResource($collection)),
+            'data' => $this->collection->map(fn ($collection): CollectionResource => new CollectionResource($collection)),
         ];
     }
 

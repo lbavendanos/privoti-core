@@ -13,7 +13,7 @@ final class VendorController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\VendorCollection
+    public function index(Request $request): VendorCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],

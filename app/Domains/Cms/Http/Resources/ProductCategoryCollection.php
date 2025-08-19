@@ -17,7 +17,7 @@ final class ProductCategoryCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn ($category): \App\Domains\Cms\Http\Resources\ProductCategoryResource => new ProductCategoryResource($category)),
+            'data' => $this->collection->map(fn ($category): ProductCategoryResource => new ProductCategoryResource($category)),
         ];
     }
 

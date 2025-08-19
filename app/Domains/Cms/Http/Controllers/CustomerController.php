@@ -16,7 +16,7 @@ final class CustomerController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\CustomerCollection
+    public function index(Request $request): CustomerCollection
     {
         $request->validate([
             'name' => ['nullable', 'string'],
@@ -82,7 +82,7 @@ final class CustomerController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \App\Domains\Cms\Http\Resources\CustomerResource
+    public function store(Request $request): CustomerResource
     {
         $rules = array_merge(
             $this->customerRules(),
@@ -102,7 +102,7 @@ final class CustomerController
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer): \App\Domains\Cms\Http\Resources\CustomerResource
+    public function show(Customer $customer): CustomerResource
     {
         return new CustomerResource($customer->load('addresses'));
     }
@@ -110,7 +110,7 @@ final class CustomerController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer): \App\Domains\Cms\Http\Resources\CustomerResource
+    public function update(Request $request, Customer $customer): CustomerResource
     {
         $rules = array_merge(
             $this->customerRules($customer),
@@ -159,9 +159,9 @@ final class CustomerController
     private function customerRules(?Customer $customer = null): array
     {
         return [
-            'first_name' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'last_name' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'email' => $customer instanceof \App\Models\Customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
+            'first_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
+            'last_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
+            'email' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
             'phone' => ['nullable', 'string', (new Phone)->country([config('core.country_code')]), 'max:255'],
             'dob' => ['nullable', 'date'],
         ];

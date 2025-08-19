@@ -30,7 +30,7 @@ final class AuthController extends Controller
     /**
      * Display the authenticated user.
      */
-    public function getUser(Request $request): \App\Domains\Cms\Http\Resources\UserResource
+    public function getUser(Request $request): UserResource
     {
         return new UserResource($request->user());
     }
@@ -38,7 +38,7 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user.
      */
-    public function updateUser(Request $request): \App\Domains\Cms\Http\Resources\UserResource
+    public function updateUser(Request $request): UserResource
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],

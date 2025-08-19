@@ -17,7 +17,7 @@ final class CustomerCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn ($customer): \App\Domains\Cms\Http\Resources\CustomerResource => new CustomerResource($customer)),
+            'data' => $this->collection->map(fn ($customer): CustomerResource => new CustomerResource($customer)),
         ];
     }
 

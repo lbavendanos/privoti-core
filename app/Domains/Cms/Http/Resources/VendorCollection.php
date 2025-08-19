@@ -17,7 +17,7 @@ final class VendorCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection->map(fn ($vendor): \App\Domains\Cms\Http\Resources\VendorResource => new VendorResource($vendor)),
+            'data' => $this->collection->map(fn ($vendor): VendorResource => new VendorResource($vendor)),
         ];
     }
 

@@ -16,7 +16,7 @@ final class ProductCategoryController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\ProductCategoryCollection
+    public function index(Request $request): ProductCategoryCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],
@@ -66,7 +66,7 @@ final class ProductCategoryController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \App\Domains\Cms\Http\Resources\ProductCategoryResource
+    public function store(Request $request): ProductCategoryResource
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('product_categories')->withoutTrashed()],
@@ -90,7 +90,7 @@ final class ProductCategoryController
     /**
      * Display the specified resource.
      */
-    public function show(ProductCategory $category): \App\Domains\Cms\Http\Resources\ProductCategoryResource
+    public function show(ProductCategory $category): ProductCategoryResource
     {
         return new ProductCategoryResource($category);
     }

@@ -13,7 +13,7 @@ final class CollectionController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\CollectionCollection
+    public function index(Request $request): CollectionCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],

@@ -13,7 +13,7 @@ final class ProductTypeController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \App\Domains\Cms\Http\Resources\ProductTypeCollection
+    public function index(Request $request): ProductTypeCollection
     {
         $request->validate([
             'all' => ['nullable', 'boolean'],

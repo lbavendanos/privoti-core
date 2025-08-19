@@ -19,9 +19,9 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory, Notifiable, SoftDeletes, TimestampsScope;
 
-    public const ACCOUNT_LIST = ['guest', 'registered'];
+    public const array ACCOUNT_LIST = ['guest', 'registered'];
 
-    public const ACCOUNT_DEFAULT = 'guest';
+    public const string ACCOUNT_DEFAULT = 'guest';
 
     /**
      * The attributes that are mass assignable.
@@ -123,7 +123,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
                 ];
             },
             set: fn (mixed $value): ?string => filled($value) ?
-                (new PhoneNumber($value, config('core.country_code')))->formatE164()
+                new PhoneNumber($value, config('core.country_code'))->formatE164()
                 : null
         );
     }
