@@ -33,9 +33,11 @@ return RectorConfig::configure()
         SetList::STRICT_BOOLEANS,
         LaravelSetList::LARAVEL_CODE_QUALITY,
         LaravelSetList::LARAVEL_ELOQUENT_MAGIC_METHOD_TO_QUERY_BUILDER,
+        LaravelSetList::LARAVEL_FACTORIES,
         LaravelLevelSetList::UP_TO_LARAVEL_120,
     ])
     ->withRules([
         AddGenericReturnTypeToRelationsRector::class,
     ])
+    ->withImportNames()
     ->withPhpSets();

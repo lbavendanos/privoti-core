@@ -68,7 +68,7 @@ final class CustomerController
             $column = mb_ltrim($order, '-');
 
             if ($column === 'name') {
-                $query->orderByRaw('CONCAT(first_name, \' \', last_name) '.$direction);
+                $query->orderByRaw("CONCAT(first_name, ' ', last_name) ".$direction);
             } else {
                 $query->orderBy($column, $direction);
             }

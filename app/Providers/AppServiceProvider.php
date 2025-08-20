@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Carbon;
@@ -26,14 +28,14 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(function (object $notifiable, string $token): string {
-            $baseUrl = $this->isUser($notifiable) ? config('core.cms_url') : config('core.store_url');
+        ResetPassword::createUrlUsing(function (User|Customer $notifiable, string $token): string {
+            $baseUrl = $this->isUser($notifiable) ? Config::string('core.cms_url') : Config::string('core.store_url');
 
             return $baseUrl.sprintf('/password/reset/%s?email=%s', $token, $notifiable->getEmailForPasswordReset());
         });
 
-        VerifyEmail::createUrlUsing(function (object $notifiable): string {
-            $baseUrl = $this->isUser($notifiable) ? config('core.cms_url') : config('core.store_url');
+        VerifyEmail::createUrlUsing(function (User|Customer $notifiable): string {
+            $baseUrl = $this->isUser($notifiable) ? Config::string('core.cms_url') : Config::string('core.store_url');
             $modelName = $this->isUser($notifiable) ? 'user' : 'customer';
 
             $id = $notifiable->getKey();
@@ -41,7 +43,7 @@ final class AppServiceProvider extends ServiceProvider
 
             $temporarySignedRoute = URL::temporarySignedRoute(
                 sprintf('auth.%s.email.verify', $modelName),
-                Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                Carbon::now()->addMinutes(Config::integer('auth.verification.expire', 60)),
                 ['id' => $id, 'hash' => $hash]
             );
 
@@ -51,8 +53,8 @@ final class AppServiceProvider extends ServiceProvider
         });
     }
 
-    private function isUser(object $notifiable): bool
+    private function isUser(User|Customer $notifiable): bool
     {
-        return $notifiable::class === \App\Models\User::class;
+        return $notifiable::class === User::class;
     }
 }

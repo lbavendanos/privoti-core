@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\TimestampsScope;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Product extends Model
 {
+    /** @use HasFactory<ProductFactory> */
     use HasFactory;
+
     use SoftDeletes;
     use TimestampsScope;
 
@@ -27,7 +31,7 @@ final class Product extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'title',
@@ -115,7 +119,7 @@ final class Product extends Model
     /**
      * The collections that belong to the product.
      *
-     * @return BelongsToMany<Collection, $this, \Illuminate\Database\Eloquent\Relations\Pivot>
+     * @return BelongsToMany<Collection, $this, Pivot>
      */
     public function collections(): BelongsToMany
     {

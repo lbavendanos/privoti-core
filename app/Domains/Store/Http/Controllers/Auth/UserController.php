@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 
 final class UserController extends Controller
 {
@@ -50,7 +50,7 @@ final class UserController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password', 'string'],
-            'password' => ['required',  'string', Rules\Password::defaults()],
+            'password' => ['required',  'string', Password::defaults()],
         ], [
             'current_password.current_password' => 'The provided password does not match your current password.',
         ]);

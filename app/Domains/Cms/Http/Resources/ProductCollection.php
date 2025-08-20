@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Resources;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -25,7 +26,7 @@ final class ProductCollection extends ResourceCollection
      * Create an HTTP response that represents the object.
      *
      * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function toResponse($request)
     {

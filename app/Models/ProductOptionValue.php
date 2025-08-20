@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class ProductOptionValue extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'value',
@@ -36,7 +39,7 @@ final class ProductOptionValue extends Model
     /**
      * The variants that belong to the option value.
      *
-     * @return BelongsToMany<ProductVariant, $this, \Illuminate\Database\Eloquent\Relations\Pivot>
+     * @return BelongsToMany<ProductVariant, $this, Pivot>
      */
     public function variants(): BelongsToMany
     {

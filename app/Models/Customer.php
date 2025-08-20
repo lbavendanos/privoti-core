@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\TimestampsScope;
+use Database\Factories\CustomerFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,9 @@ use Propaganistas\LaravelPhone\PhoneNumber;
 
 final class Customer extends Authenticatable implements MustVerifyEmail
 {
+    /** @use HasFactory<CustomerFactory> */
     use HasFactory;
+
     use Notifiable;
     use SoftDeletes;
     use TimestampsScope;
@@ -28,7 +31,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'first_name',
@@ -43,7 +46,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
