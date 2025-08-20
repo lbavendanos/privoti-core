@@ -16,8 +16,10 @@ use Propaganistas\LaravelPhone\PhoneNumber;
 
 final class Customer extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory, Notifiable, SoftDeletes, TimestampsScope;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
+    use TimestampsScope;
 
     public const array ACCOUNT_LIST = ['guest', 'registered'];
 
@@ -50,6 +52,8 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the customer's addresses.
+     *
+     * @return HasMany<CustomerAddress, $this>
      */
     public function addresses(): HasMany
     {
@@ -72,7 +76,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * Interact with the user's first name.
      */
-    private function firstName(): Attribute
+    protected function firstName(): Attribute
     {
         return Attribute::make(
             get: fn (string $value): string => ucwords($value),
@@ -83,7 +87,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * Interact with the user's last name.
      */
-    private function lastName(): Attribute
+    protected function lastName(): Attribute
     {
         return Attribute::make(
             get: fn (string $value): string => ucwords($value),
@@ -94,17 +98,17 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     /**
      * Get the customer's name attribute with proper formatting.
      */
-    private function name(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => "{$this->first_name} {$this->last_name}",
+            get: fn (): string => sprintf('%s %s', $this->first_name, $this->last_name),
         );
     }
 
     /**
      * Get the customer's phone.
      */
-    private function phone(): Attribute
+    protected function phone(): Attribute
     {
         return Attribute::make(
             get: function (?string $value): ?array {

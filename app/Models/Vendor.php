@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Vendor extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +25,8 @@ final class Vendor extends Model
 
     /**
      * Get the products for the vendor.
+     *
+     * @return HasMany<Product, $this>
      */
     public function products(): HasMany
     {

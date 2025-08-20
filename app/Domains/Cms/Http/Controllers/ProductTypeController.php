@@ -30,7 +30,7 @@ final class ProductTypeController
             $query->select(explode(',', (string) $request->input('fields')));
         }
 
-        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', "%{$request->input('q')}%"));
+        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->input('q'))));
 
         $orders = explode(',', (string) $request->input('order', 'id'));
 

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Collection extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +28,8 @@ final class Collection extends Model
 
     /**
      * The products that belong to the collection.
+     *
+     * @return BelongsToMany<Product, $this, \Illuminate\Database\Eloquent\Relations\Pivot>
      */
     public function products(): BelongsToMany
     {

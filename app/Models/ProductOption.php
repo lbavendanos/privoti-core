@@ -25,6 +25,8 @@ final class ProductOption extends Model
 
     /**
      * Get the product that owns the option.
+     *
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -33,6 +35,8 @@ final class ProductOption extends Model
 
     /**
      * Get the values for the option.
+     *
+     * @return HasMany<ProductOptionValue, $this>
      */
     public function values(): HasMany
     {

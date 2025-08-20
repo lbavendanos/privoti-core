@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class ProductCategory extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,8 @@ final class ProductCategory extends Model
 
     /**
      * Get the parent category that owns the category.
+     *
+     * @return BelongsTo<ProductCategory, $this>
      */
     public function parent(): BelongsTo
     {
@@ -40,6 +43,8 @@ final class ProductCategory extends Model
 
     /**
      * Get the children categories for the category.
+     *
+     * @return HasMany<ProductCategory, $this>
      */
     public function children(): HasMany
     {
@@ -48,6 +53,8 @@ final class ProductCategory extends Model
 
     /**
      * Get the products for the category.
+     *
+     * @return HasMany<Product, $this>
      */
     public function products(): HasMany
     {

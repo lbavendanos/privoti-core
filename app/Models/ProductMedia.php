@@ -26,6 +26,8 @@ final class ProductMedia extends Model
 
     /**
      * Get the product that owns the media.
+     *
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -35,7 +37,7 @@ final class ProductMedia extends Model
     /**
      * Get the name attribute.
      */
-    private function name(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
             get: fn (): string => pathinfo(parse_url($this->url, PHP_URL_PATH), PATHINFO_FILENAME)
@@ -45,7 +47,7 @@ final class ProductMedia extends Model
     /**
      * Get the type attribute.
      */
-    private function type(): Attribute
+    protected function type(): Attribute
     {
         return Attribute::make(
             get: function (): string {
@@ -57,6 +59,7 @@ final class ProductMedia extends Model
                 if (in_array(mb_strtolower($extension), $imageExtensions)) {
                     return 'image';
                 }
+
                 if (in_array(mb_strtolower($extension), $videoExtensions)) {
                     return 'video';
                 }

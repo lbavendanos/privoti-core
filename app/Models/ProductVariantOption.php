@@ -11,6 +11,8 @@ final class ProductVariantOption extends Pivot
 {
     /**
      * Get the variant that owns the option.
+     *
+     * @return BelongsTo<ProductVariant, $this>
      */
     public function variant(): BelongsTo
     {
@@ -19,6 +21,8 @@ final class ProductVariantOption extends Pivot
 
     /**
      * Get the value that owns the option.
+     *
+     * @return BelongsTo<ProductOptionValue, $this>
      */
     public function value(): BelongsTo
     {

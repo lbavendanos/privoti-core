@@ -54,7 +54,7 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user's password.
      */
-    public function updateUserPassword(Request $request)
+    public function updateUserPassword(Request $request): Response
     {
         $request->validate([
             'current_password' => ['required', 'current_password', 'string'],
@@ -85,7 +85,7 @@ final class AuthController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user = User::query()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
@@ -195,7 +195,7 @@ final class AuthController extends Controller
     /**
      * Send a new email verification notification.
      */
-    public function sendEmailVerificationNotification(Request $request)
+    public function sendEmailVerificationNotification(Request $request): Response
     {
         if ($request->user()->hasVerifiedEmail()) {
             return response()->noContent();
@@ -209,7 +209,7 @@ final class AuthController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function verifyEmail(EmailVerificationRequest $request)
+    public function verifyEmail(EmailVerificationRequest $request): Response
     {
         if ($request->user()->hasVerifiedEmail()) {
             return response()->noContent();
@@ -225,7 +225,7 @@ final class AuthController extends Controller
     /**
      * Send email change verification notification.
      */
-    public function sendEmailChangeVerificationNotification(Request $request)
+    public function sendEmailChangeVerificationNotification(Request $request): Response
     {
         $request->validate([
             'email' => ['required', 'string', 'email', Rule::unique('users')],
@@ -240,7 +240,7 @@ final class AuthController extends Controller
     /**
      * Verify the new email address
      */
-    public function verifyNewEmail(Request $request)
+    public function verifyNewEmail(Request $request): Response
     {
         if (! hash_equals((string) $request->user()->getKey(), (string) $request->route('id'))) {
             abort(403);

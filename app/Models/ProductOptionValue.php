@@ -25,6 +25,8 @@ final class ProductOptionValue extends Model
 
     /**
      * Get the option that owns the value.
+     *
+     * @return BelongsTo<ProductOption, $this>
      */
     public function option(): BelongsTo
     {
@@ -33,6 +35,8 @@ final class ProductOptionValue extends Model
 
     /**
      * The variants that belong to the option value.
+     *
+     * @return BelongsToMany<ProductVariant, $this, \Illuminate\Database\Eloquent\Relations\Pivot>
      */
     public function variants(): BelongsToMany
     {

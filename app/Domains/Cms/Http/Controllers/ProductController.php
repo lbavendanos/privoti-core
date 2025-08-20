@@ -9,6 +9,8 @@ use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductOption;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -56,7 +58,7 @@ final class ProductController
             'variants.values',
         ]);
 
-        $query->when($request->filled('title'), fn ($q) => $q->whereLike('title', "%{$request->input('title')}%"));
+        $query->when($request->filled('title'), fn ($q) => $q->whereLike('title', sprintf('%%%s%%', $request->input('title'))));
         $query->when($request->filled('status'), fn ($q) => $q->whereIn('status', $request->input('status')));
         $query->when($request->filled('type'), fn ($q) => $q->whereHas('type', fn ($q) => $q->whereIn('name', $request->input('type'))));
         $query->when($request->filled('vendor'), fn ($q) => $q->whereHas('vendor', fn ($q) => $q->whereIn('name', $request->input('vendor'))));
@@ -121,7 +123,7 @@ final class ProductController
             $request->merge(['status' => Product::STATUS_DEFAULT]);
         }
 
-        $product = Product::create($request->all());
+        $product = Product::query()->create($request->all());
 
         $this->createMedia($request, $product);
         $this->createOptions($request, $product);
@@ -195,7 +197,7 @@ final class ProductController
     /**
      * Bulk update multiple products, each with its own data.
      */
-    public function bulkUpdate(Request $request)
+    public function bulkUpdate(Request $request): AnonymousResourceCollection
     {
         $request->validate([
             'items' => ['required', 'array'],
@@ -206,7 +208,7 @@ final class ProductController
         $updatedProducts = [];
 
         foreach ($request->input('items') as $item) {
-            $product = Product::findOrFail($item['id']);
+            $product = Product::query()->findOrFail($item['id']);
             $data = Arr::except($item, ['id']);
             $updateRequest = new Request($data);
 
@@ -219,7 +221,7 @@ final class ProductController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): Response
     {
         $this->deleteProduct($product);
 
@@ -229,14 +231,14 @@ final class ProductController
     /**
      * Remove multiple resources from storage.
      */
-    public function bulkDestroy(Request $request)
+    public function bulkDestroy(Request $request): Response
     {
         $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['required', Rule::exists('products', 'id')->withoutTrashed()],
         ]);
 
-        Product::whereIn('id', $request->input('ids'))
+        Product::query()->whereIn('id', $request->input('ids'))
             ->chunkById(100, function ($products): void {
                 foreach ($products as $product) {
                     $this->deleteProduct($product);
@@ -248,6 +250,8 @@ final class ProductController
 
     /**
      * Product rules.
+     *
+     * @return array<string,mixed>
      */
     private function productRules(?Product $product = null): array
     {
@@ -266,6 +270,8 @@ final class ProductController
 
     /**
      * Media rules.
+     *
+     * @return array<string,mixed>
      */
     private function mediaRules(?Product $product = null): array
     {
@@ -279,6 +285,8 @@ final class ProductController
 
     /**
      * Option rules.
+     *
+     * @return array<string,mixed>
      */
     private function optionRules(?Product $product = null): array
     {
@@ -293,6 +301,8 @@ final class ProductController
 
     /**
      * Variant rules.
+     *
+     * @return array<string,mixed>
      */
     private function variantRules(?Product $product = null): array
     {
@@ -316,7 +326,7 @@ final class ProductController
             $inputMedia = $request->input('media');
 
             foreach ($inputMedia as $key => $input) {
-                $file = $request->file("media.{$key}.file");
+                $file = $request->file(sprintf('media.%s.file', $key));
                 $url = $this->storeMediaFile($file, $product->handle.'-'.($key + 1));
 
                 $product->media()->create([
@@ -357,7 +367,7 @@ final class ProductController
                         $existingMedia->update(['rank' => $input['rank']]);
                     }
                 } else {
-                    $file = $request->file("media.{$key}.file");
+                    $file = $request->file(sprintf('media.%s.file', $key));
                     $url = $this->storeMediaFile($file, $product->handle.'-'.($key + 1));
 
                     $product->media()->create([
@@ -372,7 +382,7 @@ final class ProductController
     /**
      * Store media file.
      */
-    private function storeMediaFile(UploadedFile $file, string $name)
+    private function storeMediaFile(UploadedFile $file, string $name): string
     {
         $extension = $file->extension();
         $filename = $name.'-'.Str::uuid().'.'.$extension;
@@ -449,6 +459,8 @@ final class ProductController
 
     /**
      * Update or create option values.
+     *
+     * @param  array<string,mixed>  $inputOption
      */
     private function updateOrCreateValues(array $inputOption, ProductOption $option): void
     {

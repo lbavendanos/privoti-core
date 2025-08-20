@@ -13,8 +13,9 @@ use Illuminate\Notifications\Notifiable;
 
 final class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -55,11 +56,11 @@ final class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the user's name attribute with proper formatting.
      */
-    private function name(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value): string => ucwords((string) $value),
-            set: fn (mixed $value) => mb_strtolower((string) $value)
+            get: fn (string $value): string => ucwords($value),
+            set: fn (string $value) => mb_strtolower($value)
         );
     }
 }

@@ -29,7 +29,7 @@ final class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (object $notifiable, string $token): string {
             $baseUrl = $this->isUser($notifiable) ? config('core.cms_url') : config('core.store_url');
 
-            return $baseUrl."/password/reset/$token?email={$notifiable->getEmailForPasswordReset()}";
+            return $baseUrl.sprintf('/password/reset/%s?email=%s', $token, $notifiable->getEmailForPasswordReset());
         });
 
         VerifyEmail::createUrlUsing(function (object $notifiable): string {
@@ -40,14 +40,14 @@ final class AppServiceProvider extends ServiceProvider
             $hash = sha1($notifiable->getEmailForVerification());
 
             $temporarySignedRoute = URL::temporarySignedRoute(
-                "auth.{$modelName}.email.verify",
+                sprintf('auth.%s.email.verify', $modelName),
                 Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                 ['id' => $id, 'hash' => $hash]
             );
 
             $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-            return $baseUrl."/confirm-email?id={$id}&hash={$hash}&{$query}";
+            return $baseUrl.sprintf('/confirm-email?id=%s&hash=%s&%s', $id, $hash, $query);
         });
     }
 

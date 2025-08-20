@@ -19,9 +19,9 @@ final class CollectionFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->word(),
-            'handle' => $this->faker->slug(),
-            'description' => $this->faker->sentence(),
+            'title' => fake()->word(),
+            'handle' => fake()->slug(),
+            'description' => fake()->sentence(),
         ];
     }
 }

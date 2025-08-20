@@ -7,17 +7,21 @@ namespace App\Traits;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait TimestampsScope
 {
     /**
      * Scope a query to only include products created between the given dates.
+     *
+     * @param  Builder<Model>  $query
+     * @param  array<int,mixed>  $dates
      */
     #[Scope]
-    protected function createdBetween(Builder $query, array $dates)
+    protected function createdBetween(Builder $query, array $dates): void
     {
-        $appTimezone = config('app.timezone');
-        $coreTimezone = config('core.timezone');
+        $appTimezone = (string) config('app.timezone');
+        $coreTimezone = (string) config('core.timezone');
         $dates = array_map(fn ($date): Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
@@ -28,12 +32,15 @@ trait TimestampsScope
 
     /**
      * Scope a query to only include products created on a specific date.
+     *
+     * @param  Builder<Model>  $query
+     * @param  mixed  $date
      */
     #[Scope]
-    protected function createdAt(Builder $query, $date)
+    protected function createdAt(Builder $query, $date): void
     {
-        $appTimezone = config('app.timezone');
-        $coreTimezone = config('core.timezone');
+        $appTimezone = (string) config('app.timezone');
+        $coreTimezone = (string) config('core.timezone');
 
         $date = Carbon::parse($date)->setTimezone($appTimezone);
 
@@ -45,12 +52,15 @@ trait TimestampsScope
 
     /**
      * Scope a query to only include products updated between the given dates.
+     *
+     * @param  Builder<Model>  $query
+     * @param  array<int,mixed>  $dates
      */
     #[Scope]
-    protected function updatedBetween(Builder $query, array $dates)
+    protected function updatedBetween(Builder $query, array $dates): void
     {
-        $appTimezone = config('app.timezone');
-        $coreTimezone = config('core.timezone');
+        $appTimezone = (string) config('app.timezone');
+        $coreTimezone = (string) config('core.timezone');
         $dates = array_map(fn ($date): Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
 
         $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
@@ -61,12 +71,15 @@ trait TimestampsScope
 
     /**
      * Scope a query to only include products updated on a specific date.
+     *
+     * @param  Builder<Model>  $query
+     * @param  mixed  $date
      */
     #[Scope]
-    protected function updatedAt(Builder $query, $date)
+    protected function updatedAt(Builder $query, $date): void
     {
-        $appTimezone = config('app.timezone');
-        $coreTimezone = config('core.timezone');
+        $appTimezone = (string) config('app.timezone');
+        $coreTimezone = (string) config('core.timezone');
 
         $date = Carbon::parse($date)->setTimezone($appTimezone);
 

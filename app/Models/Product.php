@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Product extends Model
 {
-    use HasFactory, SoftDeletes, TimestampsScope;
+    use HasFactory;
+    use SoftDeletes;
+    use TimestampsScope;
 
     public const array STATUS_LIST = ['draft', 'active', 'archived'];
 
@@ -42,6 +44,8 @@ final class Product extends Model
 
     /**
      * Get the category that owns the product.
+     *
+     * @return BelongsTo<ProductCategory, $this>
      */
     public function category(): BelongsTo
     {
@@ -50,6 +54,8 @@ final class Product extends Model
 
     /**
      * Get the type that owns the product.
+     *
+     * @return BelongsTo<ProductType, $this>
      */
     public function type(): BelongsTo
     {
@@ -58,6 +64,8 @@ final class Product extends Model
 
     /**
      * Get the vendor that owns the product.
+     *
+     * @return BelongsTo<Vendor, $this>
      */
     public function vendor(): BelongsTo
     {
@@ -66,6 +74,8 @@ final class Product extends Model
 
     /**
      * Get the media for the product.
+     *
+     * @return HasMany<ProductMedia, $this>
      */
     public function media(): HasMany
     {
@@ -74,6 +84,8 @@ final class Product extends Model
 
     /**
      * Get the options for the product.
+     *
+     * @return HasMany<ProductOption, $this>
      */
     public function options(): HasMany
     {
@@ -82,6 +94,8 @@ final class Product extends Model
 
     /**
      * Get the values for the product.
+     *
+     * @return HasManyThrough<ProductOptionValue, ProductOption, $this>
      */
     public function values(): HasManyThrough
     {
@@ -90,6 +104,8 @@ final class Product extends Model
 
     /**
      * Get the variants for the product.
+     *
+     * @return HasMany<ProductVariant, $this>
      */
     public function variants(): HasMany
     {
@@ -98,6 +114,8 @@ final class Product extends Model
 
     /**
      * The collections that belong to the product.
+     *
+     * @return BelongsToMany<Collection, $this, \Illuminate\Database\Eloquent\Relations\Pivot>
      */
     public function collections(): BelongsToMany
     {
@@ -107,7 +125,7 @@ final class Product extends Model
     /**
      * Get the product's thumbnail.
      */
-    private function thumbnail(): Attribute
+    protected function thumbnail(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->media()->orderBy('rank')->value('url')
@@ -117,7 +135,7 @@ final class Product extends Model
     /**
      * Get the product's stock.
      */
-    private function stock(): Attribute
+    protected function stock(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->variants()->sum('quantity')
@@ -127,7 +145,7 @@ final class Product extends Model
     /**
      * Get the product's tags.
      */
-    private function tags(): Attribute
+    protected function tags(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value) => filled($value) ? explode(',', (string) $value) : null,

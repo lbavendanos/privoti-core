@@ -8,6 +8,7 @@ use App\Domains\Cms\Http\Resources\CustomerCollection;
 use App\Domains\Cms\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Propaganistas\LaravelPhone\Rules\Phone;
 
@@ -37,7 +38,7 @@ final class CustomerController
 
         $query->with(['addresses']);
 
-        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', "%{$request->input('name')}%"));
+        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', sprintf('%%%s%%', $request->input('name'))));
         $query->when($request->filled('account'), fn ($q) => $q->whereIn('account', $request->input('account')));
 
         $query->when($request->filled('created_at'), function ($q) use ($request): void {
@@ -67,7 +68,7 @@ final class CustomerController
             $column = mb_ltrim($order, '-');
 
             if ($column === 'name') {
-                $query->orderByRaw("CONCAT(first_name, ' ', last_name) $direction");
+                $query->orderByRaw('CONCAT(first_name, \' \', last_name) '.$direction);
             } else {
                 $query->orderBy($column, $direction);
             }
@@ -94,7 +95,7 @@ final class CustomerController
             $request->merge(['account' => Customer::ACCOUNT_DEFAULT]);
         }
 
-        $customer = Customer::create($request->all());
+        $customer = Customer::query()->create($request->all());
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -126,7 +127,7 @@ final class CustomerController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): Response
     {
         $this->deleteCustomer($customer);
 
@@ -136,14 +137,14 @@ final class CustomerController
     /**
      * Remove multiple resources from storage.
      */
-    public function bulkDestroy(Request $request)
+    public function bulkDestroy(Request $request): Response
     {
         $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['required', Rule::exists('customers', 'id')->withoutTrashed()],
         ]);
 
-        Customer::whereIn('id', $request->input('ids'))
+        Customer::query()->whereIn('id', $request->input('ids'))
             ->chunkById(100, function ($customers): void {
                 foreach ($customers as $customer) {
                     $this->deleteCustomer($customer);
@@ -155,6 +156,8 @@ final class CustomerController
 
     /**
      * Customer rules.
+     *
+     * @return array<string,mixed>
      */
     private function customerRules(?Customer $customer = null): array
     {

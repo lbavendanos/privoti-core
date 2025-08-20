@@ -73,6 +73,6 @@ final class VerifyNewEmail extends Notification
 
         $query = parse_url($temporarySignedRoute, PHP_URL_QUERY);
 
-        return config('core.cms_url')."/confirm-email?id={$id}&email={$email}&hash={$hash}&{$query}";
+        return config('core.cms_url').sprintf('/confirm-email?id=%s&email=%s&hash=%s&%s', $id, $email, $hash, $query);
     }
 }

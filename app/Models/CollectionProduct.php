@@ -11,6 +11,8 @@ final class CollectionProduct extends Pivot
 {
     /**
      * Get the collection that owns the product.
+     *
+     * @return BelongsTo<Collection, $this>
      */
     public function collection(): BelongsTo
     {
@@ -19,6 +21,8 @@ final class CollectionProduct extends Pivot
 
     /**
      * Get the product that owns the collection.
+     *
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
