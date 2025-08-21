@@ -9,6 +9,7 @@ use App\Domains\Cms\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use Propaganistas\LaravelPhone\Rules\Phone;
 
@@ -38,11 +39,12 @@ final class CustomerController
 
         $query->with(['addresses']);
 
-        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', sprintf('%%%s%%', $request->input('name'))));
-        $query->when($request->filled('account'), fn ($q) => $q->whereIn('account', $request->input('account')));
+        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', sprintf('%%%s%%', $request->string('name')->toString())));
+        $query->when($request->filled('account'), fn ($q) => $q->whereIn('account', $request->array('account')));
 
         $query->when($request->filled('created_at'), function ($q) use ($request): void {
-            $dates = $request->input('created_at');
+            /** @var array<int,string> $dates */
+            $dates = $request->array('created_at');
 
             if (count($dates) === 2) {
                 $q->createdBetween($dates);
@@ -52,7 +54,8 @@ final class CustomerController
         });
 
         $query->when($request->filled('updated_at'), function ($q) use ($request): void {
-            $dates = $request->input('updated_at');
+            /** @var array<int,string> $dates */
+            $dates = $request->array('updated_at');
 
             if (count($dates) === 2) {
                 $q->updatedBetween($dates);
@@ -61,7 +64,7 @@ final class CustomerController
             }
         });
 
-        $orders = explode(',', (string) $request->input('order', 'id'));
+        $orders = explode(',', $request->string('order', 'id')->toString());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -74,8 +77,8 @@ final class CustomerController
             }
         }
 
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $page = $request->integer('page', 1);
 
         return new CustomerCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
@@ -95,7 +98,9 @@ final class CustomerController
             $request->merge(['account' => Customer::ACCOUNT_DEFAULT]);
         }
 
-        $customer = Customer::query()->create($request->all());
+        /** @var array<string,mixed> $inputs */
+        $inputs = $request->all();
+        $customer = Customer::query()->create($inputs);
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -119,7 +124,9 @@ final class CustomerController
 
         $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
 
-        $customer->update($request->all());
+        /** @var array<string,mixed> $inputs */
+        $inputs = $request->all();
+        $customer->update($inputs);
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -165,7 +172,7 @@ final class CustomerController
             'first_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
             'last_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
             'email' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
-            'phone' => ['nullable', 'string', (new Phone)->country([config('core.country_code')]), 'max:255'],
+            'phone' => ['nullable', 'string', (new Phone)->country([Config::string('core.country_code')]), 'max:255'],
             'dob' => ['nullable', 'date'],
         ];
     }
