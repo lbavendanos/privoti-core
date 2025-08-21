@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Config;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
 final class Customer extends Authenticatable implements MustVerifyEmail
@@ -78,6 +79,8 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     /**
      * Interact with the user's first name.
+     *
+     * @return Attribute<string, string>
      */
     protected function firstName(): Attribute
     {
@@ -89,6 +92,8 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     /**
      * Interact with the user's last name.
+     *
+     * @return Attribute<string, string>
      */
     protected function lastName(): Attribute
     {
@@ -100,6 +105,8 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the customer's name attribute with proper formatting.
+     *
+     * @return Attribute<string, never>
      */
     protected function name(): Attribute
     {
@@ -110,16 +117,18 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the customer's phone.
+     *
+     * @return Attribute<array<string, string>|null, string|null>
      */
     protected function phone(): Attribute
     {
         return Attribute::make(
             get: function (?string $value): ?array {
-                if (blank($value)) {
+                if (is_null($value)) {
                     return null;
                 }
 
-                $countryCode = config('core.country_code');
+                $countryCode = Config::string('core.country_code');
                 $phoneNumber = new PhoneNumber($value, $countryCode);
 
                 return [
@@ -129,9 +138,15 @@ final class Customer extends Authenticatable implements MustVerifyEmail
                     'mobile_dialing' => $phoneNumber->formatForMobileDialingInCountry($countryCode),
                 ];
             },
-            set: fn (mixed $value): ?string => filled($value) ?
-                new PhoneNumber($value, config('core.country_code'))->formatE164()
-                : null
+            set: function (?string $value): ?string {
+                if (is_null($value)) {
+                    return null;
+                }
+
+                $countryCode = Config::string('core.country_code');
+
+                return new PhoneNumber($value, Config::string('core.country_code'))->formatE164();
+            }
         );
     }
 }
