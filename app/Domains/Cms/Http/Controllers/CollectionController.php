@@ -27,12 +27,12 @@ final class CollectionController
         $query = Collection::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', (string) $request->input('fields')));
+            $query->select(explode(',', $request->string('fields')->toString()));
         }
 
-        $query->when($request->filled('q'), fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->input('q'))));
+        $query->when($request->filled('q'), fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->string('q')->toString())));
 
-        $orders = explode(',', (string) $request->input('order', 'id'));
+        $orders = explode(',', $request->string('order', 'id')->toString());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -45,8 +45,8 @@ final class CollectionController
             return new CollectionCollection($query->get());
         }
 
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $page = $request->integer('page', 1);
 
         return new CollectionCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
