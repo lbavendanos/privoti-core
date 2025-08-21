@@ -13,10 +13,12 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
+use RuntimeException;
 
 final class ProductController
 {
@@ -58,12 +60,13 @@ final class ProductController
             'variants.values',
         ]);
 
-        $query->when($request->filled('title'), fn ($q) => $q->whereLike('title', sprintf('%%%s%%', $request->input('title'))));
-        $query->when($request->filled('status'), fn ($q) => $q->whereIn('status', $request->input('status')));
-        $query->when($request->filled('type'), fn ($q) => $q->whereHas('type', fn ($q) => $q->whereIn('name', $request->input('type'))));
-        $query->when($request->filled('vendor'), fn ($q) => $q->whereHas('vendor', fn ($q) => $q->whereIn('name', $request->input('vendor'))));
+        $query->when($request->filled('title'), fn ($q) => $q->whereLike('title', sprintf('%%%s%%', $request->string('title')->value())));
+        $query->when($request->filled('status'), fn ($q) => $q->whereIn('status', $request->array('status')));
+        $query->when($request->filled('type'), fn ($q) => $q->whereHas('type', fn ($q) => $q->whereIn('name', $request->array('type'))));
+        $query->when($request->filled('vendor'), fn ($q) => $q->whereHas('vendor', fn ($q) => $q->whereIn('name', $request->array('vendor'))));
         $query->when($request->filled('created_at'), function ($q) use ($request): void {
-            $dates = $request->input('created_at');
+            /** @var array<int,string> $dates */
+            $dates = $request->array('created_at');
 
             if (count($dates) === 2) {
                 $q->createdBetween($dates);
@@ -73,7 +76,8 @@ final class ProductController
         });
 
         $query->when($request->filled('updated_at'), function ($q) use ($request): void {
-            $dates = $request->input('updated_at');
+            /** @var array<int,string> $dates */
+            $dates = $request->array('updated_at');
 
             if (count($dates) === 2) {
                 $q->updatedBetween($dates);
@@ -82,7 +86,7 @@ final class ProductController
             }
         });
 
-        $orders = explode(',', (string) $request->input('order', 'id'));
+        $orders = explode(',', $request->string('order', 'id')->value());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -95,8 +99,8 @@ final class ProductController
             return new ProductCollection($query->get());
         }
 
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $page = $request->integer('page', 1);
 
         return new ProductCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
@@ -115,7 +119,7 @@ final class ProductController
 
         $request->validate($rules);
 
-        $handle = Str::slug($request->input('title'));
+        $handle = Str::slug($request->string('title')->value());
 
         $request->merge(['handle' => $handle]);
 
@@ -123,7 +127,9 @@ final class ProductController
             $request->merge(['status' => Product::STATUS_DEFAULT]);
         }
 
-        $product = Product::query()->create($request->all());
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $product = Product::query()->create($attributes);
 
         $this->createMedia($request, $product);
         $this->createOptions($request, $product);
@@ -172,11 +178,13 @@ final class ProductController
         $request->validate($rules);
 
         if ($request->has('title') && ($request->filled('title') && $request->input('title') !== $product->title)) {
-            $handle = Str::slug($request->input('title'));
+            $handle = Str::slug($request->string('title')->value());
             $request->merge(['handle' => $handle]);
         }
 
-        $product->update($request->all());
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $product->update($attributes);
 
         $this->updateOrCreateMedia($request, $product);
         $this->updateOrCreateOptions($request, $product);
@@ -207,7 +215,9 @@ final class ProductController
 
         $updatedProducts = [];
 
-        foreach ($request->input('items') as $item) {
+        /** @var array<string,mixed> $item */
+        foreach ($request->array('items') as $item) {
+            /** @var Product $product */
             $product = Product::query()->findOrFail($item['id']);
             $data = Arr::except($item, ['id']);
             $updateRequest = new Request($data);
@@ -323,7 +333,8 @@ final class ProductController
     private function createMedia(Request $request, Product $product): void
     {
         if ($request->filled('media')) {
-            $inputMedia = $request->input('media');
+            /** @var array<int,array{'file':UploadedFile, 'rank': int}> $inputMedia */
+            $inputMedia = $request->array('media');
 
             foreach ($inputMedia as $key => $input) {
                 $file = $request->file(sprintf('media.%s.file', $key));
@@ -350,7 +361,8 @@ final class ProductController
             }
 
             $existingMedia = $product->media()->pluck('id')->toArray();
-            $inputMedia = collect($request->input('media'));
+            /** @var Collection<int, array{'id'?: int, 'file': UploadedFile, 'rank': int}> $inputMedia */
+            $inputMedia = collect($request->array('media'));
 
             $mediaToKeep = $inputMedia->filter(fn ($media): bool => isset($media['id']))->pluck('id')->toArray();
             $mediaToDelete = array_diff($existingMedia, $mediaToKeep);
@@ -388,6 +400,10 @@ final class ProductController
         $filename = $name.'-'.Str::uuid().'.'.$extension;
         $path = $file->storePubliclyAs('products', $filename);
 
+        if ($path === false) {
+            throw new RuntimeException('Failed to store media file.');
+        }
+
         return Storage::url($path);
     }
 
@@ -397,13 +413,14 @@ final class ProductController
     private function createOptions(Request $request, Product $product): void
     {
         if ($request->filled('options')) {
-            $inputOptions = $request->input('options');
+            /** @var array<int,array{'name': string, 'values'?: list<string>}> $inputOptions */
+            $inputOptions = $request->array('options');
 
             foreach ($inputOptions as $input) {
                 $option = $product->options()->create(['name' => $input['name']]);
 
                 if (isset($input['values'])) {
-                    $values = array_map(fn ($value): array => ['value' => $value], $input['values']);
+                    $values = array_map(fn (string $value): array => ['value' => $value], $input['values']);
 
                     $option->values()->createMany($values);
                 }
@@ -425,7 +442,8 @@ final class ProductController
             }
 
             $existingOptions = $product->options()->pluck('id')->toArray();
-            $inputOptions = collect($request->input('options'));
+            /** @var Collection<int, array{'id'?: int, 'name': string, 'values'?: list<string>}> $inputOptions */
+            $inputOptions = collect($request->array('options'));
 
             $optionsToKeep = $inputOptions->filter(fn ($option): bool => isset($option['id']))->pluck('id')->toArray();
             $optionsToDelete = array_diff($existingOptions, $optionsToKeep);
@@ -448,7 +466,7 @@ final class ProductController
                     $option = $product->options()->create(['name' => $input['name']]);
 
                     if (isset($input['values'])) {
-                        $values = array_map(fn ($value): array => ['value' => $value], $input['values']);
+                        $values = array_map(fn (string $value): array => ['value' => $value], $input['values']);
 
                         $option->values()->createMany($values);
                     }
@@ -473,6 +491,7 @@ final class ProductController
 
             $existingValues = $option->values()->pluck('value')->toArray();
 
+            /** @var list<string> $valuesToKeep */
             $valuesToKeep = $inputOption['values'];
             $valuesToDelete = array_diff($existingValues, $valuesToKeep);
 
@@ -481,7 +500,7 @@ final class ProductController
             }
 
             $valuesToCreate = array_diff($valuesToKeep, $existingValues);
-            $values = array_map(fn ($value): array => ['value' => $value], $valuesToCreate);
+            $values = array_map(fn (string $value): array => ['value' => $value], $valuesToCreate);
 
             $option->values()->createMany($values);
         }
@@ -493,6 +512,7 @@ final class ProductController
     private function createVariants(Request $request, Product $product): void
     {
         if ($request->filled('variants')) {
+            /** @var array<int,array{'name': string, 'price': float, 'quantity': int, 'options': list<array{'value': string}>}> $inputVariants */
             $inputVariants = $request->input('variants');
 
             foreach ($inputVariants as $input) {
@@ -518,7 +538,8 @@ final class ProductController
             }
 
             $existingVariants = $product->variants()->pluck('id')->toArray();
-            $inputVariants = collect($request->input('variants'));
+            /** @var Collection<int, array{'id'?: int, 'name': string, 'price': float, 'quantity': int, 'options': list<array{'value': string}>}> $inputVariants */
+            $inputVariants = collect($request->array('variants'));
 
             $variantsToKeep = $inputVariants->filter(fn ($variant): bool => isset($variant['id']))->pluck('id')->toArray();
             $variantsToDelete = array_diff($existingVariants, $variantsToKeep);
@@ -556,7 +577,7 @@ final class ProductController
     private function attachCollections(Request $request, Product $product): void
     {
         if ($request->filled('collections')) {
-            $collections = $request->input('collections');
+            $collections = $request->array('collections');
 
             $product->collections()->attach($collections);
         }
@@ -568,7 +589,7 @@ final class ProductController
     private function syncCollections(Request $request, Product $product): void
     {
         if ($request->has('collections')) {
-            $collections = $request->input('collections', []);
+            $collections = $request->array('collections');
 
             $product->collections()->sync($collections);
         }

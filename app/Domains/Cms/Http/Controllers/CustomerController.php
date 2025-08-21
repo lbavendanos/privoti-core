@@ -39,7 +39,7 @@ final class CustomerController
 
         $query->with(['addresses']);
 
-        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', sprintf('%%%s%%', $request->string('name')->toString())));
+        $query->when($request->filled('name'), fn ($q) => $q->whereAny(['first_name', 'last_name'], 'like', sprintf('%%%s%%', $request->string('name')->value())));
         $query->when($request->filled('account'), fn ($q) => $q->whereIn('account', $request->array('account')));
 
         $query->when($request->filled('created_at'), function ($q) use ($request): void {
@@ -64,7 +64,7 @@ final class CustomerController
             }
         });
 
-        $orders = explode(',', $request->string('order', 'id')->toString());
+        $orders = explode(',', $request->string('order', 'id')->value());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -98,9 +98,9 @@ final class CustomerController
             $request->merge(['account' => Customer::ACCOUNT_DEFAULT]);
         }
 
-        /** @var array<string,mixed> $inputs */
-        $inputs = $request->all();
-        $customer = Customer::query()->create($inputs);
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $customer = Customer::query()->create($attributes);
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -124,9 +124,9 @@ final class CustomerController
 
         $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
 
-        /** @var array<string,mixed> $inputs */
-        $inputs = $request->all();
-        $customer->update($inputs);
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $customer->update($attributes);
 
         return new CustomerResource($customer->load('addresses'));
     }

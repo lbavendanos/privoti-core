@@ -8,6 +8,7 @@ use App\Domains\Cms\Http\Resources\ProductCategoryCollection;
 use App\Domains\Cms\Http\Resources\ProductCategoryResource;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -33,18 +34,18 @@ final class ProductCategoryController
         $query = ProductCategory::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', (string) $request->input('fields')));
+            $query->select(explode(',', $request->string('fields')->value()));
         }
 
         $query->when($request->filled('parent_id'), fn ($q) => $q->where('parent_id', $request->input('parent_id')));
         $query->when($request->boolean('roots'), fn ($q) => $q->whereNull('parent_id'));
-        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->input('q'))));
+        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->string('q')->value())));
 
         if ($request->boolean('children')) {
             $query->with('children');
         }
 
-        $orders = explode(',', (string) $request->input('order', 'id'));
+        $orders = explode(',', $request->string('order', 'id')->value());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -57,8 +58,8 @@ final class ProductCategoryController
             return new ProductCategoryCollection($query->get());
         }
 
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $page = $request->integer('page', 1);
 
         return new ProductCategoryCollection($query->paginate($perPage, ['*'], 'page', $page));
     }
@@ -78,11 +79,13 @@ final class ProductCategoryController
             'parent_id' => ['nullable', Rule::exists('product_categories', 'id')->withoutTrashed()],
         ]);
 
-        $handle = Str::slug($request->input('name'));
+        $handle = Str::slug($request->string('name')->value());
 
         $request->merge(['handle' => $handle]);
 
-        $category = ProductCategory::query()->create($request->all());
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $category = ProductCategory::query()->create($attributes);
 
         return new ProductCategoryResource($category);
     }
@@ -106,7 +109,7 @@ final class ProductCategoryController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductCategory $category)
+    public function destroy(ProductCategory $category): Response
     {
         $category->delete();
 

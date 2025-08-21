@@ -27,12 +27,12 @@ final class VendorController
         $query = Vendor::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', (string) $request->input('fields')));
+            $query->select(explode(',', $request->string('fields')->value()));
         }
 
-        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->input('q'))));
+        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->string('q')->value())));
 
-        $orders = explode(',', (string) $request->input('order', 'id'));
+        $orders = explode(',', $request->string('order', 'id')->value());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
@@ -45,8 +45,8 @@ final class VendorController
             return new VendorCollection($query->get());
         }
 
-        $perPage = $request->input('per_page', 15);
-        $page = $request->input('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $page = $request->integer('page', 1);
 
         return new VendorCollection($query->paginate($perPage, ['*'], 'page', $page));
     }

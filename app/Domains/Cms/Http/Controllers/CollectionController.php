@@ -27,12 +27,12 @@ final class CollectionController
         $query = Collection::query();
 
         if ($request->filled('fields')) {
-            $query->select(explode(',', $request->string('fields')->toString()));
+            $query->select(explode(',', $request->string('fields')->value()));
         }
 
-        $query->when($request->filled('q'), fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->string('q')->toString())));
+        $query->when($request->filled('q'), fn ($q) => $q->where('title', 'like', sprintf('%%%s%%', $request->string('q')->value())));
 
-        $orders = explode(',', $request->string('order', 'id')->toString());
+        $orders = explode(',', $request->string('order', 'id')->value());
 
         foreach ($orders as $order) {
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';

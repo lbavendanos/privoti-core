@@ -46,7 +46,11 @@ final class AuthController extends Controller
             'dob' => ['nullable', 'date'],
         ]);
 
-        $request->user()->update($request->only('name', 'phone', 'dob'));
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->only('name', 'phone', 'dob');
+        /** @var User $user */
+        $user = $request->user();
+        $user->update($attributes);
 
         return new UserResource($request->user());
     }
@@ -63,11 +67,13 @@ final class AuthController extends Controller
             'current_password.current_password' => 'The provided password does not match your current password.',
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($request->string('password')),
+        /** @var User $user */
+        $user = $request->user();
+        $user->update([
+            'password' => Hash::make($request->string('password')->value()),
         ]);
 
-        event(new PasswordReset($request->user()));
+        event(new PasswordReset($user));
 
         return response()->noContent();
     }
@@ -88,7 +94,7 @@ final class AuthController extends Controller
         $user = User::query()->create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->string('password')),
+            'password' => Hash::make($request->string('password')->value()),
         ]);
 
         event(new Registered($user));
@@ -171,9 +177,9 @@ final class AuthController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request): void {
+            function (User $user) use ($request): void {
                 $user->forceFill([
-                    'password' => Hash::make($request->string('password')),
+                    'password' => Hash::make($request->string('password')->value()),
                     'remember_token' => Str::random(60),
                 ])->save();
 
@@ -183,6 +189,7 @@ final class AuthController extends Controller
             }
         );
 
+        /** @var string $status */
         if ($status !== Password::PASSWORD_RESET) {
             throw ValidationException::withMessages([
                 'email' => [__($status)],
@@ -197,11 +204,14 @@ final class AuthController extends Controller
      */
     public function sendEmailVerificationNotification(Request $request): Response
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        /** @var User $user */
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
             return response()->noContent();
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return response()->noContent();
     }
@@ -211,12 +221,15 @@ final class AuthController extends Controller
      */
     public function verifyEmail(EmailVerificationRequest $request): Response
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        /** @var User $user */
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
             return response()->noContent();
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
         }
 
         return response()->noContent();
@@ -231,8 +244,11 @@ final class AuthController extends Controller
             'email' => ['required', 'string', 'email', Rule::unique('users')],
         ]);
 
+        /** @var User $user */
+        $user = $request->user();
+
         Notification::route('mail', $request->string('email'))
-            ->notify(new VerifyNewEmail($request->user()));
+            ->notify(new VerifyNewEmail($user));
 
         return response()->noContent();
     }
@@ -242,7 +258,11 @@ final class AuthController extends Controller
      */
     public function verifyNewEmail(Request $request): Response
     {
-        if (! hash_equals((string) $request->user()->getKey(), (string) $request->route('id'))) {
+        /** @var User $user */
+        $user = $request->user();
+
+        /** @phpstan-ignore-next-line */
+        if (! hash_equals((string) $user->getKey(), (string) $request->route('id'))) {
             abort(403);
         }
 
@@ -250,12 +270,12 @@ final class AuthController extends Controller
             abort(403);
         }
 
-        $request->user()->update([
+        $user->update([
             'email' => $request->route('email'),
             'email_verified_at' => now(),
         ]);
 
-        event(new Verified($request->user()));
+        event(new Verified($user));
 
         return response()->noContent();
     }
