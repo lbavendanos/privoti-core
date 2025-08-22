@@ -85,7 +85,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value): string => ucwords($value),
+            get: fn (mixed $value): string => is_string($value) ? ucwords($value) : '',
             set: fn (string $value) => mb_strtolower($value),
         );
     }
@@ -98,7 +98,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     protected function lastName(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value): string => ucwords($value),
+            get: fn (mixed $value): string => is_string($value) ? ucwords($value) : '',
             set: fn (string $value) => mb_strtolower($value),
         );
     }
@@ -123,8 +123,12 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     protected function phone(): Attribute
     {
         return Attribute::make(
-            get: function (?string $value): ?array {
+            get: function (mixed $value): ?array {
                 if (is_null($value)) {
+                    return null;
+                }
+
+                if (! is_string($value)) {
                     return null;
                 }
 

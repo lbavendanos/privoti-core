@@ -28,6 +28,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /** @phpstan-ignore-next-line */
         ResetPassword::createUrlUsing(function (User|Customer $notifiable, string $token): string {
             $baseUrl = $this->isUser($notifiable) ? Config::string('core.cms_url') : Config::string('core.store_url');
 
@@ -38,6 +39,7 @@ final class AppServiceProvider extends ServiceProvider
             $baseUrl = $this->isUser($notifiable) ? Config::string('core.cms_url') : Config::string('core.store_url');
             $modelName = $this->isUser($notifiable) ? 'user' : 'customer';
 
+            /** @var int $id */
             $id = $notifiable->getKey();
             $hash = sha1($notifiable->getEmailForVerification());
 

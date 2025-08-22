@@ -128,6 +128,8 @@ final class Product extends Model
 
     /**
      * Get the product's thumbnail.
+     *
+     * @return Attribute<string|null, never>
      */
     protected function thumbnail(): Attribute
     {
@@ -138,6 +140,8 @@ final class Product extends Model
 
     /**
      * Get the product's stock.
+     *
+     * @return Attribute<int, never>
      */
     protected function stock(): Attribute
     {
@@ -148,12 +152,34 @@ final class Product extends Model
 
     /**
      * Get the product's tags.
+     *
+     * @return Attribute<list<string>|null, string|null>
      */
     protected function tags(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value) => filled($value) ? explode(',', (string) $value) : null,
-            set: fn (mixed $value): ?string => filled($value) ? implode(',', $value) : null
+            get: function (mixed $value): ?array {
+                if (is_null($value)) {
+                    return null;
+                }
+
+                if (! is_string($value)) {
+                    return null;
+                }
+
+                return array_map('trim', explode(',', $value));
+            },
+            set: function (mixed $value): ?string {
+                if (is_null($value)) {
+                    return null;
+                }
+
+                if (! is_array($value)) {
+                    return null;
+                }
+
+                return filled($value) ? implode(',', $value) : null;
+            }
         );
     }
 }

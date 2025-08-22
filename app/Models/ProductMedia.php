@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ProductMediaFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class ProductMedia extends Model
 {
+    /** @use HasFactory<ProductMediaFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     /**
@@ -38,22 +41,34 @@ final class ProductMedia extends Model
 
     /**
      * Get the name attribute.
+     *
+     * @return Attribute<string, never>
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => pathinfo(parse_url($this->url, PHP_URL_PATH), PATHINFO_FILENAME)
+            get: function (): string {
+                /** @var string $path */
+                $path = parse_url($this->url, PHP_URL_PATH);
+
+                return pathinfo($path, PATHINFO_FILENAME);
+
+            }
         );
     }
 
     /**
      * Get the type attribute.
+     *
+     * @return Attribute<string, never>
      */
     protected function type(): Attribute
     {
         return Attribute::make(
             get: function (): string {
-                $extension = pathinfo(parse_url($this->url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                /** @var string $path */
+                $path = parse_url($this->url, PHP_URL_PATH);
+                $extension = pathinfo($path, PATHINFO_EXTENSION);
 
                 $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
                 $videoExtensions = ['mp4', 'mkv', 'mov', 'avi', 'flv', 'wmv', 'webm'];
