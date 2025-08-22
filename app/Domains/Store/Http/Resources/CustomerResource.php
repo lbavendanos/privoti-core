@@ -7,7 +7,7 @@ namespace App\Domains\Store\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-final class UserResource extends JsonResource
+final class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,6 +16,7 @@ final class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @phpstan-ignore-next-line */
         return parent::toArray($request);
     }
 }

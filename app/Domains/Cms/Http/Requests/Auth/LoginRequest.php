@@ -24,7 +24,7 @@ final class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array<string,list<string>>
      */
     public function rules(): array
     {

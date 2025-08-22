@@ -32,7 +32,10 @@ final class AuthController extends Controller
      */
     public function getUser(Request $request): UserResource
     {
-        return new UserResource($request->user());
+        /** @var User $user */
+        $user = $request->user();
+
+        return new UserResource($user);
     }
 
     /**
@@ -52,7 +55,7 @@ final class AuthController extends Controller
         $user = $request->user();
         $user->update($attributes);
 
-        return new UserResource($request->user());
+        return new UserResource($user);
     }
 
     /**

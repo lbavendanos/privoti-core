@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains\Store\Http\Controllers\Auth;
 
+use Illuminate\Http\Response;
 use App\Domains\Store\Http\Controllers\Controller;
-use App\Domains\Store\Http\Resources\UserResource;
+use App\Domains\Store\Http\Resources\CustomerResource;
 use App\Domains\Store\Notifications\VerifyNewEmail;
+use App\Models\Customer;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -21,15 +23,15 @@ final class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): UserResource
+    public function index(Request $request): CustomerResource
     {
-        return new UserResource($request->user());
+        return new CustomerResource($request->user());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request): UserResource
+    public function update(Request $request): CustomerResource
     {
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -38,15 +40,19 @@ final class UserController extends Controller
             'dob' => ['nullable', 'date'],
         ]);
 
-        $request->user()->update($request->only('first_name', 'last_name', 'phone', 'dob'));
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->only('first_name', 'last_name', 'phone', 'dob');
+        /** @var Customer $customer */
+        $customer = $request->user();
+        $customer->update($attributes);
 
-        return new UserResource($request->user());
+        return new CustomerResource($customer);
     }
 
     /**
      * Update the user's password.
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): Response
     {
         $request->validate([
             'current_password' => ['required', 'current_password', 'string'],
@@ -55,11 +61,13 @@ final class UserController extends Controller
             'current_password.current_password' => 'The provided password does not match your current password.',
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($request->string('password')),
+        /** @var Customer $customer */
+        $customer = $request->user();
+        $customer->update([
+            'password' => Hash::make($request->string('password')->value()),
         ]);
 
-        event(new PasswordReset($request->user()));
+        event(new PasswordReset($customer));
 
         return response()->noContent();
     }
@@ -67,13 +75,16 @@ final class UserController extends Controller
     /**
      * Send a new email verification notification.
      */
-    public function sendEmailVerificationNotification(Request $request)
+    public function sendEmailVerificationNotification(Request $request): Response
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($customer->hasVerifiedEmail()) {
             return response()->noContent();
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $customer->sendEmailVerificationNotification();
 
         return response()->noContent();
     }
@@ -81,14 +92,17 @@ final class UserController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function verifyEmail(EmailVerificationRequest $request)
+    public function verifyEmail(EmailVerificationRequest $request): Response
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($customer->hasVerifiedEmail()) {
             return response()->noContent();
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if ($customer->markEmailAsVerified()) {
+            event(new Verified($customer));
         }
 
         return response()->noContent();
@@ -97,14 +111,17 @@ final class UserController extends Controller
     /**
      * Send email change verification notification.
      */
-    public function sendEmailChangeVerificationNotification(Request $request)
+    public function sendEmailChangeVerificationNotification(Request $request): Response
     {
         $request->validate([
             'email' => ['required', 'string', 'email', Rule::unique('users')],
         ]);
 
+        /** @var Customer $customer */
+        $customer = $request->user();
+
         Notification::route('mail', $request->string('email'))
-            ->notify(new VerifyNewEmail($request->user()));
+            ->notify(new VerifyNewEmail($customer));
 
         return response()->noContent();
     }
@@ -112,9 +129,13 @@ final class UserController extends Controller
     /**
      * Verify the new email address
      */
-    public function verifyNewEmail(Request $request)
+    public function verifyNewEmail(Request $request): Response
     {
-        if (! hash_equals((string) $request->user()->getKey(), (string) $request->route('id'))) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        /** @phpstan-ignore-next-line */
+        if (! hash_equals((string) $customer->getKey(), (string) $request->route('id'))) {
             abort(403);
         }
 
@@ -122,12 +143,12 @@ final class UserController extends Controller
             abort(403);
         }
 
-        $request->user()->update([
+        $customer->update([
             'email' => $request->route('email'),
             'email_verified_at' => now(),
         ]);
 
-        event(new Verified($request->user()));
+        event(new Verified($customer));
 
         return response()->noContent();
     }

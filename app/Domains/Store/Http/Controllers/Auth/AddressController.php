@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace App\Domains\Store\Http\Controllers\Auth;
 
+use Illuminate\Http\Response;
+use App\Models\Customer;
 use App\Domains\Store\Http\Controllers\Controller;
 use App\Domains\Store\Http\Resources\AddressResource;
 use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class AddressController extends Controller
 {
-    public const int ADDRESS_LIMIT = 5;
+    private const int ADDRESS_LIMIT = 5;
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return AddressResource::collection($request->user()->addresses);
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        return AddressResource::collection($customer->addresses);
     }
 
     /**
@@ -37,7 +43,9 @@ final class AddressController extends Controller
             'state' => ['required', 'string', 'max:255'],
         ]);
 
-        $numberOfAddresses = $request->user()->addresses()->count();
+        /** @var Customer $customer */
+        $customer = $request->user();
+        $numberOfAddresses = $customer->addresses()->count();
 
         if ($numberOfAddresses === self::ADDRESS_LIMIT) {
             abort(403, 'You can not add more than '.self::ADDRESS_LIMIT.' addresses.');
@@ -45,17 +53,9 @@ final class AddressController extends Controller
 
         $request->merge(['default' => $numberOfAddresses === 0]);
 
-        $address = $request->user()->addresses()->create($request->only([
-            'first_name',
-            'last_name',
-            'phone',
-            'address1',
-            'address2',
-            'district',
-            'city',
-            'state',
-            'default',
-        ]));
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $address = $customer->addresses()->create($attributes);
 
         return new AddressResource($address);
     }
@@ -65,7 +65,10 @@ final class AddressController extends Controller
      */
     public function show(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->customer_id !== $request->user()->id) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($address->customer_id !== $customer->id) {
             abort(403);
         }
 
@@ -77,7 +80,10 @@ final class AddressController extends Controller
      */
     public function update(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->customer_id !== $request->user()->id) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($address->customer_id !== $customer->id) {
             abort(403);
         }
 
@@ -92,16 +98,9 @@ final class AddressController extends Controller
             'state' => ['required', 'string', 'max:255'],
         ]);
 
-        $address->update($request->only([
-            'first_name',
-            'last_name',
-            'phone',
-            'address1',
-            'address2',
-            'district',
-            'city',
-            'state',
-        ]));
+        /** @var array<string,mixed> $attributes */
+        $attributes = $request->all();
+        $address->update($attributes);
 
         return new AddressResource($address);
     }
@@ -109,9 +108,12 @@ final class AddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, CustomerAddress $address)
+    public function destroy(Request $request, CustomerAddress $address): Response
     {
-        if ($address->customer_id !== $request->user()->id) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($address->customer_id !== $customer->id) {
             abort(403);
         }
 
@@ -129,11 +131,14 @@ final class AddressController extends Controller
      */
     public function setDefault(Request $request, CustomerAddress $address): AddressResource
     {
-        if ($address->customer_id !== $request->user()->id) {
+        /** @var Customer $customer */
+        $customer = $request->user();
+
+        if ($address->customer_id !== $customer->id) {
             abort(403);
         }
 
-        $request->user()->addresses()->update(['default' => false]);
+        $customer->addresses()->update(['default' => false]);
         $address->update(['default' => true]);
 
         return new AddressResource($address);

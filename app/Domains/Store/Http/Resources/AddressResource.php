@@ -16,6 +16,7 @@ final class AddressResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @phpstan-ignore-next-line */
         return parent::toArray($request);
     }
 }

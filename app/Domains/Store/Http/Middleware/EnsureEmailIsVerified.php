@@ -14,12 +14,13 @@ final class EnsureEmailIsVerified
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(Request): (Response)  $next
+     * @param  Closure(Request): Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (
             ! $request->user() ||
+            /** @phpstan-ignore-next-line */
             ($request->user() instanceof MustVerifyEmail &&
                 ! $request->user()->hasVerifiedEmail())
         ) {

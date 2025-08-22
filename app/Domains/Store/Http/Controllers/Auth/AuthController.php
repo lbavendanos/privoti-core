@@ -6,8 +6,8 @@ namespace App\Domains\Store\Http\Controllers\Auth;
 
 use App\Domains\Store\Http\Controllers\Controller;
 use App\Domains\Store\Http\Requests\Auth\LoginRequest;
-use App\Domains\Store\Http\Resources\UserResource;
-use App\Models\User;
+use App\Domains\Store\Http\Resources\CustomerResource;
+use App\Models\Customer;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -33,22 +33,22 @@ final class AuthController extends Controller
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Customer::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::query()->create([
+        $user = Customer::query()->create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => Hash::make($request->string('password')),
+            'password' => Hash::make($request->string('password')->value()),
         ]);
 
         event(new Registered($user));
 
         Auth::guard('store')->login($user);
 
-        return new UserResource($user);
+        return new CustomerResource($user);
     }
 
     /**
@@ -60,7 +60,7 @@ final class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return new UserResource(Auth::guard('store')->user());
+        return new CustomerResource(Auth::guard('store')->user());
     }
 
     /**
@@ -126,9 +126,9 @@ final class AuthController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request): void {
+            function (Customer $user) use ($request): void {
                 $user->forceFill([
-                    'password' => Hash::make($request->string('password')),
+                    'password' => Hash::make($request->string('password')->value()),
                     'remember_token' => Str::random(60),
                 ])->save();
 
@@ -138,12 +138,13 @@ final class AuthController extends Controller
             }
         );
 
+        /** @var string $status */
         if ($status !== Password::PASSWORD_RESET) {
             throw ValidationException::withMessages([
                 'email' => [__($status)],
             ]);
         }
 
-        return new UserResource(Auth::guard('store')->user());
+        return new CustomerResource(Auth::guard('store')->user());
     }
 }
