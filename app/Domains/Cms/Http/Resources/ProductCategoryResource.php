@@ -32,10 +32,11 @@ final class ProductCategoryResource extends JsonResource
         ];
 
         if ($request->filled('fields')) {
-            $fields = explode(',', (string) $request->input('fields'));
+            $fields = explode(',',  $request->string('fields')->value());
             $data = Arr::only($data, $fields);
         }
 
+        /** @var array<string, mixed> $data */
         return array_merge($data, [
             'children' => self::collection($this->whenLoaded('children')),
             // 'parent' => new ProductCategoryResource($this->whenLoaded('parent')),

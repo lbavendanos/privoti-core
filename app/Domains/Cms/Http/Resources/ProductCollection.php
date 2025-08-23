@@ -31,6 +31,7 @@ final class ProductCollection extends ResourceCollection
     public function toResponse($request)
     {
         $response = parent::toResponse($request);
+        /** @var array{'data':array<string, mixed>, 'links':array<string, mixed>, 'meta':array<string, mixed>} $data */
         $data = $response->getData(true);
 
         unset($data['links']);
