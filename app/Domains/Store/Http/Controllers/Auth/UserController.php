@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domains\Store\Http\Controllers\Auth;
 
-use Illuminate\Http\Response;
 use App\Domains\Store\Http\Controllers\Controller;
 use App\Domains\Store\Http\Resources\CustomerResource;
 use App\Domains\Store\Notifications\VerifyNewEmail;
@@ -13,6 +12,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;

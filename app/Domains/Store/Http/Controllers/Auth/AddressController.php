@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domains\Store\Http\Controllers\Auth;
 
-use Illuminate\Http\Response;
-use App\Models\Customer;
 use App\Domains\Store\Http\Controllers\Controller;
 use App\Domains\Store\Http\Resources\AddressResource;
+use App\Models\Customer;
 use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 final class AddressController extends Controller
 {

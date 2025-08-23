@@ -29,7 +29,7 @@ final class ProductMediaResource extends JsonResource
         ];
 
         if ($request->filled('fields')) {
-            $fields = explode(',',  $request->string('fields')->value());
+            $fields = explode(',', $request->string('fields')->value());
             $data = Arr::only($data, $fields);
         }
 
