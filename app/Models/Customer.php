@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Actions\Common\FormatPhoneNumberAction;
+use App\Actions\Common\NormalizePhoneNumberAction;
 use App\Traits\TimestampsScope;
 use Database\Factories\CustomerFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -13,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Config;
-use Propaganistas\LaravelPhone\PhoneNumber;
 
 final class Customer extends Authenticatable implements MustVerifyEmail
 {
@@ -123,34 +123,8 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     protected function phone(): Attribute
     {
         return Attribute::make(
-            get: function (mixed $value): ?array {
-                if (is_null($value)) {
-                    return null;
-                }
-
-                if (! is_string($value)) {
-                    return null;
-                }
-
-                $countryCode = Config::string('core.country_code');
-                $phoneNumber = new PhoneNumber($value, $countryCode);
-
-                return [
-                    'e164' => $phoneNumber->formatE164(),
-                    'international' => $phoneNumber->formatInternational(),
-                    'national' => $phoneNumber->formatNational(),
-                    'mobile_dialing' => $phoneNumber->formatForMobileDialingInCountry($countryCode),
-                ];
-            },
-            set: function (?string $value): ?string {
-                if (is_null($value)) {
-                    return null;
-                }
-
-                $countryCode = Config::string('core.country_code');
-
-                return new PhoneNumber($value, Config::string('core.country_code'))->formatE164();
-            }
+            get: fn (mixed $value): ?array => app(FormatPhoneNumberAction::class)->handle(is_string($value) ? $value : null),
+            set: fn (?string $value): ?string => app(NormalizePhoneNumberAction::class)->handle($value)
         );
     }
 }

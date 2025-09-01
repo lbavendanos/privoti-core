@@ -125,7 +125,7 @@ final class CustomerController
         $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
 
         /** @var array<string,mixed> $attributes */
-        $attributes = $request->all();
+        $attributes = $request->except('_method');
         $customer->update($attributes);
 
         return new CustomerResource($customer->load('addresses'));
