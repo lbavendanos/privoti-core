@@ -22,12 +22,12 @@ final class CustomerAddressFactory extends Factory
         return [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'phone' => fake()->phoneNumber(),
+            'phone' => '987654321',
             'address1' => fake()->streetAddress(),
             'address2' => fake()->optional()->secondaryAddress(),
-            'district' => fake()->citySuffix(),
-            'city' => fake()->city(),
-            'state' => fake()->state(),
+            'district' => 'Lima',
+            'city' => 'Lima',
+            'state' => 'Lima',
             'default' => false,
         ];
     }

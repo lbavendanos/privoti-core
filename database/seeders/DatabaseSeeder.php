@@ -92,10 +92,9 @@ final class DatabaseSeeder extends Seeder
     /**
      * Create categories recursively.
      *
-     * @param  array  $categories
-     * @param  int|null  $parent_id
+     * @param  array<string, mixed>  $categories
      */
-    public function createCategory($categories, $parent_id = null): void
+    public function createCategory(array $categories, ?int $parent_id = null): void
     {
         foreach ($categories as $category => $subcategories) {
             if (is_array($subcategories)) {
@@ -105,16 +104,20 @@ final class DatabaseSeeder extends Seeder
                     'parent_id' => $parent_id,
                 ]);
 
+                /** @var array<string, mixed> $subcategories */
                 $this->createCategory($subcategories, $parent->id);
 
                 continue;
             }
 
-            $parent = ProductCategory::factory()->create([
-                'name' => $subcategories,
-                'handle' => Str::slug($subcategories),
-                'parent_id' => $parent_id,
-            ]);
+            if (is_string($subcategories)) {
+                $parent = ProductCategory::factory()->create([
+                    'name' => $subcategories,
+                    'handle' => Str::slug($subcategories),
+                    'parent_id' => $parent_id,
+                ]);
+            }
+
         }
     }
 }
