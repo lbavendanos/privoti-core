@@ -18,8 +18,6 @@ final readonly class NormalizePhoneNumberAction
             return null;
         }
 
-        $countryCode = Config::string('core.country_code');
-
         return new PhoneNumber($value, Config::string('core.country_code'))->formatE164();
     }
 }
