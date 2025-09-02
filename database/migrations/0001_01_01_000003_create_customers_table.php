@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Customer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +20,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone')->nullable();
             $table->date('dob')->nullable();
-            $table->enum('account', Customer::ACCOUNT_LIST)->default(Customer::ACCOUNT_DEFAULT);
+            $table->enum('account', ['guest', 'registered'])->default('guest');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
