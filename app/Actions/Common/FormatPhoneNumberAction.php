@@ -12,7 +12,7 @@ final readonly class FormatPhoneNumberAction
     /**
      * Format a phone number into various formats.
      *
-     * @return array{e164: string, international: string, national: string, mobile_dialing: string}|null
+     * @return array<string, string>|null
      */
     public function handle(?string $value): ?array
     {
