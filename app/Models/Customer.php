@@ -7,7 +7,9 @@ namespace App\Models;
 use App\Actions\Common\FormatPhoneNumberAction;
 use App\Actions\Common\NormalizePhoneNumberAction;
 use App\Traits\TimestampsScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\CustomerFactory;
+use DateTimeInterface;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +18,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property-read int $id
+ * @property-read string $first_name
+ * @property-read string $last_name
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read array<string, string>|null $phone
+ * @property-read string|null $dob
+ * @property-read string $account
+ * @property-read DateTimeInterface|null $email_verified_at
+ * @property-read string $password
+ * @property-read string|null $remember_token
+ * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
+ */
 final class Customer extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<CustomerFactory> */
@@ -25,9 +43,14 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     use SoftDeletes;
     use TimestampsScope;
 
-    public const array ACCOUNT_LIST = ['guest', 'registered'];
+    public const string ACCOUNT_GUEST = 'guest';
 
-    public const string ACCOUNT_DEFAULT = 'guest';
+    public const string ACCOUNT_REGISTERED = 'registered';
+
+    public const array ACCOUNT_LIST = [
+        self::ACCOUNT_GUEST,
+        self::ACCOUNT_REGISTERED,
+    ];
 
     /**
      * The attributes that are mass assignable.

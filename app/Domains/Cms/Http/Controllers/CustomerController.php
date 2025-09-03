@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Actions\Customer\CreateGuestCustomerAction;
+use App\Actions\Customer\UpdateCustomerAction;
+use App\Domains\Cms\Http\Requests\StoreCustomerRequest;
+use App\Domains\Cms\Http\Requests\UpdateCustomerRequest;
 use App\Domains\Cms\Http\Resources\CustomerCollection;
 use App\Domains\Cms\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
-use Propaganistas\LaravelPhone\Rules\Phone;
 
 final class CustomerController
 {
@@ -86,21 +88,10 @@ final class CustomerController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): CustomerResource
+    public function store(StoreCustomerRequest $request, CreateGuestCustomerAction $action): CustomerResource
     {
-        $rules = array_merge(
-            $this->customerRules(),
-        );
-
-        $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
-
-        if ($request->missing('account')) {
-            $request->merge(['account' => Customer::ACCOUNT_DEFAULT]);
-        }
-
-        /** @var array<string,mixed> $attributes */
-        $attributes = $request->all();
-        $customer = Customer::query()->create($attributes);
+        $attributes = $request->validated();
+        $customer = $action->handle($attributes);
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -116,17 +107,10 @@ final class CustomerController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer): CustomerResource
+    public function update(UpdateCustomerRequest $request, Customer $customer, UpdateCustomerAction $action): CustomerResource
     {
-        $rules = array_merge(
-            $this->customerRules($customer),
-        );
-
-        $request->validate($rules, ['phone' => 'The :attribute field must be a valid number.']);
-
-        /** @var array<string,mixed> $attributes */
-        $attributes = $request->except('_method');
-        $customer->update($attributes);
+        $attributes = $request->validated();
+        $customer = $action->handle($customer, $attributes);
 
         return new CustomerResource($customer->load('addresses'));
     }
@@ -159,22 +143,6 @@ final class CustomerController
             });
 
         return response()->noContent();
-    }
-
-    /**
-     * Customer rules.
-     *
-     * @return array<string,mixed>
-     */
-    private function customerRules(?Customer $customer = null): array
-    {
-        return [
-            'first_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'last_name' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'max:255'] : ['required', 'string', 'max:255'],
-            'email' => $customer instanceof Customer ? ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->ignore($customer->id)->withoutTrashed()] : ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('customers')->withoutTrashed()],
-            'phone' => ['nullable', 'string', (new Phone)->country([Config::string('core.country_code')]), 'max:255'],
-            'dob' => ['nullable', 'date'],
-        ];
     }
 
     /**
