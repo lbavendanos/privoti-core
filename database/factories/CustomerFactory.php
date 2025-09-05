@@ -55,7 +55,7 @@ final class CustomerFactory extends Factory
         return $this->state(fn (array $attributes): array => [
             'account' => 'registered',
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => self::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ]);
     }
