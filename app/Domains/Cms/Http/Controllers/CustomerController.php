@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Actions\Customer\CreateGuestCustomerAction;
+use App\Actions\Customer\DeleteCustomerAction;
 use App\Actions\Customer\UpdateCustomerAction;
 use App\Domains\Cms\Http\Requests\StoreCustomerRequest;
 use App\Domains\Cms\Http\Requests\UpdateCustomerRequest;
@@ -118,9 +119,9 @@ final class CustomerController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer): Response
+    public function destroy(Customer $customer, DeleteCustomerAction $action): Response
     {
-        $this->deleteCustomer($customer);
+        $action->handle($customer);
 
         return response()->noContent();
     }
@@ -128,29 +129,21 @@ final class CustomerController
     /**
      * Remove multiple resources from storage.
      */
-    public function bulkDestroy(Request $request): Response
+    public function bulkDestroy(Request $request, DeleteCustomerAction $action): Response
     {
         $request->validate([
             'ids' => ['required', 'array'],
             'ids.*' => ['required', Rule::exists('customers', 'id')->withoutTrashed()],
         ]);
 
-        Customer::query()->whereIn('id', $request->input('ids'))
-            ->chunkById(100, function ($customers): void {
+        Customer::query()
+            ->whereIn('id', $request->input('ids'))
+            ->chunkById(100, function ($customers) use ($action): void {
                 foreach ($customers as $customer) {
-                    $this->deleteCustomer($customer);
+                    $action->handle($customer);
                 }
             });
 
         return response()->noContent();
-    }
-
-    /**
-     * Delete customer and its related data.
-     */
-    private function deleteCustomer(Customer $customer): void
-    {
-        $customer->addresses();
-        $customer->delete();
     }
 }
