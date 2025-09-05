@@ -6,7 +6,9 @@ namespace App\Domains\Cms\Http\Controllers;
 
 use App\Actions\Customer\CreateGuestCustomerAction;
 use App\Actions\Customer\DeleteCustomerAction;
+use App\Actions\Customer\DeleteCustomersAction;
 use App\Actions\Customer\UpdateCustomerAction;
+use App\Domains\Cms\Http\Requests\BulkDestroyCustomerRequest;
 use App\Domains\Cms\Http\Requests\StoreCustomerRequest;
 use App\Domains\Cms\Http\Requests\UpdateCustomerRequest;
 use App\Domains\Cms\Http\Resources\CustomerCollection;
@@ -129,20 +131,11 @@ final class CustomerController
     /**
      * Remove multiple resources from storage.
      */
-    public function bulkDestroy(Request $request, DeleteCustomerAction $action): Response
+    public function bulkDestroy(BulkDestroyCustomerRequest $request, DeleteCustomersAction $action): Response
     {
-        $request->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['required', Rule::exists('customers', 'id')->withoutTrashed()],
-        ]);
-
-        Customer::query()
-            ->whereIn('id', $request->input('ids'))
-            ->chunkById(100, function ($customers) use ($action): void {
-                foreach ($customers as $customer) {
-                    $action->handle($customer);
-                }
-            });
+        /** @var list<int> $ids */
+        $ids = $request->array('ids');
+        $action->handle($ids);
 
         return response()->noContent();
     }
