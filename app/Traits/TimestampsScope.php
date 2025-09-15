@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -24,10 +24,10 @@ trait TimestampsScope
         $appTimezone = Config::string('app.timezone');
         $coreTimezone = Config::string('core.timezone');
 
-        $dates = array_map(fn (string $date): Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
+        $dates = array_map(fn (string $date): CarbonImmutable => CarbonImmutable::parse($date)->setTimezone($appTimezone), $dates);
 
-        $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
-        $end = $dates[1]->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
+        $start = $dates[0]->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
+        $end = $dates[1]->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
 
         $query->whereBetween('created_at', [$start, $end]);
     }
@@ -43,10 +43,10 @@ trait TimestampsScope
         $appTimezone = Config::string('app.timezone');
         $coreTimezone = Config::string('core.timezone');
 
-        $date = Carbon::parse($date)->setTimezone($appTimezone);
+        $date = CarbonImmutable::parse($date)->setTimezone($appTimezone);
 
-        $start = $date->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
-        $end = $date->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
+        $start = $date->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
+        $end = $date->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
 
         $query->whereBetween('created_at', [$start, $end]);
     }
@@ -63,10 +63,10 @@ trait TimestampsScope
         $appTimezone = Config::string('app.timezone');
         $coreTimezone = Config::string('core.timezone');
 
-        $dates = array_map(fn (string $date): Carbon => Carbon::parse($date)->setTimezone($appTimezone), $dates);
+        $dates = array_map(fn (string $date): CarbonImmutable => CarbonImmutable::parse($date)->setTimezone($appTimezone), $dates);
 
-        $start = $dates[0]->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
-        $end = $dates[1]->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
+        $start = $dates[0]->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
+        $end = $dates[1]->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
 
         $query->whereBetween('updated_at', [$start, $end]);
     }
@@ -82,10 +82,10 @@ trait TimestampsScope
         $appTimezone = Config::string('app.timezone');
         $coreTimezone = Config::string('core.timezone');
 
-        $date = Carbon::parse($date)->setTimezone($appTimezone);
+        $date = CarbonImmutable::parse($date)->setTimezone($appTimezone);
 
-        $start = $date->copy()->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
-        $end = $date->copy()->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
+        $start = $date->setTimezone($coreTimezone)->startOfDay()->setTimezone($appTimezone);
+        $end = $date->setTimezone($coreTimezone)->endOfDay()->setTimezone($appTimezone);
 
         $query->whereBetween('updated_at', [$start, $end]);
     }

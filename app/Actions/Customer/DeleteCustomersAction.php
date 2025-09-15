@@ -21,7 +21,7 @@ final readonly class DeleteCustomersAction
      */
     public function handle(array $ids): void
     {
-        if (empty($ids)) {
+        if (blank($ids)) {
             return;
         }
 

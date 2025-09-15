@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Actions\Common\FormatPhoneNumberAction;
 use App\Actions\Common\NormalizePhoneNumberAction;
-use App\Traits\TimestampsScope;
 use Carbon\CarbonImmutable;
 use Database\Factories\CustomerFactory;
 use DateTimeInterface;
@@ -41,7 +40,6 @@ final class Customer extends Authenticatable implements MustVerifyEmail
 
     use Notifiable;
     use SoftDeletes;
-    use TimestampsScope;
 
     public const string ACCOUNT_GUEST = 'guest';
 

@@ -10,10 +10,7 @@ it('deletes multiple customers', function () {
     /** @var list<int> $ids */
     $ids = $customers->pluck('id')->all();
 
-    /** @var DeleteCustomersAction $action */
-    $action = app(DeleteCustomersAction::class);
-
-    $action->handle($ids);
+    app(DeleteCustomersAction::class)->handle($ids);
 
     expect(Customer::query()->whereIn('id', $ids)->count())->toBe(0);
 });

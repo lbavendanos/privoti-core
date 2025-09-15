@@ -11,7 +11,7 @@ it('deletes a customer', function () {
     $address1 = CustomerAddress::factory()->create(['customer_id' => $customer->id]);
     $address2 = CustomerAddress::factory()->create(['customer_id' => $customer->id]);
 
-    (new DeleteCustomerAction())->handle($customer);
+    app(DeleteCustomerAction::class)->handle($customer);
 
     expect(Customer::query()->find($customer->id))->toBeNull();
     expect(CustomerAddress::query()->find($address1->id))->toBeNull();
