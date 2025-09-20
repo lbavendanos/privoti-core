@@ -130,3 +130,43 @@ it('returns customers filtered by :dataset date range', function (string $field)
 
     expect($foundDates)->each->toBeBetween($filterDates[0]->startOfDay(), $filterDates[1]->endOfDay());
 })->with(['created_at', 'updated_at']);
+
+it('returns customers ordered by :dataset ascending', function (string $field) {
+    Customer::factory()->count(10)->create();
+
+    /** @var LengthAwarePaginator<int, Customer> $result */
+    $result = app(GetCustomersAction::class)->handle([
+        'order' => $field,
+    ]);
+
+    expect($result)->not->toBeEmpty()
+        ->and($result->count())->toBe(10);
+
+    /** @var list<string> $list */
+    $list = $result->pluck($field)->all();
+
+    $sortedList = $list;
+    sort($sortedList);
+
+    expect($list)->toBe($sortedList);
+})->with(['id', 'name']);
+
+it('returns customers ordered by :dataset descending', function (string $field) {
+    Customer::factory()->count(10)->create();
+
+    /** @var LengthAwarePaginator<int, Customer> $result */
+    $result = app(GetCustomersAction::class)->handle([
+        'order' => sprintf('-%s', $field),
+    ]);
+
+    expect($result)->not->toBeEmpty()
+        ->and($result->count())->toBe(10);
+
+    /** @var list<string> $list */
+    $list = $result->pluck($field)->all();
+
+    $sortedList = $list;
+    rsort($sortedList);
+
+    expect($list)->toBe($sortedList);
+})->with(['id', 'name']);

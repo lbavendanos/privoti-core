@@ -51,20 +51,9 @@ final readonly class GetCustomersAction
             $query = $this->updatedAtFilter->handle($query, $dates);
         }
 
-        $orders = explode(',', Arr::string($filters, 'order', 'id'));
-
-        foreach ($orders as $order) {
-            } else {
-                $query->orderBy($column, $direction);
-            }
-            $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = mb_ltrim($order, '-');
-
-            if ($column === 'name') {
-                $query->orderByRaw("CONCAT(first_name, ' ', last_name) ".$direction);
-            } else {
-                $query->orderBy($column, $direction);
-            }
+        if (Arr::has($filters, 'order')) {
+            $sort = explode(',', Arr::string($filters, 'order', 'id'));
+            $query = $this->sortFilter->handle($query, $sort, ['name' => "CONCAT(first_name, ' ', last_name)"]);
         }
 
         $perPage = Arr::integer($filters, 'per_page', 15);
