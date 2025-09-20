@@ -35,13 +35,10 @@ it('creates a customer with phone number', function () {
 
     $customer = (new CreateCustomerAction())->handle($attributes);
 
-    expect($customer->phone)->toBeArray()
-        /** @phpstan-ignore-next-line */
-        ->and($customer->phone['e164'])->toBe('+51987654321')
-        /** @phpstan-ignore-next-line */
-        ->and($customer->phone['international'])->toBe('+51 987 654 321')
-        /** @phpstan-ignore-next-line */
-        ->and($customer->phone['national'])->toBe('987 654 321')
-        /** @phpstan-ignore-next-line */
-        ->and($customer->phone['mobile_dialing'])->toBe('987654321');
+    expect($customer->phone)->toBe([
+        'e164' => '+51987654321',
+        'international' => '+51 987 654 321',
+        'national' => '987 654 321',
+        'mobile_dialing' => '987654321',
+    ]);
 });

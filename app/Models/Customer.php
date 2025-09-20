@@ -99,7 +99,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Interact with the user's first name.
+     * Interact with the customer's first name.
      *
      * @return Attribute<string, string>
      */
@@ -112,7 +112,7 @@ final class Customer extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Interact with the user's last name.
+     * Interact with the customer's last name.
      *
      * @return Attribute<string, string>
      */
