@@ -5,8 +5,21 @@ declare(strict_types=1);
 use App\Actions\Customer\GetCustomersAction;
 use App\Models\Customer;
 use Carbon\CarbonImmutable;
-use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+
+it('returns paginated customers', function () {
+    Customer::factory()->count(30)->create();
+
+    /** @var LengthAwarePaginator<int, Customer> $result */
+    $result = app(GetCustomersAction::class)->handle();
+
+    expect($result)->not->toBeEmpty()
+        ->and($result->count())->toBe(15)
+        ->and($result->total())->toBe(30)
+        ->and($result->currentPage())->toBe(1)
+        ->and($result->lastPage())->toBe(2);
+});
 
 it('returns customers filtered by name', function () {
     /** @var Collection<int, Customer> $customers */
@@ -32,7 +45,7 @@ it('returns customers filtered by guest account type', function () {
     Customer::factory()->guest()->count(3)->create();
     Customer::factory()->registered()->count(5)->create();
 
-    /** @var AbstractPaginator<int, Customer> $result */
+    /** @var LengthAwarePaginator<int, Customer> $result */
     $result = app(GetCustomersAction::class)->handle([
         'account' => [Customer::ACCOUNT_GUEST],
     ]);
@@ -45,7 +58,7 @@ it('returns customers filtered by registered account type', function () {
     Customer::factory()->guest()->count(5)->create();
     Customer::factory()->registered()->count(3)->create();
 
-    /** @var AbstractPaginator<int, Customer> $result */
+    /** @var LengthAwarePaginator<int, Customer> $result */
     $result = app(GetCustomersAction::class)->handle([
         'account' => [Customer::ACCOUNT_REGISTERED],
     ]);
@@ -73,7 +86,7 @@ it('returns customers filtered by a single :dataset date', function (string $fie
 
     $filterDate = now()->subDays(5);
 
-    /** @var AbstractPaginator<int, Customer> $result */
+    /** @var LengthAwarePaginator<int, Customer> $result */
     $result = app(GetCustomersAction::class)->handle([
         $field => [$filterDate->toISOString()],
     ]);

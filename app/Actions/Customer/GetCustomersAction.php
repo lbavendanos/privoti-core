@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Actions\Customer;
 
 use App\Actions\Common\ApplyCreatedAtFilterAction;
+use App\Actions\Common\ApplySortFilterAction;
 use App\Actions\Common\ApplyUpdatedAtFilterAction;
 use App\Models\Customer;
-use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 
 final readonly class GetCustomersAction
@@ -15,10 +16,12 @@ final readonly class GetCustomersAction
     /**
      * @param  ApplyCreatedAtFilterAction<Customer>  $createdAtFilter
      * @param  ApplyUpdatedAtFilterAction<Customer>  $updatedAtFilter
+     * @param  ApplySortFilterAction<Customer>  $sortFilter
      */
     public function __construct(
         private ApplyCreatedAtFilterAction $createdAtFilter,
-        private ApplyUpdatedAtFilterAction $updatedAtFilter
+        private ApplyUpdatedAtFilterAction $updatedAtFilter,
+        private ApplySortFilterAction $sortFilter
     ) {
         //
     }
@@ -27,9 +30,9 @@ final readonly class GetCustomersAction
      * Builds a customer query based on provided filters and ordering options.
      *
      * @param  array<string,mixed>  $filters
-     * @return AbstractPaginator<int, Customer>
+     * @return LengthAwarePaginator<int, Customer>
      */
-    public function handle(array $filters): AbstractPaginator
+    public function handle(array $filters = []): LengthAwarePaginator
     {
         $query = Customer::query();
 
@@ -51,6 +54,9 @@ final readonly class GetCustomersAction
         $orders = explode(',', Arr::string($filters, 'order', 'id'));
 
         foreach ($orders as $order) {
+            } else {
+                $query->orderBy($column, $direction);
+            }
             $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
             $column = mb_ltrim($order, '-');
 
