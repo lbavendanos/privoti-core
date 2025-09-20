@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Config;
 final readonly class ApplyUpdatedAtFilterAction
 {
     /**
+     * Applies a updated_at date filter to the given query.
+     *
      * @param  Builder<TModel>  $query
      * @param  list<string>  $dates
      * @return Builder<TModel>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Actions\Customer\GetCustomersAction;
 use App\Models\Customer;
+use Carbon\CarbonImmutable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 
@@ -52,3 +53,67 @@ it('returns customers filtered by registered account type', function () {
     expect($result)->not->toBeEmpty()
         ->and($result->count())->toBe(3);
 });
+
+it('returns customers filtered by a single :dataset date', function (string $field) {
+    /** @var List<CarbonImmutable> $mockDates */
+    $mockDates = [
+        now()->subDays(5),
+        now()->subDays(5),
+        now()->subDays(4),
+        now()->subDays(3),
+        now()->subDays(2),
+        now()->subDay(),
+        now(),
+    ];
+
+    Customer::factory()
+        ->count(count($mockDates))
+        ->sequence(...array_map(fn ($date) => [$field => $date], $mockDates))
+        ->create();
+
+    $filterDate = now()->subDays(5);
+
+    /** @var AbstractPaginator<int, Customer> $result */
+    $result = app(GetCustomersAction::class)->handle([
+        $field => [$filterDate->toISOString()],
+    ]);
+
+    expect($result)->not->toBeEmpty()
+        ->and($result->count())->toBe(2);
+
+    /** @var list<CarbonImmutable> $foundDates */
+    $foundDates = $result->pluck($field)->all();
+
+    expect($foundDates)->each->toBeBetween($filterDate->startOfDay(), $filterDate->endOfDay());
+})->with(['created_at', 'updated_at']);
+
+it('returns customers filtered by :dataset date range', function (string $field) {
+    /** @var List<CarbonImmutable> $mockDates */
+    $mockDates = [
+        now()->subDays(5),
+        now()->subDays(4),
+        now()->subDays(3),
+        now()->subDays(2),
+        now()->subDay(),
+        now(),
+    ];
+
+    Customer::factory()
+        ->count(count($mockDates))
+        ->sequence(...array_map(fn ($date) => [$field => $date], $mockDates))
+        ->create();
+
+    $filterDates = [now()->subDays(4), now()->subDays(2)];
+
+    $result = app(GetCustomersAction::class)->handle([
+        $field => array_map(fn ($date) => $date->toISOString(), $filterDates),
+    ]);
+
+    expect($result)->not->toBeEmpty()
+        ->and($result->count())->toBe(3);
+
+    /** @var list<CarbonImmutable> $foundDates */
+    $foundDates = $result->pluck($field)->all();
+
+    expect($foundDates)->each->toBeBetween($filterDates[0]->startOfDay(), $filterDates[1]->endOfDay());
+})->with(['created_at', 'updated_at']);
