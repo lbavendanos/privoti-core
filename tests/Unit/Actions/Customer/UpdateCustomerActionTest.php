@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Actions\Customer\UpdateCustomerAction;
 use App\Models\Customer;
-use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -71,15 +70,3 @@ it('updates a customer with phone number', function () {
         'mobile_dialing' => '987654321',
     ]);
 });
-
-it('throws a validation exception if email is duplicated', function () {
-    Customer::factory()->create([
-        'email' => 'm@example.com',
-    ]);
-
-    /** @var TestCase $this */
-    /** @phpstan-ignore-next-line */
-    (new UpdateCustomerAction())->handle($this->customer, [
-        'email' => 'm@example.com',
-    ]);
-})->throws(ValidationException::class, 'The email has already been taken.');

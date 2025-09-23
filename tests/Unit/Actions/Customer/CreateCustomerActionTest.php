@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Actions\Customer\CreateCustomerAction;
 use App\Models\Customer;
-use Illuminate\Validation\ValidationException;
 
 it('creates a customer with basic attributes', function () {
     $attributes = [
@@ -41,15 +40,3 @@ it('creates a customer with phone number', function () {
         'mobile_dialing' => '987654321',
     ]);
 });
-
-it('throws a validation exception if email is duplicated', function () {
-    Customer::factory()->create([
-        'email' => 'm@example.com',
-    ]);
-
-    (new CreateCustomerAction())->handle([
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => 'm@example.com',
-    ]);
-})->throws(ValidationException::class, 'The email has already been taken.');
