@@ -28,19 +28,23 @@ it('returns a customer collection', function () {
 });
 
 it('creates a customer', function () {
+    $attributes = [
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => fake()->email(),
+        'dob' => fake()->date(),
+    ];
+
     /** @var TestCase $this */
-    $response = $this->postJson('/api/c/customers', [
-        'first_name' => 'John',
-        'last_name' => 'Doe',
-        'email' => 'john@example.com',
-    ]);
+    $response = $this->postJson('/api/c/customers', $attributes);
 
     $response
         ->assertCreated()
         ->assertJson(fn (AssertableJson $json) => $json
-            ->where('data.first_name', 'John')
-            ->where('data.last_name', 'Doe')
-            ->where('data.email', 'john@example.com')
+            ->where('data.first_name', $attributes['first_name'])
+            ->where('data.last_name', $attributes['last_name'])
+            ->where('data.email', $attributes['email'])
+            ->where('data.dob', $attributes['dob'])
             ->where('data.account', Customer::ACCOUNT_GUEST)
         );
 });
@@ -62,20 +66,24 @@ it('shows a customer', function () {
 it('updates a customer', function () {
     $customer = Customer::factory()->create();
 
+    $attributes = [
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => fake()->email(),
+        'dob' => fake()->date(),
+    ];
+
     /** @var TestCase $this */
-    $response = $this->putJson("/api/c/customers/{$customer->id}", [
-        'first_name' => 'Jane',
-        'last_name' => 'Smith',
-        'email' => 'jane@exmaple.com',
-    ]);
+    $response = $this->putJson("/api/c/customers/{$customer->id}", $attributes);
 
     $response
         ->assertOk()
         ->assertJson(fn (AssertableJson $json) => $json
             ->where('data.id', $customer->id)
-            ->where('data.first_name', 'Jane')
-            ->where('data.last_name', 'Smith')
-            ->where('data.email', 'jane@exmaple.com')
+            ->where('data.first_name', $attributes['first_name'])
+            ->where('data.last_name', $attributes['last_name'])
+            ->where('data.email', $attributes['email'])
+            ->where('data.dob', $attributes['dob'])
         );
 });
 

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 use App\Actions\Customer\CreateCustomerAction;
 use App\Models\Customer;
+use Illuminate\Validation\ValidationException;
 
 it('creates a customer with basic attributes', function () {
     $attributes = [
-        'first_name' => 'John',
-        'last_name' => 'Doe',
-        'email' => 'john@example.com',
-        'dob' => '1990-01-01',
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => fake()->email(),
+        'dob' => fake()->date(),
         'password' => 'password',
     ];
 
@@ -27,9 +28,9 @@ it('creates a customer with basic attributes', function () {
 
 it('creates a customer with phone number', function () {
     $attributes = [
-        'first_name' => 'Jane',
-        'last_name' => 'Smith',
-        'email' => 'jane@example.com',
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => fake()->email(),
         'phone' => '987654321',
     ];
 
@@ -42,3 +43,15 @@ it('creates a customer with phone number', function () {
         'mobile_dialing' => '987654321',
     ]);
 });
+
+it('throws a validation exception if email is duplicated', function () {
+    Customer::factory()->create([
+        'email' => 'm@example.com',
+    ]);
+
+    (new CreateCustomerAction())->handle([
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => 'm@example.com',
+    ]);
+})->throws(ValidationException::class, 'The email has already been taken.');
