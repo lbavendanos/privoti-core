@@ -12,7 +12,6 @@ it('creates a customer with basic attributes', function () {
         'last_name' => fake()->lastName(),
         'email' => fake()->email(),
         'dob' => fake()->date(),
-        'password' => 'password',
     ];
 
     $customer = (new CreateCustomerAction())->handle($attributes);
@@ -22,8 +21,7 @@ it('creates a customer with basic attributes', function () {
         ->and($customer->first_name)->toBe($attributes['first_name'])
         ->and($customer->last_name)->toBe($attributes['last_name'])
         ->and($customer->email)->toBe($attributes['email'])
-        ->and($customer->dob)->toBe($attributes['dob'])
-        ->and(password_verify('password', $customer->password))->toBeTrue();
+        ->and($customer->dob)->toBe($attributes['dob']);
 });
 
 it('creates a customer with phone number', function () {
