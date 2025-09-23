@@ -49,6 +49,41 @@ it('creates a customer', function () {
         );
 });
 
+it('throws a validation error when creating a customer with invalid attributes', function () {
+    $attributes = [
+        'first_name' => '',
+        'last_name' => '',
+        'email' => 'invalid-email',
+        'dob' => 'invalid-date',
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->postJson('/api/c/customers', $attributes);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['first_name', 'last_name', 'email', 'dob']);
+});
+
+it('throws a validation error when creating a customer with duplicated email', function () {
+    Customer::factory()->create([
+        'email' => 'm@example.com',
+    ]);
+
+    $attributes = [
+        'first_name' => fake()->firstName(),
+        'last_name' => fake()->lastName(),
+        'email' => 'm@example.com',
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->postJson('/api/c/customers', $attributes);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+});
+
 it('shows a customer', function () {
     $customer = Customer::factory()->create();
 
@@ -61,6 +96,13 @@ it('shows a customer', function () {
             ->where('data.id', $customer->id)
             ->where('data.email', $customer->email)
         );
+});
+
+it('returns 404 when showing a non-existing customer', function () {
+    /** @var TestCase $this */
+    $response = $this->getJson('/api/c/customers/999999');
+
+    $response->assertNotFound();
 });
 
 it('updates a customer', function () {
@@ -87,6 +129,41 @@ it('updates a customer', function () {
         );
 });
 
+it('throws a validation error when updating a customer with invalid attributes', function () {
+    $customer = Customer::factory()->create();
+
+    $attributes = [
+        'first_name' => '',
+        'last_name' => '',
+        'email' => 'invalid-email',
+        'dob' => 'invalid-date',
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->putJson("/api/c/customers/{$customer->id}", $attributes);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['first_name', 'last_name', 'email', 'dob']);
+});
+
+it('throws a validation error when updating a customer with duplicated email', function () {
+    Customer::factory()->create([
+        'email' => 'm@example.com',
+    ]);
+
+    $customer = Customer::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->putJson("/api/c/customers/{$customer->id}", [
+        'email' => 'm@example.com',
+    ]);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+});
+
 it('deletes a customer', function () {
     $customer = Customer::factory()->create();
 
@@ -96,6 +173,13 @@ it('deletes a customer', function () {
     $response->assertNoContent();
 
     expect(Customer::query()->find($customer->id))->toBeNull();
+});
+
+it('returns 404 when deleting a non-existing customer', function () {
+    /** @var TestCase $this */
+    $response = $this->deleteJson('/api/c/customers/999999');
+
+    $response->assertNotFound();
 });
 
 it('bulk deletes customers', function () {
