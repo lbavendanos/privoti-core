@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Domains\Cms\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
+use App\Domains\Cms\Http\Requests\Auth\ResetPasswordRequest;
+use App\Domains\Cms\Http\Requests\Auth\UpdateUserPasswordRequest;
 use App\Domains\Cms\Http\Requests\Auth\UpdateUserRequest;
 use App\Domains\Cms\Http\Resources\UserResource;
 use App\Domains\Cms\Notifications\VerifyNewEmail;
@@ -56,15 +59,8 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user's password.
      */
-    public function updateUserPassword(Request $request): Response
+    public function updateUserPassword(UpdateUserPasswordRequest $request): Response
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password', 'string'],
-            'password' => ['required',  'string', Rules\Password::defaults()],
-        ], [
-            'current_password.current_password' => 'The provided password does not match your current password.',
-        ]);
-
         /** @var User $user */
         $user = $request->user();
         $user->update([
@@ -131,12 +127,8 @@ final class AuthController extends Controller
      *
      * @throws ValidationException
      */
-    public function forgotPassword(Request $request): JsonResponse
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-        ]);
-
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
@@ -160,14 +152,8 @@ final class AuthController extends Controller
      *
      * @throws ValidationException
      */
-    public function resetPassword(Request $request): JsonResource
+    public function resetPassword(ResetPasswordRequest $request): JsonResource
     {
-        $request->validate([
-            'token' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
