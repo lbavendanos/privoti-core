@@ -81,6 +81,22 @@ it('authenticates a user', function () {
         );
 });
 
+it('fails to authenticate a user with invalid attributes', function () {
+    $attributes = [
+        'email' => 'invalid-email',
+        'password' => '',
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->postJson('/c/login', $attributes);
+
+    $this->assertGuest('cms');
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email', 'password']);
+});
+
 it('fails to authenticate a user with invalid password', function () {
     $user = User::factory()->create();
 
@@ -95,6 +111,21 @@ it('fails to authenticate a user with invalid password', function () {
     $response
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
+});
+
+it('fails to authenticate a user with non-existing email', function () {
+    /** @var TestCase $this */
+    $response = $this->postJson('/c/login', [
+        'email' => fake()->email(),
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest('cms');
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+
 });
 
 it('logs out an authenticated user', function () {

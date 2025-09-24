@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
+use App\Domains\Cms\Http\Requests\Auth\UpdateUserRequest;
 use App\Domains\Cms\Http\Resources\UserResource;
 use App\Domains\Cms\Notifications\VerifyNewEmail;
 use App\Models\User;
@@ -41,16 +42,10 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user.
      */
-    public function updateUser(Request $request): UserResource
+    public function updateUser(UpdateUserRequest $request): UserResource
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'dob' => ['nullable', 'date'],
-        ]);
-
         /** @var array<string,mixed> $attributes */
-        $attributes = $request->only('name', 'phone', 'dob');
+        $attributes = $request->validated();
         /** @var User $user */
         $user = $request->user();
         $user->update($attributes);
