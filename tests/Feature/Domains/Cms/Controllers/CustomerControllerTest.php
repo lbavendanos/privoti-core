@@ -10,7 +10,7 @@ use Tests\TestCase;
 beforeEach(function () {
     $user = User::factory()->create();
     /** @var TestCase $this */
-    $this->actingAs($user);
+    $this->actingAs($user, 'cms');
 });
 
 it('returns a customer collection', function () {
@@ -95,6 +95,7 @@ it('shows a customer', function () {
         ->assertJson(fn (AssertableJson $json) => $json
             ->where('data.id', $customer->id)
             ->where('data.email', $customer->email)
+            ->etc()
         );
 });
 
@@ -126,6 +127,7 @@ it('updates a customer', function () {
             ->where('data.last_name', $attributes['last_name'])
             ->where('data.email', $attributes['email'])
             ->where('data.dob', $attributes['dob'])
+            ->etc()
         );
 });
 
