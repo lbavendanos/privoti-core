@@ -19,11 +19,7 @@ final class EmailChangeVerificationRequest extends FormRequest
             return false;
         }
 
-        if (! hash_equals(sha1($this->route('email')), (string) $this->route('hash'))) {
-            return false;
-        }
-
-        return true;
+        return hash_equals(sha1($this->route('email')), (string) $this->route('hash'));
     }
 
     /**
