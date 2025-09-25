@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Domains\Cms\Notifications\VerifyNewEmail;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Stringable;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -287,4 +294,206 @@ it('fails to reset the user password with invalid token', function () {
     $response
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
+});
+
+it('sends an email verification notification to the authenticated user', function () {
+    Notification::fake();
+
+    $user = User::factory()->unverified()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->postJson('/api/c/auth/user/email/notification');
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+
+    $response->assertNoContent();
+});
+
+it('does not send an email verification notification if the authenticated user email is already verified', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->postJson('/api/c/auth/user/email/notification');
+
+    Notification::assertNothingSent();
+
+    $response->assertNoContent();
+});
+
+it('verifies the authenticated user email with valid hash', function () {
+    Event::fake();
+
+    $user = User::factory()->unverified()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        )
+    );
+
+    Event::assertDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+
+    $response->assertNoContent();
+});
+
+it('does not verify the authenticated user email with invalid hash', function () {
+    $user = User::factory()->unverified()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1('wrong-email')]
+        )
+    );
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+
+    $response->assertForbidden();
+});
+
+it('does not verify the authenticated user email if already verified', function () {
+    Event::fake();
+
+    $user = User::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        )
+    );
+
+    Event::assertNotDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+
+    $response->assertNoContent();
+});
+
+it('sends an email change verification notification to the new email address', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $attributes = [
+        'email' => fake()->email(),
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->postJson('/api/c/auth/user/email/new/notification', $attributes);
+
+    Notification::assertSentOnDemand(VerifyNewEmail::class,
+        function (VerifyNewEmail $notification, $channels, AnonymousNotifiable $notifiable) use ($attributes) {
+            /** @var Stringable $route */
+            $route = $notifiable->routes['mail'];
+
+            return $route->value() === $attributes['email'];
+        }
+    );
+
+    $response->assertNoContent();
+});
+
+it('fails to send an email change verification notification with invalid attributes', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $attributes = [
+        'email' => 'invalid-email',
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->postJson('/api/c/auth/user/email/new/notification', $attributes);
+
+    Notification::assertNothingSent();
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+});
+
+it('verifies the new email address with valid hash', function () {
+    Event::fake();
+
+    $user = User::factory()->create();
+    $newEmail = fake()->email();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.new.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'email' => $newEmail, 'hash' => sha1($newEmail)]
+        )
+    );
+
+    Event::assertDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->email)->toBe($newEmail);
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+
+    $response->assertNoContent();
+});
+
+it('does not verify the new email address with invalid hash', function () {
+    Event::fake();
+
+    $user = User::factory()->create();
+    $newEmail = fake()->email();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.new.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'email' => $newEmail, 'hash' => sha1('wrong-email')]
+        )
+    );
+
+    Event::assertNotDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->email)->not->toBe($newEmail);
+
+    $response->assertForbidden();
+});
+
+it('does not verify the new email address if the id does not match the authenticated user', function () {
+    Event::fake();
+
+    $user = User::factory()->create();
+    $newEmail = fake()->email();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.new.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id + 1, 'email' => $newEmail, 'hash' => sha1($newEmail)]
+        )
+    );
+
+    Event::assertNotDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->email)->not->toBe($newEmail);
+
+    $response->assertForbidden();
 });

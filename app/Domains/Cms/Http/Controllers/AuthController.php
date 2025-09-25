@@ -256,7 +256,6 @@ final class AuthController extends Controller
 
         $user->update([
             'email' => $request->route('email'),
-            'email_verified_at' => now(),
         ]);
 
         event(new Verified($user));
