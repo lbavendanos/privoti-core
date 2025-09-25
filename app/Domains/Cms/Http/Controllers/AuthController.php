@@ -254,6 +254,10 @@ final class AuthController extends Controller
             abort(403);
         }
 
+        if ($user->email === $request->route('email')) {
+            return response()->noContent();
+        }
+
         $user->update([
             'email' => $request->route('email'),
         ]);

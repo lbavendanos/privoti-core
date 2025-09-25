@@ -497,3 +497,25 @@ it('does not verify the new email address if the id does not match the authentic
 
     $response->assertForbidden();
 });
+
+it('does not verify the new email address if the new email is the same as the current email', function () {
+    Event::fake();
+
+    $user = User::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->actingAs($user, 'cms')->getJson(
+        URL::temporarySignedRoute(
+            'auth.user.email.new.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'email' => $user->email, 'hash' => sha1($user->email)]
+        )
+    );
+
+    Event::assertNotDispatched(Verified::class);
+
+    /** @phpstan-ignore-next-line */
+    expect($user->fresh()->email)->toBe($user->email);
+
+    $response->assertNoContent();
+});
