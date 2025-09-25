@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Domains\Cms\Http\Requests\Auth\EmailChangeVerificationRequest;
 use App\Domains\Cms\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
 use App\Domains\Cms\Http\Requests\Auth\ResetPasswordRequest;
+use App\Domains\Cms\Http\Requests\Auth\SendEmailChangeVerificationRequest;
 use App\Domains\Cms\Http\Requests\Auth\UpdateUserPasswordRequest;
 use App\Domains\Cms\Http\Requests\Auth\UpdateUserRequest;
 use App\Domains\Cms\Http\Resources\UserResource;
@@ -222,12 +224,8 @@ final class AuthController extends Controller
     /**
      * Send email change verification notification.
      */
-    public function sendEmailChangeVerificationNotification(Request $request): Response
+    public function sendEmailChangeVerificationNotification(SendEmailChangeVerificationRequest $request): Response
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email', Rule::unique('users')],
-        ]);
-
         /** @var User $user */
         $user = $request->user();
 
@@ -240,19 +238,10 @@ final class AuthController extends Controller
     /**
      * Verify the new email address
      */
-    public function verifyNewEmail(Request $request): Response
+    public function verifyNewEmail(EmailChangeVerificationRequest $request): Response
     {
         /** @var User $user */
         $user = $request->user();
-
-        /** @phpstan-ignore-next-line */
-        if (! hash_equals((string) $user->getKey(), (string) $request->route('id'))) {
-            abort(403);
-        }
-
-        if (! hash_equals(sha1($request->route('email')), (string) $request->route('hash'))) {
-            abort(403);
-        }
 
         if ($user->email === $request->route('email')) {
             return response()->noContent();
