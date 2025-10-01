@@ -15,7 +15,8 @@ it('creates a registered customer', function () {
 
     $customer = (new CreateRegisteredCustomerAction())->handle($attributes);
 
-    expect($customer)->toBeInstanceOf(Customer::class)
+    expect($customer)
+        ->toBeInstanceOf(Customer::class)
         ->and($customer->account)->toBe(Customer::ACCOUNT_REGISTERED)
         ->and(password_verify('password', $customer->password))->toBeTrue();
 });

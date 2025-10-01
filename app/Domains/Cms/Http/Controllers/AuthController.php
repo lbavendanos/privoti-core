@@ -15,7 +15,6 @@ use App\Domains\Cms\Http\Resources\UserResource;
 use App\Domains\Cms\Notifications\VerifyNewEmail;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
@@ -27,8 +26,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 
 final class AuthController extends Controller
@@ -72,30 +69,6 @@ final class AuthController extends Controller
         event(new PasswordReset($user));
 
         return response()->noContent();
-    }
-
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
-    public function register(Request $request): JsonResource
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user = User::query()->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->string('password')->value()),
-        ]);
-
-        event(new Registered($user));
-
-        return new UserResource($user);
     }
 
     /**
