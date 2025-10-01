@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Actions\User\UpdateUserAction;
 use App\Domains\Cms\Http\Requests\Auth\EmailChangeVerificationRequest;
 use App\Domains\Cms\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Domains\Cms\Http\Requests\Auth\LoginRequest;
@@ -44,13 +45,12 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user.
      */
-    public function updateUser(UpdateUserRequest $request): UserResource
+    public function updateUser(UpdateUserRequest $request, UpdateUserAction $action): UserResource
     {
-        /** @var array<string,mixed> $attributes */
-        $attributes = $request->validated();
         /** @var User $user */
         $user = $request->user();
-        $user->update($attributes);
+        $attributes = $request->validated();
+        $user = $action->handle($user, $attributes);
 
         return new UserResource($user);
     }
@@ -58,12 +58,12 @@ final class AuthController extends Controller
     /**
      * Update the authenticated user's password.
      */
-    public function updateUserPassword(UpdateUserPasswordRequest $request): Response
+    public function updateUserPassword(UpdateUserPasswordRequest $request, UpdateUserAction $action): Response
     {
         /** @var User $user */
         $user = $request->user();
-        $user->update([
-            'password' => Hash::make($request->string('password')->value()),
+        $user = $action->handle($user, [
+            'password' => $request->string('password')->value(),
         ]);
 
         event(new PasswordReset($user));
@@ -211,7 +211,7 @@ final class AuthController extends Controller
     /**
      * Verify the new email address
      */
-    public function verifyNewEmail(EmailChangeVerificationRequest $request): Response
+    public function verifyNewEmail(EmailChangeVerificationRequest $request, UpdateUserAction $action): Response
     {
         /** @var User $user */
         $user = $request->user();
@@ -220,7 +220,7 @@ final class AuthController extends Controller
             return response()->noContent();
         }
 
-        $user->update([
+        $action->handle($user, [
             'email' => $request->route('email'),
         ]);
 
