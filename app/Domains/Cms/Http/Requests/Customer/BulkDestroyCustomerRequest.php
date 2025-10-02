@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domains\Cms\Http\Requests;
+namespace App\Domains\Cms\Http\Requests\Customer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
