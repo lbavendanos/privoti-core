@@ -56,8 +56,10 @@ final readonly class GetCustomersAction
             $query = $this->sortFilter->handle($query, $sort, ['name' => "CONCAT(first_name, ' ', last_name)"]);
         }
 
-        $perPage = Arr::integer($filters, 'per_page', 15);
-        $page = Arr::integer($filters, 'page', 1);
+        /** @phpstan-ignore-next-line */
+        $perPage = (int) Arr::get($filters, 'per_page', 15);
+        /** @phpstan-ignore-next-line */
+        $page = (int) (Arr::get($filters, 'page', 1));
 
         return $query->paginate($perPage, ['*'], 'page', $page);
     }
