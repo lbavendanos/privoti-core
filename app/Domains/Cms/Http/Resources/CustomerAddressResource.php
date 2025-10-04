@@ -7,7 +7,7 @@ namespace App\Domains\Cms\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-final class CustomerResource extends JsonResource
+final class CustomerAddressResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,16 +20,16 @@ final class CustomerResource extends JsonResource
             'id' => $this->id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'name' => $this->name,
-            'email' => $this->email,
-            'avatar' => null,
             'phone' => $this->phone,
-            'dob' => $this->dob,
-            'account' => $this->account,
-            'email_verified_at' => $this->email_verified_at,
+            'address1' => $this->address1,
+            'address2' => $this->address2,
+            'district' => $this->district,
+            'city' => $this->city,
+            'state' => $this->state,
+            'default' => $this->default,
+            'customer_id' => $this->customer_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'addresses' => CustomerAddressResource::collection($this->whenLoaded('addresses')),
         ];
     }
 }

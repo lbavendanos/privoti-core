@@ -48,6 +48,18 @@ final class CustomerAddress extends Model
     }
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'default' => 'boolean',
+        ];
+    }
+
+    /**
      * Interact with the user's first name.
      *
      * @return Attribute<string, string>
