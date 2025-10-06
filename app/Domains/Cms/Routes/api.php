@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Domains\Cms\Http\Controllers\AuthController;
 use App\Domains\Cms\Http\Controllers\CollectionController;
+use App\Domains\Cms\Http\Controllers\CustomerAddressController;
 use App\Domains\Cms\Http\Controllers\CustomerController;
 use App\Domains\Cms\Http\Controllers\ProductCategoryController;
 use App\Domains\Cms\Http\Controllers\ProductController;
@@ -43,6 +44,7 @@ Route::prefix('c')->group(function (): void {
             Route::apiResource('vendors', VendorController::class);
             Route::delete('customers', [CustomerController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
             Route::apiResource('customers', CustomerController::class);
+            Route::apiResource('customers.addresses', CustomerAddressController::class);
         });
     });
 });

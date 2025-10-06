@@ -20,6 +20,8 @@ final class CustomerAddress extends Model
 
     use SoftDeletes;
 
+    public const MAX_ADDRESSES_PER_CUSTOMER = 5;
+
     /**
      * The attributes that are mass assignable.
      *
