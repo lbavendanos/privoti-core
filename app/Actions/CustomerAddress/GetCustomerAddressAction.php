@@ -21,7 +21,7 @@ final readonly class GetCustomerAddressAction
             $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
 
             if ($address->customer_id !== $customer->id) {
-                throw (new ModelNotFoundException())->setModel(CustomerAddress::class, $address->id);
+                throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
             }
 
             return $address;

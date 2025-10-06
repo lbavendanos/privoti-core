@@ -39,8 +39,8 @@ it('can format last name to uppercase first letter', function () {
     $address = CustomerAddress::factory()
         ->for($customer)
         ->create([
-        'last_name' => 'doe smith',
-    ]);
+            'last_name' => 'doe smith',
+        ]);
 
     expect($address->last_name)->toBe('Doe Smith');
 });
@@ -50,8 +50,8 @@ it('can format phone number', function () {
     $address = CustomerAddress::factory()
         ->for($customer)
         ->create([
-        'phone' => '987654321',
-    ]);
+            'phone' => '987654321',
+        ]);
 
     expect($address->phone)->toBe([
         'e164' => '+51987654321',

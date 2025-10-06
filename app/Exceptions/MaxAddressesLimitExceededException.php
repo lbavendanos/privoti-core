@@ -11,7 +11,7 @@ final class MaxAddressesLimitExceededException extends DomainException
     public static function forCustomer(int $maxAddresses): self
     {
         return new self(
-            "A customer cannot have more than {$maxAddresses} addresses."
+            sprintf('A customer cannot have more than %d addresses.', $maxAddresses)
         );
     }
 }

@@ -43,8 +43,8 @@ final class CustomerAddressController
 
         try {
             $address = $action->handle($customer, $attributes);
-        } catch (MaxAddressesLimitExceededException $e) {
-            abort(403, $e->getMessage());
+        } catch (MaxAddressesLimitExceededException $maxAddressesLimitExceededException) {
+            abort(403, $maxAddressesLimitExceededException->getMessage());
         }
 
         return new CustomerAddressResource($address);
@@ -57,7 +57,7 @@ final class CustomerAddressController
     {
         try {
             $address = $action->handle($customer, $address);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException) {
             abort(404, 'Customer address not found.');
         }
 
@@ -73,7 +73,7 @@ final class CustomerAddressController
 
         try {
             $address = $action->handle($customer, $address, $attributes);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException) {
             abort(404, 'Customer address not found.');
         }
 
@@ -87,7 +87,7 @@ final class CustomerAddressController
     {
         try {
             $action->handle($customer, $address);
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException) {
             abort(404, 'Customer address not found.');
         }
 
