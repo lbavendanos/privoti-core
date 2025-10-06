@@ -29,9 +29,9 @@ it('returns a customer collection', function () {
 
 it('creates a customer', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'dob' => fake()->date(),
     ];
 
@@ -71,8 +71,8 @@ it('throws a validation error when creating a customer with duplicated email', f
     ]);
 
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'email' => 'm@example.com',
     ];
 
@@ -110,9 +110,9 @@ it('updates a customer', function () {
     $customer = Customer::factory()->create();
 
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'dob' => fake()->date(),
     ];
 

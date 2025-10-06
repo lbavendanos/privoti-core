@@ -16,9 +16,9 @@ beforeEach(function () {
 
 it('updates a customer by model instance', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'dob' => fake()->date(),
         'password' => 'newpassword',
     ];
@@ -37,9 +37,9 @@ it('updates a customer by model instance', function () {
 
 it('updates a customer by id', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'dob' => fake()->date(),
         'password' => 'newpassword',
     ];

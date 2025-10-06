@@ -7,8 +7,8 @@ use App\Models\User;
 
 it('registers a user and verifies email', function () {
     $attributes = [
-        'name' => fake()->name(),
-        'email' => fake()->email(),
+        'name' => 'John Doe',
+        'email' => 'm@example.com',
         'password' => 'password',
     ];
 

@@ -7,9 +7,9 @@ use App\Models\Customer;
 
 it('creates a customer with basic attributes', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'dob' => fake()->date(),
     ];
 
@@ -25,9 +25,9 @@ it('creates a customer with basic attributes', function () {
 
 it('creates a customer with phone number', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
         'phone' => '987654321',
     ];
 

@@ -34,7 +34,7 @@ it('updates the authenticated user', function () {
     $user = User::factory()->create();
 
     $attributes = [
-        'name' => fake()->name(),
+        'name' => 'John Doe',
         'phone' => fake()->phoneNumber(),
         'dob' => fake()->date(),
     ];
@@ -177,7 +177,7 @@ it('fails to authenticate a user with invalid password', function () {
 it('fails to authenticate a user with non-existing email', function () {
     /** @var TestCase $this */
     $response = $this->postJson('/c/login', [
-        'email' => fake()->email(),
+        'email' => 'm@example.com',
         'password' => 'password',
     ]);
 
@@ -390,7 +390,7 @@ it('sends an email change verification notification to the new email address', f
     $user = User::factory()->create();
 
     $attributes = [
-        'email' => fake()->email(),
+        'email' => 'm@example.com',
     ];
 
     /** @var TestCase $this */
@@ -431,7 +431,7 @@ it('verifies the new email address with valid hash', function () {
     Event::fake();
 
     $user = User::factory()->create();
-    $newEmail = fake()->email();
+    $newEmail = 'm@example.com';
 
     /** @var TestCase $this */
     $response = $this->actingAs($user, 'cms')->getJson(
@@ -456,7 +456,7 @@ it('does not verify the new email address with invalid hash', function () {
     Event::fake();
 
     $user = User::factory()->create();
-    $newEmail = fake()->email();
+    $newEmail = 'm@example.com';
 
     /** @var TestCase $this */
     $response = $this->actingAs($user, 'cms')->getJson(
@@ -479,7 +479,7 @@ it('does not verify the new email address if the id does not match the authentic
     Event::fake();
 
     $user = User::factory()->create();
-    $newEmail = fake()->email();
+    $newEmail = 'm@example.com';
 
     /** @var TestCase $this */
     $response = $this->actingAs($user, 'cms')->getJson(

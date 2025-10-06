@@ -10,8 +10,8 @@ use App\Models\CustomerAddress;
 it('creates a customer address with basic attributes', function () {
     $customer = Customer::factory()->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '987654321',
         'address1' => 'Av. Natalia Zayas',
         'address2' => 'Dpto. 101',
@@ -43,8 +43,8 @@ it('creates a customer address with basic attributes', function () {
 it('creates the first address as default even if default is set to false', function () {
     $customer = Customer::factory()->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '987654321',
         'address1' => 'Av. Natalia Zayas',
         'address2' => 'Dpto. 101',
@@ -64,8 +64,8 @@ it('throws an exception when creating more than the maximum allowed addresses fo
     CustomerAddress::factory()->count(CustomerAddress::MAX_ADDRESSES_PER_CUSTOMER)->for($customer)->create();
 
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '987654321',
         'address1' => 'Av. Natalia Zayas',
         'address2' => 'Dpto. 101',

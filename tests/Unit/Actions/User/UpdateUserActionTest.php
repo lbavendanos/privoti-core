@@ -16,8 +16,8 @@ beforeEach(function () {
 
 it('updates a user by model instance', function () {
     $attributes = [
-        'name' => fake()->name(),
-        'email' => fake()->email(),
+        'name' => 'John Doe',
+        'email' => 'm@example.com',
         'password' => 'newpassword',
     ];
 
@@ -33,8 +33,8 @@ it('updates a user by model instance', function () {
 
 it('updates a user by id', function () {
     $attributes = [
-        'name' => fake()->name(),
-        'email' => fake()->email(),
+        'name' => 'John Doe',
+        'email' => 'm@example.com',
         'password' => 'newpassword',
     ];
 

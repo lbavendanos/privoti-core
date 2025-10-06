@@ -7,9 +7,9 @@ use App\Models\Customer;
 
 it('creates a guest customer', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
-        'email' => fake()->email(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'm@example.com',
     ];
 
     $customer = (new CreateGuestCustomerAction())->handle($attributes);

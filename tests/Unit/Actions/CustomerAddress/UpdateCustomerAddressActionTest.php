@@ -11,8 +11,8 @@ it('updates a customer address by model instance', function () {
     $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()->for($customer)->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -43,8 +43,8 @@ it('updates a customer address by id', function () {
     $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()->for($customer)->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -75,8 +75,8 @@ it('throws an exception when the customer does not exist', function () {
     $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()->for($customer)->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -91,8 +91,8 @@ it('throws an exception when the customer does not exist', function () {
 it('throws an exception when the address does not exist', function () {
     $customer = Customer::factory()->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -106,8 +106,8 @@ it('throws an exception when the address does not exist', function () {
 
 it('throws an exception when neither the customer nor the address exist', function () {
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -124,8 +124,8 @@ it('throws an exception when the address does not belong to the given customer',
     $otherCustomer = Customer::factory()->create();
     $address = CustomerAddress::factory()->for($otherCustomer)->create();
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',
@@ -169,8 +169,8 @@ it('updates the address without changing the default status when the default att
     $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()->for($customer)->create(['default' => true]);
     $attributes = [
-        'first_name' => fake()->firstName(),
-        'last_name' => fake()->lastName(),
+        'first_name' => 'John',
+        'last_name' => 'Doe',
         'phone' => '912345678',
         'address1' => 'Urb. Valery  Crespo # 46 Hab. 463',
         'address2' => 'Hab. 834',

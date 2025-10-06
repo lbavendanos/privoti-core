@@ -7,8 +7,8 @@ use App\Models\User;
 
 it('creates a user with basic attributes', function () {
     $attributes = [
-        'name' => fake()->name(),
-        'email' => fake()->email(),
+        'name' => 'John Doe',
+        'email' => 'm@example.com',
         'password' => 'password',
     ];
 
