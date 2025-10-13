@@ -40,7 +40,7 @@ final class CustomerController
         $attributes = $request->validated();
         $customer = $action->handle($attributes);
 
-        return new CustomerResource($customer->load('addresses'));
+        return new CustomerResource($customer);
     }
 
     /**
@@ -48,7 +48,7 @@ final class CustomerController
      */
     public function show(Customer $customer): CustomerResource
     {
-        return new CustomerResource($customer->load('addresses'));
+        return new CustomerResource($customer);
     }
 
     /**
@@ -59,7 +59,7 @@ final class CustomerController
         $attributes = $request->validated();
         $customer = $action->handle($customer, $attributes);
 
-        return new CustomerResource($customer->load('addresses'));
+        return new CustomerResource($customer);
     }
 
     /**

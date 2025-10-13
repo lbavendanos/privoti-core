@@ -14,6 +14,7 @@ use App\Domains\Cms\Http\Requests\CustomerAddress\StoreCustomerAddressRequest;
 use App\Domains\Cms\Http\Requests\CustomerAddress\UpdateCustomerAddressRequest;
 use App\Domains\Cms\Http\Resources\CustomerAddressCollection;
 use App\Domains\Cms\Http\Resources\CustomerAddressResource;
+use App\Exceptions\CannotDeleteDefaultAddressException;
 use App\Exceptions\MaxAddressesLimitExceededException;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
@@ -89,6 +90,8 @@ final class CustomerAddressController
             $action->handle($customer, $address);
         } catch (ModelNotFoundException) {
             abort(404, 'Customer address not found.');
+        } catch (CannotDeleteDefaultAddressException $cannotDeleteDefaultAddressException) {
+            abort(403, $cannotDeleteDefaultAddressException->getMessage());
         }
 
         return response()->noContent();

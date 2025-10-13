@@ -11,6 +11,7 @@ use Database\Factories\CustomerFactory;
 use DateTimeInterface;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read CarbonImmutable|null $created_at
  * @property-read CarbonImmutable|null $updated_at
  * @property-read CarbonImmutable|null $deleted_at
+ * @property-read Collection<int, CustomerAddress> $addresses
  */
 final class Customer extends Authenticatable implements MustVerifyEmail
 {

@@ -60,3 +60,36 @@ it('can format phone number', function () {
         'mobile_dialing' => '987654321',
     ]);
 });
+
+it('can format district to uppercase first letter', function () {
+    $customer = Customer::factory()->create();
+    $address = CustomerAddress::factory()
+        ->for($customer)
+        ->create([
+            'district' => 'lima',
+        ]);
+
+    expect($address->district)->toBe('Lima');
+});
+
+it('can format city to uppercase first letter', function () {
+    $customer = Customer::factory()->create();
+    $address = CustomerAddress::factory()
+        ->for($customer)
+        ->create([
+            'city' => 'lima',
+        ]);
+
+    expect($address->city)->toBe('Lima');
+});
+
+it('can format state to uppercase first letter', function () {
+    $customer = Customer::factory()->create();
+    $address = CustomerAddress::factory()
+        ->for($customer)
+        ->create([
+            'state' => 'lima',
+        ]);
+
+    expect($address->state)->toBe('Lima');
+});

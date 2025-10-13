@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\CustomerAddress\DeleteCustomerAddressAction;
+use App\Exceptions\CannotDeleteDefaultAddressException;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -49,3 +50,10 @@ it('throws an exception if the address does not exist', function () {
 it('throws an exception if both customer and address do not exist', function () {
     app(DeleteCustomerAddressAction::class)->handle(9999, 9999);
 })->throws(ModelNotFoundException::class);
+
+it('throws an exception if trying to delete a default address', function () {
+    $customer = Customer::factory()->create();
+    $address = CustomerAddress::factory()->for($customer)->create(['default' => true]);
+
+    app(DeleteCustomerAddressAction::class)->handle($customer, $address);
+})->throws(CannotDeleteDefaultAddressException::class);
