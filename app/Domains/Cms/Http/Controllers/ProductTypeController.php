@@ -4,51 +4,22 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Actions\ProductType\GetProductTypesAction;
+use App\Domains\Cms\Http\Requests\ProductType\GetProductTypesRequest;
 use App\Domains\Cms\Http\Resources\ProductTypeCollection;
-use App\Models\ProductType;
-use Illuminate\Http\Request;
 
 final class ProductTypeController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): ProductTypeCollection
+    public function index(GetProductTypesRequest $request, GetProductTypesAction $action): ProductTypeCollection
     {
-        $request->validate([
-            'all' => ['nullable', 'boolean'],
-            'fields' => ['nullable', 'string'],
-            'q' => ['nullable', 'string'],
-            'order' => ['nullable', 'string'],
-            'per_page' => ['nullable', 'integer'],
-            'page' => ['nullable', 'integer'],
-        ]);
+        /** @var array<string,mixed> $filters */
+        $filters = $request->validated();
+        $resource = $action->handle($filters);
 
-        $query = ProductType::query();
-
-        if ($request->filled('fields')) {
-            $query->select(explode(',', $request->string('fields')->value()));
-        }
-
-        $query->when($request->filled('q'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $request->string('q')->value())));
-
-        $orders = explode(',', $request->string('order', 'id')->value());
-
-        foreach ($orders as $order) {
-            $direction = str_starts_with($order, '-') ? 'desc' : 'asc';
-            $column = mb_ltrim($order, '-');
-
-            $query->orderBy($column, $direction);
-        }
-
-        if ($request->boolean('all', false)) {
-            return new ProductTypeCollection($query->get());
-        }
-
-        $perPage = $request->integer('per_page', 15);
-        $page = $request->integer('page', 1);
-
-        return new ProductTypeCollection($query->paginate($perPage, ['*'], 'page', $page));
+        return new ProductTypeCollection($resource);
     }
 
     /**
