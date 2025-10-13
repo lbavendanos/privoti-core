@@ -394,13 +394,3 @@ it('throws a not found error when deleting a non-existing customer address for a
 
     $response->assertNotFound();
 });
-
-it('throws a forbidden error when deleting a default customer address', function () {
-    $customer = Customer::factory()->create();
-    $address = CustomerAddress::factory()->for($customer)->create(['default' => true]);
-
-    /** @var TestCase $this */
-    $response = $this->deleteJson(sprintf('/api/c/customers/%s/addresses/%s', $customer->id, $address->id));
-
-    $response->assertForbidden();
-});

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\CustomerAddress;
 
-use App\Exceptions\CannotDeleteDefaultAddressException;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,10 +22,6 @@ final readonly class DeleteCustomerAddressAction
 
             if ($address->customer_id !== $customer->id) {
                 throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
-            }
-
-            if ($address->default) {
-                throw CannotDeleteDefaultAddressException::create();
             }
 
             $address->delete();
