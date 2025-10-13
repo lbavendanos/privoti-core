@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-final class AuthController extends Controller
+final class AuthController
 {
     /**
      * Display the authenticated user.
