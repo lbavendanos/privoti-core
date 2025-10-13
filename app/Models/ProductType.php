@@ -5,11 +5,20 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\ProductTypeFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string|null $created_at
+ * @property-read string|null $updated_at
+ * @property-read string|null $deleted_at
+ * @property-read Collection<int, Product> $products
+ */
 final class ProductType extends Model
 {
     /** @use HasFactory<ProductTypeFactory> */

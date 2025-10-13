@@ -4,13 +4,32 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\ProductCategoryFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string $handle
+ * @property-read string|null $description
+ * @property-read bool $is_active
+ * @property-read bool $is_public
+ * @property-read int $rank
+ * @property-read array<string, mixed>|null $metadata
+ * @property-read int|null $parent_id
+ * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
+ * @property-read ProductCategory|null $parent
+ * @property-read Collection<int, ProductCategory> $children
+ * @property-read Collection<int, Product> $products
+ */
 final class ProductCategory extends Model
 {
     /** @use HasFactory<ProductCategoryFactory> */
@@ -61,7 +80,7 @@ final class ProductCategory extends Model
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'category_id');
     }
 
     /**
