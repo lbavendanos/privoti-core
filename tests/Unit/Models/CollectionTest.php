@@ -16,4 +16,3 @@ it('can have many products', function () {
 
     expect($collection->products)->toHaveCount(5);
 });
-
