@@ -20,7 +20,8 @@ final class ProductMediaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'url' => fake()->imageUrl(),
+            'rank' => 0,
         ];
     }
 }

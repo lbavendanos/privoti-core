@@ -27,7 +27,7 @@ final readonly class GetVendorsAction
     }
 
     /**
-     * Builds a vendor query based on provided filters and ordering options.
+     * Builds a vendor pagination based on the provided filters.
      *
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator<int, Vendor>
@@ -36,7 +36,7 @@ final readonly class GetVendorsAction
     {
         $query = Vendor::query();
 
-        $query->when(Arr::has($filters, 'name'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', Arr::string($filters, 'name'))));
+        $query->when(Arr::has($filters, 'name'), fn ($q) => $q->whereLike('name', sprintf('%%%s%%', Arr::string($filters, 'name'))));
 
         if (Arr::has($filters, 'created_at')) {
             /** @var list<string> $dates */

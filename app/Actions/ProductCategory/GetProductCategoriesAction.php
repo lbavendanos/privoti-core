@@ -27,7 +27,7 @@ final readonly class GetProductCategoriesAction
     }
 
     /**
-     * Builds a product category query based on provided filters and ordering options.
+     * Builds a product category pagination based on the provided filters.
      *
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator<int, ProductCategory>
@@ -36,7 +36,7 @@ final readonly class GetProductCategoriesAction
     {
         $query = ProductCategory::query();
 
-        $query->when(Arr::has($filters, 'name'), fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', Arr::string($filters, 'name'))));
+        $query->when(Arr::has($filters, 'name'), fn ($q) => $q->whereLike('name', sprintf('%%%s%%', Arr::string($filters, 'name'))));
 
         if (Arr::has($filters, 'created_at')) {
             /** @var list<string> $dates */

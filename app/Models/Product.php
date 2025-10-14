@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Traits\TimestampsScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +18,30 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property-read int $id
+ * @property-read string $title
+ * @property-read string|null $subtitle
+ * @property-read string $handle
+ * @property-read string|null $description
+ * @property-read string|null $thumbnail
+ * @property-read int $stock
+ * @property-read string $status
+ * @property-read list<string>|null $tags
+ * @property-read array<string,mixed>|null $metadata
+ * @property-read int|null $category_id
+ * @property-read int|null $type_id
+ * @property-read int|null $vendor_id
+ * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
+ * @property-read ProductCategory|null $category
+ * @property-read ProductType|null $type
+ * @property-read Vendor|null $vendor
+ * @property-read EloquentCollection<int, ProductMedia> $media
+ * @property-read EloquentCollection<int, ProductOption> $options
+ * @property-read EloquentCollection<int, ProductOptionValue> $values
+ */
 final class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */

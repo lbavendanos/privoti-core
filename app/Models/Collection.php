@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\CollectionFactory;
-use Illuminate\Database\Eloquent\Collection as ECollection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,10 +19,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read string $handle
  * @property-read string|null $description
  * @property-read array<string, mixed>|null $metadata
- * @property-read string|null $created_at
- * @property-read string|null $updated_at
- * @property-read string|null $deleted_at
- * @property-read ECollection<int, Product> $products
+ * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
+ * @property-read EloquentCollection<int, Product> $products
  */
 final class Collection extends Model
 {

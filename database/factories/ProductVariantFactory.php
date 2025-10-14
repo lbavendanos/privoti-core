@@ -20,7 +20,11 @@ final class ProductVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->word(),
+            'price' => fake()->randomFloat(2, 1, 1000),
+            'quantity' => fake()->numberBetween(0, 100),
+            'sku' => fake()->unique()->bothify('SKU-#####'),
+            'barcode' => fake()->unique()->ean13(),
         ];
     }
 }

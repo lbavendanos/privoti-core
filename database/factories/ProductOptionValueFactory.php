@@ -20,7 +20,7 @@ final class ProductOptionValueFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'value' => fake()->word(),
         ];
     }
 }

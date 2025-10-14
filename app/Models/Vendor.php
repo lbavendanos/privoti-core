@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\VendorFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property-read int $id
  * @property-read string $name
- * @property-read string|null $created_at
- * @property-read string|null $updated_at
- * @property-read string|null $deleted_at
+ * @property-read CarbonImmutable|null $created_at
+ * @property-read CarbonImmutable|null $updated_at
+ * @property-read CarbonImmutable|null $deleted_at
  * @property-read Collection<int, Product> $products
  */
 final class Vendor extends Model

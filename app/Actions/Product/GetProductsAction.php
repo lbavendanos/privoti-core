@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Collection;
+namespace App\Actions\Product;
 
 use App\Actions\Common\ApplyCreatedAtFilterAction;
 use App\Actions\Common\ApplySortFilterAction;
 use App\Actions\Common\ApplyUpdatedAtFilterAction;
-use App\Models\Collection;
+use App\Models\Product;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 
-final readonly class GetCollectionsAction
+final readonly class GetProductsAction
 {
     /**
-     * @param  ApplyCreatedAtFilterAction<Collection>  $createdAtFilter
-     * @param  ApplyUpdatedAtFilterAction<Collection>  $updatedAtFilter
-     * @param  ApplySortFilterAction<Collection>  $sortFilter
+     * @param  ApplyCreatedAtFilterAction<Product>  $createdAtFilter
+     * @param  ApplyUpdatedAtFilterAction<Product>  $updatedAtFilter
+     * @param  ApplySortFilterAction<Product>  $sortFilter
      */
     public function __construct(
         private ApplyCreatedAtFilterAction $createdAtFilter,
@@ -27,16 +27,29 @@ final readonly class GetCollectionsAction
     }
 
     /**
-     * Builds a collection pagination based on the provided filters.
+     * Builds a product pagination based on the provided filters.
      *
      * @param  array<string,mixed>  $filters
-     * @return LengthAwarePaginator<int, Collection>
+     * @return LengthAwarePaginator<int, Product>
      */
     public function handle(array $filters = []): LengthAwarePaginator
     {
-        $query = Collection::query();
+        $query = Product::query();
+
+        $query->with([
+            'category',
+            'type',
+            'vendor',
+            'media',
+            'collections',
+            'options.values',
+            'variants.values',
+        ]);
 
         $query->when(Arr::has($filters, 'title'), fn ($q) => $q->whereLike('title', sprintf('%%%s%%', Arr::string($filters, 'title'))));
+        $query->when(Arr::has($filters, 'status'), fn ($q) => $q->whereIn('status', Arr::array($filters, 'status')));
+        $query->when(Arr::has($filters, 'type'), fn ($q) => $q->whereHas('type', fn ($q) => $q->whereIn('name', Arr::array($filters, 'type'))));
+        $query->when(Arr::has($filters, 'vendor'), fn ($q) => $q->whereHas('vendor', fn ($q) => $q->whereIn('name', Arr::array($filters, 'vendor'))));
 
         if (Arr::has($filters, 'created_at')) {
             /** @var list<string> $dates */

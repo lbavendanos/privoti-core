@@ -6,7 +6,6 @@ namespace App\Domains\Cms\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Arr;
 
 final class ProductResource extends JsonResource
 {
@@ -17,7 +16,7 @@ final class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = [
+        return [
             'id' => $this->id,
             'title' => $this->title,
             'subtitle' => $this->subtitle,
@@ -41,13 +40,5 @@ final class ProductResource extends JsonResource
             'options' => ProductOptionResource::collection($this->whenLoaded('options')),
             'variants' => ProductVariantResource::collection($this->whenLoaded('variants')),
         ];
-
-        if ($request->filled('fields')) {
-            $fields = explode(',', $request->string('fields')->value());
-            $data = Arr::only($data, $fields);
-        }
-
-        /** @var array<string, mixed> $data */
-        return array_merge($data, []);
     }
 }

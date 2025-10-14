@@ -27,7 +27,7 @@ final readonly class GetCustomersAction
     }
 
     /**
-     * Builds a customer query based on provided filters and ordering options.
+     * Builds a customer pagination based on the provided filters.
      *
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator<int, Customer>

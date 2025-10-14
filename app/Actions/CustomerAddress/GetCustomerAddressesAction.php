@@ -28,7 +28,7 @@ final readonly class GetCustomerAddressesAction
     }
 
     /**
-     * Builds a customer address query based on provided filters and ordering options.
+     * Builds a customer address pagination based on the provided filters.
      *
      * @param  array<string,mixed>  $filters
      * @return LengthAwarePaginator<int, CustomerAddress>

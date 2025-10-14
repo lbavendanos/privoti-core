@@ -6,8 +6,7 @@ use App\Models\Customer;
 use App\Models\CustomerAddress;
 
 it('can create a customer address', function () {
-    $customer = Customer::factory()->create();
-    $address = CustomerAddress::factory()->for($customer)->create();
+    $address = CustomerAddress::factory()->forCustomer()->create();
 
     expect($address)
         ->toBeInstanceOf(CustomerAddress::class)
@@ -24,9 +23,8 @@ it('can belong to a customer', function () {
 });
 
 it('can format first name to uppercase first letter', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'first_name' => 'john doe',
         ]);
@@ -35,9 +33,8 @@ it('can format first name to uppercase first letter', function () {
 });
 
 it('can format last name to uppercase first letter', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'last_name' => 'doe smith',
         ]);
@@ -46,9 +43,8 @@ it('can format last name to uppercase first letter', function () {
 });
 
 it('can format phone number', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'phone' => '987654321',
         ]);
@@ -62,9 +58,8 @@ it('can format phone number', function () {
 });
 
 it('can format district to uppercase first letter', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'district' => 'lima',
         ]);
@@ -73,9 +68,8 @@ it('can format district to uppercase first letter', function () {
 });
 
 it('can format city to uppercase first letter', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'city' => 'lima',
         ]);
@@ -84,9 +78,8 @@ it('can format city to uppercase first letter', function () {
 });
 
 it('can format state to uppercase first letter', function () {
-    $customer = Customer::factory()->create();
     $address = CustomerAddress::factory()
-        ->for($customer)
+        ->forCustomer()
         ->create([
             'state' => 'lima',
         ]);
