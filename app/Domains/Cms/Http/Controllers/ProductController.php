@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Actions\Product\GetProductAction;
 use App\Actions\Product\GetProductsAction;
 use App\Domains\Cms\Http\Requests\Product\GetProductsRequest;
 use App\Domains\Cms\Http\Resources\ProductCollection;
@@ -81,17 +82,9 @@ final class ProductController
     /**
      * Display the specified resource.
      */
-    public function show(Product $product): ProductResource
+    public function show(Product $product, GetProductAction $action): ProductResource
     {
-        return new ProductResource($product->load(
-            'category',
-            'type',
-            'vendor',
-            'media',
-            'collections',
-            'options.values',
-            'variants.values'
-        ));
+        return new ProductResource($action->handle($product));
     }
 
     /**

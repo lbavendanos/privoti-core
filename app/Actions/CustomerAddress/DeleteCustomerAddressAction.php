@@ -16,14 +16,14 @@ final readonly class DeleteCustomerAddressAction
      */
     public function handle(Customer|int $customer, CustomerAddress|int $address): void
     {
-        DB::transaction(function () use ($customer, $address): void {
-            $address = $address instanceof CustomerAddress ? $address : CustomerAddress::query()->findOrFail($address);
-            $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
+        $address = $address instanceof CustomerAddress ? $address : CustomerAddress::query()->findOrFail($address);
+        $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
 
-            if ($address->customer_id !== $customer->id) {
-                throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
-            }
+        if ($address->customer_id !== $customer->id) {
+            throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
+        }
 
+        DB::transaction(function () use ($address): void {
             $address->delete();
         });
     }

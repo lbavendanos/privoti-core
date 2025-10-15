@@ -40,8 +40,8 @@ final readonly class GetProductsAction
             'category',
             'type',
             'vendor',
-            'media',
             'collections',
+            'media',
             'options.values',
             'variants.values',
         ]);

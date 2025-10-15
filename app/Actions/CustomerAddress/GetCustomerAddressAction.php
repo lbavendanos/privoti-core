@@ -7,7 +7,6 @@ namespace App\Actions\CustomerAddress;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 
 final readonly class GetCustomerAddressAction
 {
@@ -16,15 +15,18 @@ final readonly class GetCustomerAddressAction
      */
     public function handle(Customer|int $customer, CustomerAddress|int $address): CustomerAddress
     {
-        return DB::transaction(function () use ($customer, $address): CustomerAddress {
-            $address = $address instanceof CustomerAddress ? $address : CustomerAddress::query()->findOrFail($address);
-            $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
+        $customerId = $customer instanceof Customer ? $customer->id : $customer;
+        $addressId = $address instanceof CustomerAddress ? $address->id : $address;
 
-            if ($address->customer_id !== $customer->id) {
-                throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
-            }
+        $customerAddress = CustomerAddress::query()
+            ->where('id', $addressId)
+            ->where('customer_id', $customerId)
+            ->first();
 
-            return $address;
-        });
+        if (! $customerAddress) {
+            throw new ModelNotFoundException()->setModel(CustomerAddress::class, $addressId);
+        }
+
+        return $customerAddress;
     }
 }

@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read ProductCategory|null $category
  * @property-read ProductType|null $type
  * @property-read Vendor|null $vendor
+ * @property-read EloquentCollection<int, Collection> $collections
  * @property-read EloquentCollection<int, ProductMedia> $media
  * @property-read EloquentCollection<int, ProductOption> $options
  * @property-read EloquentCollection<int, ProductOptionValue> $values
@@ -103,6 +104,16 @@ final class Product extends Model
     }
 
     /**
+     * The collections that belong to the product.
+     *
+     * @return BelongsToMany<Collection, $this, Pivot>
+     */
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class);
+    }
+
+    /**
      * Get the media for the product.
      *
      * @return HasMany<ProductMedia, $this>
@@ -140,16 +151,6 @@ final class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
-    }
-
-    /**
-     * The collections that belong to the product.
-     *
-     * @return BelongsToMany<Collection, $this, Pivot>
-     */
-    public function collections(): BelongsToMany
-    {
-        return $this->belongsToMany(Collection::class);
     }
 
     /**

@@ -19,14 +19,14 @@ final readonly class UpdateCustomerAddressAction
      */
     public function handle(Customer|int $customer, CustomerAddress|int $address, array $attributes): CustomerAddress
     {
+        $address = $address instanceof CustomerAddress ? $address : CustomerAddress::query()->findOrFail($address);
+        $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
+
+        if ($address->customer_id !== $customer->id) {
+            throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
+        }
+
         return DB::transaction(function () use ($customer, $address, $attributes): CustomerAddress {
-            $address = $address instanceof CustomerAddress ? $address : CustomerAddress::query()->findOrFail($address);
-            $customer = $customer instanceof Customer ? $customer : Customer::query()->findOrFail($customer);
-
-            if ($address->customer_id !== $customer->id) {
-                throw new ModelNotFoundException()->setModel(CustomerAddress::class, $address->id);
-            }
-
             if (Arr::has($attributes, 'default')) {
                 if ($attributes['default'] === true) {
                     $customer->addresses()
