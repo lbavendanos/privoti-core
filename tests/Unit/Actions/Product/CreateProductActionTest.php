@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Actions\Product\CreateProductAction;
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 it('creates a product with basic attributes', function () {
     $attributes = [
@@ -52,4 +54,23 @@ it('creates a product with a custom status', function () {
 
     expect($product)->toBeInstanceOf(Product::class)
         ->and($product->status)->toBe($attributes['status']);
+});
+
+it('creates a product with media', function () {
+    Storage::fake('s3');
+
+    $attributes = [
+        'title' => 'Test Product with Media',
+        'media' => [
+            ['file' => UploadedFile::fake()->image('media1.jpg'), 'rank' => 1],
+            ['file' => UploadedFile::fake()->image('media2.jpg'), 'rank' => 2],
+        ],
+    ];
+
+    /** @var CreateProductAction $action */
+    $action = app(CreateProductAction::class);
+    $product = $action->handle($attributes);
+
+    expect($product)->toBeInstanceOf(Product::class)
+        ->and($product->media)->toHaveCount(2);
 });

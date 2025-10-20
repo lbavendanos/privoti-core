@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Product;
 
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,6 +13,7 @@ use Illuminate\Support\Str;
 final readonly class CreateProductAction
 {
     public function __construct(
+        private CreateProductMediaAction $createProductMediaAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -25,8 +27,8 @@ final readonly class CreateProductAction
     public function handle(array $attributes): Product
     {
         return DB::transaction(function () use ($attributes): Product {
-            /** @var array<string,mixed> $attributes */
-            $attributes = Arr::only($attributes, [
+            /** @var array<string,mixed> $basicAttributes */
+            $basicAttributes = Arr::only($attributes, [
                 'title',
                 'subtitle',
                 'handle',
@@ -36,13 +38,19 @@ final readonly class CreateProductAction
                 'metadata',
             ]);
 
-            $attributes['handle'] = Str::slug(Arr::string($attributes, 'title'));
+            $basicAttributes['handle'] = Str::slug(Arr::string($basicAttributes, 'title'));
 
-            if (! Arr::has($attributes, 'status')) {
-                $attributes['status'] = Product::STATUS_DEFAULT;
+            if (! Arr::has($basicAttributes, 'status')) {
+                $basicAttributes['status'] = Product::STATUS_DEFAULT;
             }
 
-            $product = Product::query()->create($attributes);
+            $product = Product::query()->create($basicAttributes);
+
+            if (Arr::has($attributes, 'media')) {
+                /** @var list<array{'file':UploadedFile, 'rank': int}>  $media */
+                $media = Arr::array($attributes, 'media');
+                $this->createProductMediaAction->handle($product, $media);
+            }
 
             return $this->getProductAction->handle($product);
         });
