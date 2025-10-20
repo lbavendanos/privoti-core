@@ -154,6 +154,18 @@ final class Product extends Model
     }
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'metadata' => 'array',
+        ];
+    }
+
+    /**
      * Get the product's thumbnail.
      *
      * @return Attribute<string|null, never>
