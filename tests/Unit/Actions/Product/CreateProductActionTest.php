@@ -97,3 +97,46 @@ it('creates a product with options', function () {
     expect($product)->toBeInstanceOf(Product::class)
         ->and($product->options)->toHaveCount(2);
 });
+
+it('creates a product with variants', function () {
+    $attributes = [
+        'title' => 'Test Product with Variants',
+        'options' => [
+            [
+                'name' => 'Size',
+                'values' => ['Small', 'Medium', 'Large'],
+            ],
+            [
+                'name' => 'Color',
+                'values' => ['Red', 'Blue', 'Green'],
+            ],
+        ],
+        'variants' => [
+            [
+                'name' => 'Variant 1',
+                'price' => 19.99,
+                'quantity' => 10,
+                'options' => [
+                    ['value' => 'Small'],
+                    ['value' => 'Red'],
+                ],
+            ],
+            [
+                'name' => 'Variant 2',
+                'price' => 29.99,
+                'quantity' => 5,
+                'options' => [
+                    ['value' => 'Large'],
+                    ['value' => 'Blue'],
+                ],
+            ],
+        ],
+    ];
+
+    /** @var CreateProductAction $action */
+    $action = app(CreateProductAction::class);
+    $product = $action->handle($attributes);
+
+    expect($product)->toBeInstanceOf(Product::class)
+        ->and($product->variants)->toHaveCount(2);
+});

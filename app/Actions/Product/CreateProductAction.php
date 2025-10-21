@@ -15,6 +15,7 @@ final readonly class CreateProductAction
     public function __construct(
         private CreateProductMediaAction $createProductMediaAction,
         private CreateProductOptionsAction $createProductOptionsAction,
+        private CreateProductVariantsAction $createProductVariantsAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -39,9 +40,15 @@ final readonly class CreateProductAction
             }
 
             if (Arr::has($attributes, 'options')) {
-                /** @var array<int,array{'name': string, 'values'?: list<string>}> $options */
+                /** @var list<array{'name': string, 'values'?: list<string>}> $options */
                 $options = Arr::array($attributes, 'options');
                 $this->createProductOptionsAction->handle($product, $options);
+            }
+
+            if (Arr::has($attributes, 'variants')) {
+                /** @var list<array<string,mixed>> $variants */
+                $variants = Arr::array($attributes, 'variants');
+                $this->createProductVariantsAction->handle($product, $variants);
             }
 
             return $this->getProductAction->handle($product);
