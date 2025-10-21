@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Traits\TimestampsScope;
 use Carbon\CarbonImmutable;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -49,7 +48,6 @@ final class Product extends Model
     use HasFactory;
 
     use SoftDeletes;
-    use TimestampsScope;
 
     public const array STATUS_LIST = ['draft', 'active', 'archived'];
 
