@@ -6,6 +6,7 @@ namespace App\Actions\Product;
 
 use App\Models\Product;
 use App\Models\ProductOption;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,7 @@ final readonly class CreateProductOptionsAction
     /**
      * Create product options.
      *
-     * @param  list<array{name: string, values?: list<string>}>  $attributes
+     * @param  list<array<string,mixed>>  $attributes
      * @return Collection<int, ProductOption>
      */
     public function handle(Product $product, array $attributes): Collection
@@ -24,10 +25,14 @@ final readonly class CreateProductOptionsAction
             $collection = collect();
 
             foreach ($attributes as $attribute) {
-                $option = $product->options()->create(['name' => $attribute['name']]);
+                /** @var array<string, mixed> $optionAttributes */
+                $optionAttributes = Arr::only($attribute, ['name']);
+                $option = $product->options()->create($optionAttributes);
 
-                if (isset($attribute['values'])) {
-                    $values = array_map(fn (string $value): array => ['value' => $value], $attribute['values']);
+                if (Arr::has($attribute, 'values')) {
+                    /** @var list<string> $valueAttributes */
+                    $valueAttributes = Arr::array($attribute, 'values');
+                    $values = array_map(fn (string $value): array => ['value' => $value], $valueAttributes);
 
                     $option->values()->createMany($values);
                 }

@@ -13,8 +13,6 @@ use InvalidArgumentException;
 
 final readonly class CreateProductVariantsAction
 {
-    // * @param  list<array{name: string, price: float, quantity: int, options: list<array{value: string}>}>  $attributes
-
     /**
      * Create product variants.
      *

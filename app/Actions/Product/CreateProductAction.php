@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Actions\Product;
 
 use App\Models\Product;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -34,13 +33,13 @@ final readonly class CreateProductAction
             $product = Product::query()->create($basicAttributes);
 
             if (Arr::has($attributes, 'media')) {
-                /** @var list<array{'file':UploadedFile, 'rank': int}>  $media */
+                /** @var list<array<string,mixed>> $media */
                 $media = Arr::array($attributes, 'media');
                 $this->createProductMediaAction->handle($product, $media);
             }
 
             if (Arr::has($attributes, 'options')) {
-                /** @var list<array{'name': string, 'values'?: list<string>}> $options */
+                /** @var list<array<string,mixed>> $options */
                 $options = Arr::array($attributes, 'options');
                 $this->createProductOptionsAction->handle($product, $options);
             }

@@ -43,3 +43,16 @@ it('handles empty media attributes', function () {
 
     expect($mediaCollection)->toHaveCount(0);
 });
+
+it('throws an exception for invalid file types', function () {
+    $product = Product::factory()->create();
+
+    $attributes = [
+        ['file' => 'not-a-file', 'rank' => 1],
+    ];
+
+    /** @var CreateProductMediaAction $action */
+    $action = app(CreateProductMediaAction::class);
+
+    $action->handle($product, $attributes);
+})->throws(InvalidArgumentException::class, 'The file must be an instance of UploadedFile.');

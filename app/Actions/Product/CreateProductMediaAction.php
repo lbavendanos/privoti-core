@@ -10,6 +10,7 @@ use App\Models\ProductMedia;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 final readonly class CreateProductMediaAction
 {
@@ -24,7 +25,7 @@ final readonly class CreateProductMediaAction
     /**
      * Create product media.
      *
-     * @param  list<array{file: UploadedFile, rank: int}>  $attributes
+     * @param  list<array<string,mixed>>  $attributes
      * @return Collection<int,ProductMedia>
      */
     public function handle(Product $product, array $attributes): Collection
@@ -35,6 +36,10 @@ final readonly class CreateProductMediaAction
 
             foreach ($attributes as $key => $attribute) {
                 ['file' => $file, 'rank' => $rank] = $attribute;
+
+                if (! $file instanceof UploadedFile) {
+                    throw new InvalidArgumentException('The file must be an instance of UploadedFile.');
+                }
 
                 $filename = sprintf('%s-%s', $product->handle, ($key + 1));
                 $url = $this->storeFileAction->handle($file, self::DIRECTORY, $filename);
