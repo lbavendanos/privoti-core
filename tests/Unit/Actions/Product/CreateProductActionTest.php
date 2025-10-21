@@ -3,7 +3,12 @@
 declare(strict_types=1);
 
 use App\Actions\Product\CreateProductAction;
+use App\Models\Collection;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductType;
+use App\Models\Vendor;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,9 +29,9 @@ it('creates a product with basic attributes', function () {
         ->and($product->title)->toBe($attributes['title'])
         ->and($product->subtitle)->toBe($attributes['subtitle'])
         ->and($product->description)->toBe($attributes['description'])
+        ->and($product->status)->toBe(Product::STATUS_DEFAULT)
         ->and($product->tags)->toBe($attributes['tags'])
-        ->and($product->metadata)->toBe($attributes['metadata'])
-        ->and($product->status)->toBe(Product::STATUS_DEFAULT);
+        ->and($product->metadata)->toBe($attributes['metadata']);
 });
 
 it('creates a product and generates a handle from the title', function () {
@@ -54,6 +59,28 @@ it('creates a product with a custom status', function () {
 
     expect($product)->toBeInstanceOf(Product::class)
         ->and($product->status)->toBe($attributes['status']);
+});
+
+it('creates a product with relations to category, type and vendor', function () {
+    $category = ProductCategory::factory()->create();
+    $type = ProductType::factory()->create();
+    $vendor = Vendor::factory()->create();
+
+    $attributes = [
+        'title' => 'Test Product',
+        'category_id' => $category->id,
+        'type_id' => $type->id,
+        'vendor_id' => $vendor->id,
+    ];
+
+    /** @var CreateProductAction $action */
+    $action = app(CreateProductAction::class);
+    $product = $action->handle($attributes);
+
+    expect($product)->toBeInstanceOf(Product::class)
+        ->and($product->category_id)->toBe($attributes['category_id'])
+        ->and($product->type_id)->toBe($attributes['type_id'])
+        ->and($product->vendor_id)->toBe($attributes['vendor_id']);
 });
 
 it('creates a product with media', function () {
@@ -139,4 +166,21 @@ it('creates a product with variants', function () {
 
     expect($product)->toBeInstanceOf(Product::class)
         ->and($product->variants)->toHaveCount(2);
+});
+
+it('creates a product and attaches it to collections', function () {
+    /** @var EloquentCollection<int, Collection> $collections */
+    $collections = Collection::factory()->count(2)->create();
+
+    $attributes = [
+        'title' => 'Test Product with Collections',
+        'collections' => $collections->pluck('id')->toArray(),
+    ];
+
+    /** @var CreateProductAction $action */
+    $action = app(CreateProductAction::class);
+    $product = $action->handle($attributes);
+
+    expect($product)->toBeInstanceOf(Product::class)
+        ->and($product->collections)->toHaveCount(2);
 });

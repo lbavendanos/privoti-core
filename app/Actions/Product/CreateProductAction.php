@@ -15,6 +15,7 @@ final readonly class CreateProductAction
         private CreateProductMediaAction $createProductMediaAction,
         private CreateProductOptionsAction $createProductOptionsAction,
         private CreateProductVariantsAction $createProductVariantsAction,
+        private AttachProductCollectionsAction $attachProductCollectionsAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -50,6 +51,12 @@ final readonly class CreateProductAction
                 $this->createProductVariantsAction->handle($product, $variants);
             }
 
+            if (Arr::has($attributes, 'collections')) {
+                /** @var list<int> $collectionIds */
+                $collectionIds = Arr::array($attributes, 'collections');
+                $this->attachProductCollectionsAction->handle($product, $collectionIds);
+            }
+
             return $this->getProductAction->handle($product);
         });
     }
@@ -71,6 +78,9 @@ final readonly class CreateProductAction
             'status',
             'tags',
             'metadata',
+            'category_id',
+            'type_id',
+            'vendor_id',
         ]);
 
         $basicAttributes['handle'] = Str::slug(Arr::string($basicAttributes, 'title'));

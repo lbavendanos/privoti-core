@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains\Cms\Http\Controllers;
 
+use App\Actions\Product\CreateProductAction;
 use App\Actions\Product\GetProductAction;
 use App\Actions\Product\GetProductsAction;
 use App\Domains\Cms\Http\Requests\Product\GetProductsRequest;
+use App\Domains\Cms\Http\Requests\Product\StoreProductRequest;
 use App\Domains\Cms\Http\Resources\ProductCollection;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -40,43 +42,12 @@ final class ProductController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): ProductResource
+    public function store(StoreProductRequest $request, CreateProductAction $action): ProductResource
     {
-        $rules = array_merge(
-            $this->productRules(),
-            $this->mediaRules(),
-            $this->optionRules(),
-            $this->variantRules()
-        );
+        $attributes = $request->validated();
+        $product = $action->handle($attributes);
 
-        $request->validate($rules);
-
-        $handle = Str::slug($request->string('title')->value());
-
-        $request->merge(['handle' => $handle]);
-
-        if ($request->missing('status')) {
-            $request->merge(['status' => Product::STATUS_DEFAULT]);
-        }
-
-        /** @var array<string,mixed> $attributes */
-        $attributes = $request->all();
-        $product = Product::query()->create($attributes);
-
-        $this->createMedia($request, $product);
-        $this->createOptions($request, $product);
-        $this->createVariants($request, $product);
-        $this->attachCollections($request, $product);
-
-        return new ProductResource($product->load(
-            'category',
-            'type',
-            'vendor',
-            'media',
-            'collections',
-            'options.values',
-            'variants.values'
-        ));
+        return new ProductResource($product);
     }
 
     /**
@@ -252,27 +223,6 @@ final class ProductController
     }
 
     /**
-     * Create product media.
-     */
-    private function createMedia(Request $request, Product $product): void
-    {
-        if ($request->filled('media')) {
-            /** @var array<int,array{'file':UploadedFile, 'rank': int}> $inputMedia */
-            $inputMedia = $request->array('media');
-
-            foreach ($inputMedia as $key => $input) {
-                $file = $request->file(sprintf('media.%s.file', $key));
-                $url = $this->storeMediaFile($file, $product->handle.'-'.($key + 1));
-
-                $product->media()->create([
-                    'url' => $url,
-                    'rank' => $input['rank'],
-                ]);
-            }
-        }
-    }
-
-    /**
      * Update or create product media.
      */
     private function updateOrCreateMedia(Request $request, Product $product): void
@@ -329,27 +279,6 @@ final class ProductController
         }
 
         return Storage::url($path);
-    }
-
-    /**
-     * Create product options.
-     */
-    private function createOptions(Request $request, Product $product): void
-    {
-        if ($request->filled('options')) {
-            /** @var array<int,array{'name': string, 'values'?: list<string>}> $inputOptions */
-            $inputOptions = $request->array('options');
-
-            foreach ($inputOptions as $input) {
-                $option = $product->options()->create(['name' => $input['name']]);
-
-                if (isset($input['values'])) {
-                    $values = array_map(fn (string $value): array => ['value' => $value], $input['values']);
-
-                    $option->values()->createMany($values);
-                }
-            }
-        }
     }
 
     /**
@@ -431,25 +360,6 @@ final class ProductController
     }
 
     /**
-     * Create product variants.
-     */
-    private function createVariants(Request $request, Product $product): void
-    {
-        if ($request->filled('variants')) {
-            /** @var array<int,array{'name': string, 'price': float, 'quantity': int, 'options': list<array{'value': string}>}> $inputVariants */
-            $inputVariants = $request->input('variants');
-
-            foreach ($inputVariants as $input) {
-                $variant = $product->variants()->create($input);
-                $values = collect($input['options'])
-                    ->map(fn ($option) => $product->values()->firstWhere('value', $option['value']));
-
-                $variant->values()->attach($values->pluck('id'));
-            }
-        }
-    }
-
-    /**
      * Update or create product variants.
      */
     private function updateOrCreateVariants(Request $request, Product $product): void
@@ -492,18 +402,6 @@ final class ProductController
                     $variant->values()->attach($values->pluck('id'));
                 }
             }
-        }
-    }
-
-    /**
-     * Attach collections to product.
-     */
-    private function attachCollections(Request $request, Product $product): void
-    {
-        if ($request->filled('collections')) {
-            $collections = $request->array('collections');
-
-            $product->collections()->attach($collections);
         }
     }
 
