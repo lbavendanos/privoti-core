@@ -74,3 +74,26 @@ it('creates a product with media', function () {
     expect($product)->toBeInstanceOf(Product::class)
         ->and($product->media)->toHaveCount(2);
 });
+
+it('creates a product with options', function () {
+    $attributes = [
+        'title' => 'Test Product with Options',
+        'options' => [
+            [
+                'name' => 'Size',
+                'values' => ['Small', 'Medium', 'Large'],
+            ],
+            [
+                'name' => 'Color',
+                'values' => ['Red', 'Blue', 'Green'],
+            ],
+        ],
+    ];
+
+    /** @var CreateProductAction $action */
+    $action = app(CreateProductAction::class);
+    $product = $action->handle($attributes);
+
+    expect($product)->toBeInstanceOf(Product::class)
+        ->and($product->options)->toHaveCount(2);
+});

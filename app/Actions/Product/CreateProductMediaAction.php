@@ -22,9 +22,9 @@ final readonly class CreateProductMediaAction
     }
 
     /**
-     * Create a new product media.
+     * Create product media.
      *
-     * @param  list<array{file:UploadedFile,rank:int}>  $attributes
+     * @param  list<array{file: UploadedFile, rank: int}>  $attributes
      * @return Collection<int,ProductMedia>
      */
     public function handle(Product $product, array $attributes): Collection
@@ -33,8 +33,8 @@ final readonly class CreateProductMediaAction
             /** @var Collection<int,ProductMedia> $collection */
             $collection = collect();
 
-            foreach ($attributes as $key => $input) {
-                ['file' => $file, 'rank' => $rank] = $input;
+            foreach ($attributes as $key => $attribute) {
+                ['file' => $file, 'rank' => $rank] = $attribute;
 
                 $filename = sprintf('%s-%s', $product->handle, ($key + 1));
                 $url = $this->storeFileAction->handle($file, self::DIRECTORY, $filename);

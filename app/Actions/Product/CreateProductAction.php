@@ -14,6 +14,7 @@ final readonly class CreateProductAction
 {
     public function __construct(
         private CreateProductMediaAction $createProductMediaAction,
+        private CreateProductOptionsAction $createProductOptionsAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -35,6 +36,12 @@ final readonly class CreateProductAction
                 /** @var list<array{'file':UploadedFile, 'rank': int}>  $media */
                 $media = Arr::array($attributes, 'media');
                 $this->createProductMediaAction->handle($product, $media);
+            }
+
+            if (Arr::has($attributes, 'options')) {
+                /** @var array<int,array{'name': string, 'values'?: list<string>}> $options */
+                $options = Arr::array($attributes, 'options');
+                $this->createProductOptionsAction->handle($product, $options);
             }
 
             return $this->getProductAction->handle($product);
