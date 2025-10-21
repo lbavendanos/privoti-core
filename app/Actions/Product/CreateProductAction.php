@@ -27,22 +27,7 @@ final readonly class CreateProductAction
     public function handle(array $attributes): Product
     {
         return DB::transaction(function () use ($attributes): Product {
-            /** @var array<string,mixed> $basicAttributes */
-            $basicAttributes = Arr::only($attributes, [
-                'title',
-                'subtitle',
-                'handle',
-                'description',
-                'status',
-                'tags',
-                'metadata',
-            ]);
-
-            $basicAttributes['handle'] = Str::slug(Arr::string($basicAttributes, 'title'));
-
-            if (! Arr::has($basicAttributes, 'status')) {
-                $basicAttributes['status'] = Product::STATUS_DEFAULT;
-            }
+            $basicAttributes = $this->prepareBasicAttributes($attributes);
 
             $product = Product::query()->create($basicAttributes);
 
@@ -54,5 +39,30 @@ final readonly class CreateProductAction
 
             return $this->getProductAction->handle($product);
         });
+    }
+
+    /**
+     * Prepare and sanitize product attributes.
+     *
+     * @param  array<string,mixed>  $attributes
+     * @return array<string,mixed>
+     */
+    private function prepareBasicAttributes(array $attributes): array
+    {
+        /** @var array<string,mixed> $basicAttributes */
+        $basicAttributes = Arr::only($attributes, [
+            'title',
+            'subtitle',
+            'handle',
+            'description',
+            'status',
+            'tags',
+            'metadata',
+        ]);
+
+        $basicAttributes['handle'] = Str::slug(Arr::string($basicAttributes, 'title'));
+        $basicAttributes['status'] ??= Product::STATUS_DEFAULT;
+
+        return $basicAttributes;
     }
 }
