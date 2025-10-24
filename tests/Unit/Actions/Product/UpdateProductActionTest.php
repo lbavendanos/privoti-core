@@ -120,3 +120,50 @@ it('updates a product and syncs its media', function () {
         ->and($updatedMedia->pluck('rank'))->toContain(4)
         ->and($updatedMedia->pluck('id'))->not->toContain($existingMedia2->id);
 });
+
+it('updates a product and syncs its options', function () {
+    $product = Product::factory()->create();
+
+    $exsistingOption1 = $product->options()->create(['name' => 'Size']);
+    $exsistingValues1 = $exsistingOption1->values()->createMany([
+        ['value' => 'S'],
+        ['value' => 'M'],
+        ['value' => 'L'],
+    ]);
+
+    $exsistingOption2 = $product->options()->create(['name' => 'Color']);
+    $exsistingValues2 = $exsistingOption2->values()->createMany([
+        ['value' => 'Red'],
+        ['value' => 'Blue'],
+    ]);
+
+    $attributes = [
+        'options' => [
+            [
+                'id' => $exsistingOption1->id,
+                'name' => 'Size',
+                'values' => ['M', 'L', 'XL'],
+            ],
+            [
+                'name' => 'Material',
+                'values' => ['Cotton', 'Polyester'],
+            ],
+        ],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    /** @phpstan-ignore-next-line */
+    $valuesOfSizeOption = $updatedProduct->options->firstWhere('name', 'Size')->values->pluck('value');
+    /** @phpstan-ignore-next-line */
+    $valuesOfMaterialOption = $updatedProduct->options->firstWhere('name', 'Material')->values->pluck('value');
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedProduct->options)->toHaveCount(2)
+        ->and($updatedProduct->options->pluck('name'))->toContain('Size')
+        ->and($updatedProduct->options->pluck('name'))->toContain('Material')
+        ->and($valuesOfSizeOption)->toContain('M', 'L', 'XL')
+        ->and($valuesOfSizeOption)->not->toContain('S')
+        ->and($valuesOfMaterialOption)->toContain('Cotton', 'Polyester');
+});

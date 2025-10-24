@@ -9,17 +9,18 @@ use App\Models\ProductOption;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
-final readonly class CreateProductOptionsAction
+final readonly class UpdateProductOptionsAction
 {
     public function __construct(
-        private CreateProductOptionValuesAction $createProductOptionValuesAction,
+        private SyncProductOptionValuesAction $syncProductOptionValuesAction,
     ) {
         //
     }
 
     /**
-     * Create product options.
+     * Update product options.
      *
      * @param  list<array<string,mixed>>  $attributes
      * @return Collection<int, ProductOption>
@@ -31,17 +32,23 @@ final readonly class CreateProductOptionsAction
             $collection = collect();
 
             foreach ($attributes as $attribute) {
+                if (! isset($attribute['id'])) {
+                    throw new InvalidArgumentException('The id attribute is required for updating options.');
+                }
+
+                /** @var ProductOption $option */
+                $option = $product->options()->findOrFail($attribute['id']);
                 /** @var array<string, mixed> $optionAttributes */
                 $optionAttributes = Arr::only($attribute, ['name']);
-                $option = $product->options()->create($optionAttributes);
+                $option->update($optionAttributes);
+
+                $collection->push($option);
 
                 if (Arr::has($attribute, 'values')) {
                     /** @var list<string> $valueAttributes */
                     $valueAttributes = Arr::array($attribute, 'values');
-                    $this->createProductOptionValuesAction->handle($option, $valueAttributes);
+                    $this->syncProductOptionValuesAction->handle($option, $valueAttributes);
                 }
-
-                $collection->push($option);
             }
 
             return $collection;

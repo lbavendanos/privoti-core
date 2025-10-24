@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 it('updates product media for a product', function () {
     $product = Product::factory()->create();
 
-    $media1 = ProductMedia::factory()->create(['product_id' => $product->id, 'rank' => 1]);
-    $media2 = ProductMedia::factory()->create(['product_id' => $product->id, 'rank' => 2]);
+    $media1 = ProductMedia::factory()->for($product)->create(['rank' => 1]);
+    $media2 = ProductMedia::factory()->for($product)->create(['rank' => 2]);
 
     $attributes = [
         ['id' => $media1->id, 'rank' => 3],

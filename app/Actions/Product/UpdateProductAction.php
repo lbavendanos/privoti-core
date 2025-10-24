@@ -13,6 +13,7 @@ final readonly class UpdateProductAction
 {
     public function __construct(
         private SyncProductMediaAction $syncProductMediaAction,
+        private SyncProductOptionsAction $syncProductOptionsAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -34,6 +35,12 @@ final readonly class UpdateProductAction
                 /** @var list<array<string,mixed>> $media */
                 $media = Arr::array($attributes, 'media');
                 $this->syncProductMediaAction->handle($product, $media);
+            }
+
+            if (Arr::has($attributes, 'options')) {
+                /** @var list<array<string,mixed>> $options */
+                $options = Arr::array($attributes, 'options');
+                $this->syncProductOptionsAction->handle($product, $options);
             }
 
             return $this->getProductAction->handle($product);
