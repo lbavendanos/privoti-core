@@ -17,7 +17,6 @@ use App\Domains\Cms\Http\Resources\CustomerAddressResource;
 use App\Exceptions\MaxAddressesLimitExceededException;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 
 final class CustomerAddressController
@@ -55,11 +54,7 @@ final class CustomerAddressController
      */
     public function show(Customer $customer, CustomerAddress $address, GetCustomerAddressAction $action): CustomerAddressResource
     {
-        try {
-            $address = $action->handle($customer, $address);
-        } catch (ModelNotFoundException) {
-            abort(404, 'Customer address not found.');
-        }
+        $address = $action->handle($customer, $address);
 
         return new CustomerAddressResource($address);
     }
@@ -71,11 +66,7 @@ final class CustomerAddressController
     {
         $attributes = $request->validated();
 
-        try {
-            $address = $action->handle($customer, $address, $attributes);
-        } catch (ModelNotFoundException) {
-            abort(404, 'Customer address not found.');
-        }
+        $address = $action->handle($customer, $address, $attributes);
 
         return new CustomerAddressResource($address);
     }
@@ -85,11 +76,7 @@ final class CustomerAddressController
      */
     public function destroy(Customer $customer, CustomerAddress $address, DeleteCustomerAddressAction $action): Response
     {
-        try {
-            $action->handle($customer, $address);
-        } catch (ModelNotFoundException) {
-            abort(404, 'Customer address not found.');
-        }
+        $action->handle($customer, $address);
 
         return response()->noContent();
     }
