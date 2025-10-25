@@ -41,7 +41,7 @@ final readonly class UpdateProductAction
 
             if (Arr::has($attributes, 'options')) {
                 /** @var list<array<string,mixed>> $options */
-                $options = Arr::array($attributes, 'options');
+                $options = Arr::get($attributes, 'options') ?? [];
                 $this->syncProductOptionsAction->handle($product, $options);
             }
 

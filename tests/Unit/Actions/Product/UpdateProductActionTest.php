@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductMedia;
 use App\Models\ProductType;
+use App\Models\ProductOption;
+use App\Models\ProductVariant;
 use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\UploadedFile;
@@ -169,6 +171,40 @@ it('updates a product and syncs its options', function () {
         ->and($valuesOfMaterialOption)->toContain('Cotton', 'Polyester');
 });
 
+it('updates a product and detaches all options when given an empty array', function () {
+    $product = Product::factory()->create();
+    ProductOption::factory()->for($product)->count(2)->create();
+
+    $attributes = [
+        'options' => [],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedProduct->options)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedProduct->options)->toHaveCount(0);
+});
+
+it('updates a product and detaches all options when given a null value', function () {
+    $product = Product::factory()->create();
+    ProductOption::factory()->for($product)->count(2)->create();
+
+    $attributes = [
+        'options' => null,
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedProduct->options)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedProduct->options)->toHaveCount(0);
+});
+
 it('updates a product and syncs its variants', function () {
     $product = Product::factory()->create();
 
@@ -223,18 +259,7 @@ it('updates a product and syncs its variants', function () {
 
 it('detaches all variants when given an empty array', function () {
     $product = Product::factory()->create();
-
-    $existingVariant1 = $product->variants()->create([
-        'name' => 'Variant 1',
-        'price' => 19.99,
-        'quantity' => 10,
-    ]);
-
-    $existingVariant2 = $product->variants()->create([
-        'name' => 'Variant 2',
-        'price' => 29.99,
-        'quantity' => 5,
-    ]);
+    ProductVariant::factory()->for($product)->count(2)->create();
 
     $attributes = [
         'variants' => [],
@@ -252,18 +277,7 @@ it('detaches all variants when given an empty array', function () {
 
 it('detaches all variants when given a null value', function () {
     $product = Product::factory()->create();
-
-    $existingVariant1 = $product->variants()->create([
-        'name' => 'Variant 1',
-        'price' => 19.99,
-        'quantity' => 10,
-    ]);
-
-    $existingVariant2 = $product->variants()->create([
-        'name' => 'Variant 2',
-        'price' => 29.99,
-        'quantity' => 5,
-    ]);
+    ProductVariant::factory()->for($product)->count(2)->create();
 
     $attributes = [
         'variants' => null,
