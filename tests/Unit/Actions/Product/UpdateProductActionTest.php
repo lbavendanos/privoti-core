@@ -221,6 +221,64 @@ it('updates a product and syncs its variants', function () {
         ->and($updatedVariants->pluck('id'))->not->toContain($existingVariant2->id);
 });
 
+it('detaches all variants when given an empty array', function () {
+    $product = Product::factory()->create();
+
+    $existingVariant1 = $product->variants()->create([
+        'name' => 'Variant 1',
+        'price' => 19.99,
+        'quantity' => 10,
+    ]);
+
+    $existingVariant2 = $product->variants()->create([
+        'name' => 'Variant 2',
+        'price' => 29.99,
+        'quantity' => 5,
+    ]);
+
+    $attributes = [
+        'variants' => [],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedVariants = $updatedProduct->variants;
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedVariants)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedVariants)->toHaveCount(0);
+});
+
+it('detaches all variants when given a null value', function () {
+    $product = Product::factory()->create();
+
+    $existingVariant1 = $product->variants()->create([
+        'name' => 'Variant 1',
+        'price' => 19.99,
+        'quantity' => 10,
+    ]);
+
+    $existingVariant2 = $product->variants()->create([
+        'name' => 'Variant 2',
+        'price' => 29.99,
+        'quantity' => 5,
+    ]);
+
+    $attributes = [
+        'variants' => null,
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedVariants = $updatedProduct->variants;
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedVariants)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedVariants)->toHaveCount(0);
+});
+
 it('updates a product and syncs its collections', function () {
     $product = Product::factory()->create();
 
