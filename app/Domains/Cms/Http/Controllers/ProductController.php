@@ -10,18 +10,17 @@ use App\Actions\Product\DeleteProductsAction;
 use App\Actions\Product\GetProductAction;
 use App\Actions\Product\GetProductsAction;
 use App\Actions\Product\UpdateProductAction;
+use App\Actions\Product\UpdateProductsAction;
 use App\Domains\Cms\Http\Requests\Product\BulkDestroyProductRequest;
+use App\Domains\Cms\Http\Requests\Product\BulkUpdateProductRequest;
 use App\Domains\Cms\Http\Requests\Product\GetProductsRequest;
 use App\Domains\Cms\Http\Requests\Product\StoreProductRequest;
 use App\Domains\Cms\Http\Requests\Product\UpdateProductRequest;
 use App\Domains\Cms\Http\Resources\ProductCollection;
 use App\Domains\Cms\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\Rule;
 
 final class ProductController
 {
@@ -70,25 +69,11 @@ final class ProductController
     /**
      * Bulk update multiple products, each with its own data.
      */
-    public function bulkUpdate(Request $request): AnonymousResourceCollection
+    public function bulkUpdate(BulkUpdateProductRequest $request, UpdateProductsAction $action): AnonymousResourceCollection
     {
-        $request->validate([
-            'items' => ['required', 'array'],
-            'items.*.id' => ['required', Rule::exists('products', 'id')->withoutTrashed()],
-            'items.*' => ['required', 'array'],
-        ]);
-
-        $updatedProducts = [];
-
-        /** @var array<string,mixed> $item */
-        foreach ($request->array('items') as $item) {
-            /** @var Product $product */
-            $product = Product::query()->findOrFail($item['id']);
-            $data = Arr::except($item, ['id']);
-            $updateRequest = new Request($data);
-
-            $updatedProducts[] = $this->update($updateRequest, $product);
-        }
+        /** @var list<array<string, mixed>> $attributes */
+        $attributes = $request->array('items');
+        $updatedProducts = $action->handle($attributes);
 
         return ProductResource::collection($updatedProducts);
     }

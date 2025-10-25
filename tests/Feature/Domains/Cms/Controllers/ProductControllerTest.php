@@ -353,6 +353,110 @@ it('throws a validation error when updating a product with duplicated handle', f
         ->assertJsonValidationErrors(['title']);
 });
 
+it('bulk updates products', function () {
+    $products = Product::factory()->count(3)->create();
+
+    $attributes = [
+        'items' => $products->map(function (Product $product, int $index) {
+            return [
+                'id' => $product->id,
+                'title' => "Updated Title {$index}",
+                'status' => 'active',
+            ];
+        })->toArray(),
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->putJson('/api/c/products', $attributes);
+
+    $response
+        ->assertOk()
+        ->assertJson(fn (AssertableJson $json) => $json
+            ->has('data', 3)
+        );
+});
+
+it('throws a validation error when bulk updating products with invalid attributes', function () {
+    $products = Product::factory()->count(2)->create();
+
+    $attributes = [
+        'items' => $products->map(function (Product $product) {
+            return [
+                'id' => $product->id,
+                'title' => '',
+                'subtitle' => str_repeat('a', 300),
+                'description' => '',
+                'status' => 'invalid_status',
+                'tags' => 'not_an_array',
+                'category_id' => 9999,
+                'type_id' => 9999,
+                'vendor_id' => 9999,
+                'collections' => 'not_an_array',
+                'media' => [
+                    [
+                        'file' => 'not_a_file',
+                        'rank' => 'not_an_integer',
+                    ],
+                ],
+                'options' => [
+                    [
+                        'name' => '',
+                        'values' => 'not_an_array',
+                    ],
+                ],
+                'variants' => [
+                    [
+                        'name' => '',
+                        'price' => 'not_a_number',
+                        'quantity' => 'not_an_integer',
+                        'options' => 'not_an_array',
+                    ],
+                ],
+            ];
+        })->toArray(),
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->putJson('/api/c/products', $attributes);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'items.0.title',
+            'items.0.subtitle',
+            'items.0.status',
+            'items.0.tags',
+            'items.0.category_id',
+            'items.0.type_id',
+            'items.0.vendor_id',
+            'items.0.collections',
+            'items.0.media.0.file',
+            'items.0.media.0.rank',
+            'items.0.options.0.name',
+            'items.0.options.0.values',
+            'items.0.variants.0.name',
+            'items.0.variants.0.price',
+            'items.0.variants.0.quantity',
+            'items.0.variants.0.options',
+            'items.1.title',
+            'items.1.subtitle',
+            'items.1.status',
+            'items.1.tags',
+            'items.1.category_id',
+            'items.1.type_id',
+            'items.1.vendor_id',
+            'items.1.collections',
+            'items.1.media.0.file',
+            'items.1.media.0.rank',
+            'items.1.options.0.name',
+            'items.1.options.0.values',
+            'items.1.variants.0.name',
+            'items.1.variants.0.price',
+            'items.1.variants.0.quantity',
+            'items.1.variants.0.options',
+        ]);
+});
+
 it('deletes a product', function () {
     $product = Product::factory()->create();
 
