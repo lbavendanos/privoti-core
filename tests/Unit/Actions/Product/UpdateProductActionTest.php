@@ -124,6 +124,42 @@ it('updates a product and syncs its media', function () {
         ->and($updatedMedia->pluck('id'))->not->toContain($existingMedia2->id);
 });
 
+it('updates a product and detaches all media when given an empty array', function () {
+    $product = Product::factory()->create();
+    ProductMedia::factory()->for($product)->count(2)->create();
+
+    $attributes = [
+        'media' => [],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedMedia = $updatedProduct->media;
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedMedia)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedMedia)->toHaveCount(0);
+});
+
+it('updates a product and detaches all media when given a null value', function () {
+    $product = Product::factory()->create();
+    ProductMedia::factory()->for($product)->count(2)->create();
+
+    $attributes = [
+        'media' => null,
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedMedia = $updatedProduct->media;
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedMedia)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedMedia)->toHaveCount(0);
+});
+
 it('updates a product and syncs its options', function () {
     $product = Product::factory()->create();
 

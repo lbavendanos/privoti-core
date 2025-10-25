@@ -35,7 +35,7 @@ final readonly class UpdateProductAction
 
             if (Arr::has($attributes, 'media')) {
                 /** @var list<array<string,mixed>> $media */
-                $media = Arr::array($attributes, 'media');
+                $media = Arr::get($attributes, 'media') ?? [];
                 $this->syncProductMediaAction->handle($product, $media);
             }
 
