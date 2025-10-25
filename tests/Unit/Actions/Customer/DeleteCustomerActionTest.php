@@ -8,8 +8,8 @@ use App\Models\CustomerAddress;
 
 it('deletes a customer', function () {
     $customer = Customer::factory()->create();
-    $address1 = CustomerAddress::factory()->create(['customer_id' => $customer->id]);
-    $address2 = CustomerAddress::factory()->create(['customer_id' => $customer->id]);
+    $address1 = CustomerAddress::factory()->for($customer)->create();
+    $address2 = CustomerAddress::factory()->for($customer)->create();
 
     app(DeleteCustomerAction::class)->handle($customer);
 

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Domains\Cms\Http\Controllers;
 
 use App\Actions\Product\CreateProductAction;
+use App\Actions\Product\DeleteProductAction;
+use App\Actions\Product\DeleteProductsAction;
 use App\Actions\Product\GetProductAction;
 use App\Actions\Product\GetProductsAction;
 use App\Actions\Product\UpdateProductAction;
+use App\Domains\Cms\Http\Requests\Product\BulkDestroyProductRequest;
 use App\Domains\Cms\Http\Requests\Product\GetProductsRequest;
 use App\Domains\Cms\Http\Requests\Product\StoreProductRequest;
 use App\Domains\Cms\Http\Requests\Product\UpdateProductRequest;
@@ -93,9 +96,9 @@ final class ProductController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product): Response
+    public function destroy(Product $product, DeleteProductAction $action): Response
     {
-        $this->deleteProduct($product);
+        $action->handle($product);
 
         return response()->noContent();
     }
@@ -103,32 +106,12 @@ final class ProductController
     /**
      * Remove multiple resources from storage.
      */
-    public function bulkDestroy(Request $request): Response
+    public function bulkDestroy(BulkDestroyProductRequest $request, DeleteProductsAction $action): Response
     {
-        $request->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['required', Rule::exists('products', 'id')->withoutTrashed()],
-        ]);
-
-        Product::query()->whereIn('id', $request->input('ids'))
-            ->chunkById(100, function ($products): void {
-                foreach ($products as $product) {
-                    $this->deleteProduct($product);
-                }
-            });
+        /** @var list<int> $ids */
+        $ids = $request->array('ids');
+        $action->handle($ids);
 
         return response()->noContent();
-    }
-
-    /**
-     * Delete product and its related data.
-     */
-    private function deleteProduct(Product $product): void
-    {
-        $product->variants()->delete();
-        $product->values()->delete();
-        $product->options()->delete();
-        $product->media()->delete();
-        $product->delete();
     }
 }

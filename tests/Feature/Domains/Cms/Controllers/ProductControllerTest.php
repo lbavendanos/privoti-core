@@ -335,3 +335,54 @@ it('throws a validation error when updating a product with invalid attributes', 
             'variants.0.options',
         ]);
 });
+
+it('throws a validation error when updating a product with duplicated handle', function () {
+    Product::factory()->create([
+        'title' => 'Existing Product',
+    ]);
+
+    $product = Product::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->putJson("/api/c/products/{$product->id}", [
+        'title' => 'Existing Product',
+    ]);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['title']);
+});
+
+it('deletes a product', function () {
+    $product = Product::factory()->create();
+
+    /** @var TestCase $this */
+    $response = $this->deleteJson("/api/c/products/{$product->id}");
+
+    $response->assertNoContent();
+
+    expect(Product::query()->find($product->id))->toBeNull();
+});
+
+it('return 404 when deleting a non-existing product', function () {
+    /** @var TestCase $this */
+    $response = $this->deleteJson('/api/c/products/9999');
+
+    $response->assertNotFound();
+});
+
+it('bulk deletes products', function () {
+    $products = Product::factory()->count(3)->create();
+    $ids = $products->pluck('id')->toArray();
+
+    /** @var TestCase $this */
+    $response = $this->deleteJson('/api/c/products', [
+        'ids' => $ids,
+    ]);
+
+    $response->assertNoContent();
+
+    foreach ($ids as $id) {
+        expect(Product::query()->find($id))->toBeNull();
+    }
+});
