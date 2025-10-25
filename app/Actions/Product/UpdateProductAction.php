@@ -14,6 +14,8 @@ final readonly class UpdateProductAction
     public function __construct(
         private SyncProductMediaAction $syncProductMediaAction,
         private SyncProductOptionsAction $syncProductOptionsAction,
+        private SyncProductVariantsAction $syncProductVariantsAction,
+        private SyncProductCollectionsAction $syncProductCollectionsAction,
         private GetProductAction $getProductAction
     ) {
         //
@@ -41,6 +43,18 @@ final readonly class UpdateProductAction
                 /** @var list<array<string,mixed>> $options */
                 $options = Arr::array($attributes, 'options');
                 $this->syncProductOptionsAction->handle($product, $options);
+            }
+
+            if (Arr::has($attributes, 'variants')) {
+                /** @var list<array<string,mixed>> $variants */
+                $variants = Arr::array($attributes, 'variants');
+                $this->syncProductVariantsAction->handle($product, $variants);
+            }
+
+            if (Arr::has($attributes, 'collections')) {
+                /** @var list<int> $collectionIds */
+                $collectionIds = Arr::array($attributes, 'collections');
+                $this->syncProductCollectionsAction->handle($product, $collectionIds);
             }
 
             return $this->getProductAction->handle($product);

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Product\UpdateProductAction;
+use App\Models\Collection;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductMedia;
@@ -166,4 +167,83 @@ it('updates a product and syncs its options', function () {
         ->and($valuesOfSizeOption)->toContain('M', 'L', 'XL')
         ->and($valuesOfSizeOption)->not->toContain('S')
         ->and($valuesOfMaterialOption)->toContain('Cotton', 'Polyester');
+});
+
+it('updates a product and syncs its variants', function () {
+    $product = Product::factory()->create();
+
+    $existingOption1 = $product->options()->create(['name' => 'Size']);
+    $existingOption2 = $product->options()->create(['name' => 'Color']);
+
+    $existingOption1->values()->createMany([
+        ['value' => 'S'],
+        ['value' => 'M'],
+        ['value' => 'L'],
+    ]);
+
+    $existingOption2->values()->createMany([
+        ['value' => 'Red'],
+        ['value' => 'Blue'],
+    ]);
+
+    $existingVariant1 = $product->variants()->create([
+        'name' => 'Variant 1',
+        'price' => 19.99,
+        'quantity' => 10,
+    ]);
+
+    $existingVariant2 = $product->variants()->create([
+        'name' => 'Variant 2',
+        'price' => 29.99,
+        'quantity' => 5,
+    ]);
+
+    $attributes = [
+        'variants' => [
+            ['id' => $existingVariant1->id, 'name' => 'Updated Variant 1', 'price' => 17.99, 'quantity' => 15],
+            ['name' => 'New Variant 3', 'price' => 39.99, 'quantity' => 8, 'options' => [
+                ['value' => 'S'],
+                ['value' => 'Red'],
+            ]],
+        ],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedVariants = $updatedProduct->variants;
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedVariants)->toBeInstanceOf(EloquentCollection::class)
+        ->and($updatedVariants)->toHaveCount(2)
+        ->and($updatedVariants->pluck('name'))->toContain('Updated Variant 1')
+        ->and($updatedVariants->pluck('name'))->toContain('New Variant 3')
+        ->and($updatedVariants->pluck('id'))->not->toContain($existingVariant2->id);
+});
+
+it('updates a product and syncs its collections', function () {
+    $product = Product::factory()->create();
+
+    /** @var EloquentCollection<int, Collection> $existingCollections */
+    $existingCollections = Collection::factory()->count(2)->create();
+    $product->collections()->attach($existingCollections->pluck('id')->toArray());
+
+    /** @var EloquentCollection<int, Collection> $newCollections */
+    $newCollections = Collection::factory()->count(2)->create();
+
+    $attributes = [
+        'collections' => $newCollections->pluck('id')->toArray(),
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedCollectionIds = $updatedProduct->collections->pluck('id');
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedCollectionIds)->toHaveCount(2)
+        /** @phpstan-ignore-next-line */
+        ->and($updatedCollectionIds)->toContain($newCollections[0]->id, $newCollections[1]->id)
+        /** @phpstan-ignore-next-line */
+        ->and($updatedCollectionIds)->not->toContain($existingCollections[0]->id, $existingCollections[1]->id);
 });

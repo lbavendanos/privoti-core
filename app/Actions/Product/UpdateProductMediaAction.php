@@ -26,7 +26,7 @@ final readonly class UpdateProductMediaAction
             $collection = collect();
 
             foreach ($attributes as $attribute) {
-                if (! isset($attribute['id'])) {
+                if (! Arr::has($attribute, 'id')) {
                     throw new InvalidArgumentException('The id attribute is required for updating media.');
                 }
 
