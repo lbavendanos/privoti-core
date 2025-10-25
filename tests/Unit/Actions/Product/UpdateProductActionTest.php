@@ -247,3 +247,43 @@ it('updates a product and syncs its collections', function () {
         /** @phpstan-ignore-next-line */
         ->and($updatedCollectionIds)->not->toContain($existingCollections[0]->id, $existingCollections[1]->id);
 });
+
+it('updates a product and detaches all collections when given an empty array', function () {
+    $product = Product::factory()->create();
+
+    /** @var EloquentCollection<int, Collection> $existingCollections */
+    $existingCollections = Collection::factory()->count(2)->create();
+    $product->collections()->attach($existingCollections->pluck('id')->toArray());
+
+    $attributes = [
+        'collections' => [],
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedCollectionIds = $updatedProduct->collections->pluck('id');
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedCollectionIds)->toHaveCount(0);
+});
+
+it('updates a product and detaches all collections when given an null value', function () {
+    $product = Product::factory()->create();
+
+    /** @var EloquentCollection<int, Collection> $existingCollections */
+    $existingCollections = Collection::factory()->count(2)->create();
+    $product->collections()->attach($existingCollections->pluck('id')->toArray());
+
+    $attributes = [
+        'collections' => null,
+    ];
+
+    /** @var UpdateProductAction $action */
+    $action = app(UpdateProductAction::class);
+    $updatedProduct = $action->handle($product, $attributes);
+    $updatedCollectionIds = $updatedProduct->collections->pluck('id');
+
+    expect($updatedProduct)->toBeInstanceOf(Product::class)
+        ->and($updatedCollectionIds)->toHaveCount(0);
+});

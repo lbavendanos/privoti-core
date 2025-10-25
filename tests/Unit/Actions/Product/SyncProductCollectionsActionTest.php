@@ -37,3 +37,20 @@ it('syncs collections for a product', function (): void {
         expect($product->collections()->where('id', $collection->id)->exists())->toBeFalse();
     }
 });
+
+it('detaches all collections when given an empty array', function (): void {
+    /** @var Product $product */
+    $product = Product::factory()->create();
+    /** @var EloquentCollection<int,Collection> $initialCollections */
+    $initialCollections = Collection::factory()->count(2)->create();
+
+    // Attach initial collections
+    $product->collections()->attach($initialCollections->pluck('id')->toArray());
+
+    /** @var SyncProductCollectionsAction $action */
+    $action = app(SyncProductCollectionsAction::class);
+
+    $action->handle($product, []);
+
+    expect($product->collections()->count())->toBe(0);
+});

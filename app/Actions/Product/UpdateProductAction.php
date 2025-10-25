@@ -53,7 +53,7 @@ final readonly class UpdateProductAction
 
             if (Arr::has($attributes, 'collections')) {
                 /** @var list<int> $collectionIds */
-                $collectionIds = Arr::array($attributes, 'collections');
+                $collectionIds = Arr::get($attributes, 'collections') ?? [];
                 $this->syncProductCollectionsAction->handle($product, $collectionIds);
             }
 
