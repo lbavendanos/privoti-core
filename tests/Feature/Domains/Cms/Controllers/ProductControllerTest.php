@@ -191,3 +191,147 @@ it('show a product', function () {
             ->etc()
         );
 });
+
+it('updates a product', function () {
+    Storage::fake('s3');
+
+    $product = Product::factory()->create();
+
+    $category = ProductCategory::factory()->create();
+    $type = ProductType::factory()->create();
+    $vendor = Vendor::factory()->create();
+    $collection = Collection::factory()->count(2)->create();
+
+    $attributes = [
+        'title' => 'Updated Product Title',
+        'subtitle' => 'Updated Subtitle',
+        'description' => 'Updated description of the product.',
+        'status' => 'active',
+        'tags' => ['updated_tag1', 'updated_tag2'],
+        'category_id' => $category->id,
+        'type_id' => $type->id,
+        'vendor_id' => $vendor->id,
+        'collections' => $collection->pluck('id')->toArray(),
+        'media' => [
+            [
+                'file' => UploadedFile::fake()->image('updated_product1.jpg'),
+                'rank' => 1,
+            ],
+            [
+                'file' => UploadedFile::fake()->image('updated_product2.jpg'),
+                'rank' => 2,
+            ],
+        ],
+        'options' => [
+            [
+                'name' => 'Material',
+                'values' => ['Cotton', 'Polyester'],
+            ],
+            [
+                'name' => 'Size',
+                'values' => ['Small', 'Medium', 'Large'],
+            ],
+        ],
+        'variants' => [
+            [
+                'name' => 'Small Cotton Variant',
+                'price' => 25.99,
+                'quantity' => 200,
+                'options' => [
+                    ['value' => 'Small'],
+                    ['value' => 'Cotton'],
+                ],
+            ],
+            [
+                'name' => 'Medium Polyester Variant',
+                'price' => 27.99,
+                'quantity' => 250,
+                'options' => [
+                    ['value' => 'Medium'],
+                    ['value' => 'Polyester'],
+                ],
+            ],
+        ],
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->putJson("/api/c/products/{$product->id}", $attributes);
+
+    $response
+        ->assertOk()
+        ->assertJson(fn (AssertableJson $json) => $json
+            ->where('data.id', $product->id)
+            ->where('data.title', $attributes['title'])
+            ->where('data.subtitle', $attributes['subtitle'])
+            ->where('data.description', $attributes['description'])
+            ->where('data.status', $attributes['status'])
+            ->where('data.category_id', $category->id)
+            ->where('data.type_id', $type->id)
+            ->where('data.vendor_id', $vendor->id)
+            ->has('data.media', 2)
+            ->has('data.options', 2)
+            ->has('data.variants', 2)
+            ->has('data.collections', 2)
+            ->etc()
+        );
+});
+
+it('throws a validation error when updating a product with invalid attributes', function () {
+    $product = Product::factory()->create();
+
+    $attributes = [
+        'title' => '',
+        'subtitle' => str_repeat('a', 300),
+        'description' => '',
+        'status' => 'invalid_status',
+        'tags' => 'not_an_array',
+        'category_id' => 9999,
+        'type_id' => 9999,
+        'vendor_id' => 9999,
+        'collections' => 'not_an_array',
+        'media' => [
+            [
+                'file' => 'not_a_file',
+                'rank' => 'not_an_integer',
+            ],
+        ],
+        'options' => [
+            [
+                'name' => '',
+                'values' => 'not_an_array',
+            ],
+        ],
+        'variants' => [
+            [
+                'name' => '',
+                'price' => 'not_a_number',
+                'quantity' => 'not_an_integer',
+                'options' => 'not_an_array',
+            ],
+        ],
+    ];
+
+    /** @var TestCase $this */
+    $response = $this->putJson("/api/c/products/{$product->id}", $attributes);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'title',
+            'subtitle',
+            'status',
+            'tags',
+            'category_id',
+            'type_id',
+            'vendor_id',
+            'collections',
+            'media.0.file',
+            'media.0.rank',
+            'options.0.name',
+            'options.0.values',
+            'variants.0.name',
+            'variants.0.price',
+            'variants.0.quantity',
+            'variants.0.options',
+        ]);
+});
