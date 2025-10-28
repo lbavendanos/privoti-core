@@ -8,8 +8,8 @@ use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,7 +45,7 @@ final class AppServiceProvider extends ServiceProvider
 
             $temporarySignedRoute = URL::temporarySignedRoute(
                 sprintf('auth.%s.email.verify', $modelName),
-                Carbon::now()->addMinutes(Config::integer('auth.verification.expire', 60)),
+                Date::now()->addMinutes(Config::integer('auth.verification.expire', 60)),
                 ['id' => $id, 'hash' => $hash]
             );
 
