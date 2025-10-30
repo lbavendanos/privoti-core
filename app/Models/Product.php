@@ -204,7 +204,7 @@ final class Product extends Model
                     return null;
                 }
 
-                return array_map('trim', explode(',', $value));
+                return array_map(trim(...), explode(',', $value));
             },
             set: function (mixed $value): ?string {
                 if (is_null($value)) {
