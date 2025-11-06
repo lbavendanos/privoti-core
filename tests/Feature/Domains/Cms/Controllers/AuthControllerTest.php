@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Domains\Cms\Notifications\VerifyNewEmail;
 use App\Models\User;
+use App\Notifications\Cms\VerifyNewEmail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;

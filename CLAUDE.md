@@ -4,33 +4,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Privoti Core is a Laravel 12 application (PHP 8.4+) implementing a multi-tenant e-commerce platform with two separate domains:
-- **CMS Domain** (`/c` prefix): Admin interface for managing products, customers, orders, etc.
-- **Store Domain** (`/s` prefix): Customer-facing storefront interface
+Privoti Core is a Laravel 12 application (PHP 8.4+) implementing a multi-tenant e-commerce platform with two separate contexts:
+- **CMS Context** (`/c` prefix): Admin interface for managing products, customers, orders, etc.
+- **Store Context** (`/s` prefix): Customer-facing storefront interface
 
-The application uses a **Domain-Driven Design** pattern with Actions for business logic.
+The application uses Actions for business logic and separates concerns by organizing code into context-specific HTTP layers.
 
 ## Architecture
 
-### Domain Structure
+### Project Structure
 
-The codebase is organized into two primary domains located in `app/Domains/`:
+The codebase is organized using a horizontal layering approach with context separation:
 
-1. **Cms Domain** (`app/Domains/Cms/`)
-   - Routes: `app/Domains/Cms/Routes/api.php`
-   - Controllers: `app/Domains/Cms/Http/Controllers/`
-   - Requests: `app/Domains/Cms/Http/Requests/`
-   - Resources: `app/Domains/Cms/Http/Resources/`
-   - Notifications: `app/Domains/Cms/Notifications/`
-   - Console: `app/Domains/Cms/Console/`
+1. **HTTP Layer** (`app/Http/`)
+   - **Cms** (`app/Http/Cms/`)
+     - Controllers: `app/Http/Cms/Controllers/`
+     - Requests: `app/Http/Cms/Requests/`
+     - Resources: `app/Http/Cms/Resources/`
+   - **Store** (`app/Http/Store/`)
+     - Controllers: `app/Http/Store/Controllers/`
+     - Requests: `app/Http/Store/Requests/`
+     - Resources: `app/Http/Store/Resources/`
+     - Middleware: `app/Http/Store/Middleware/`
 
-2. **Store Domain** (`app/Domains/Store/`)
-   - Routes: `app/Domains/Store/Routes/api.php`
-   - Controllers: `app/Domains/Store/Http/Controllers/`
-   - Middleware: `app/Domains/Store/Http/Middleware/`
-   - Requests: `app/Domains/Store/Http/Requests/`
-   - Resources: `app/Domains/Store/Http/Resources/`
-   - Notifications: `app/Domains/Store/Notifications/`
+2. **Notifications** (`app/Notifications/`)
+   - Cms: `app/Notifications/Cms/`
+   - Store: `app/Notifications/Store/`
+
+3. **Console Commands** (`app/Console/`)
+   - Cms: `app/Console/Cms/Commands/`
+
+4. **Routes** (`app/Routes/`)
+   - CMS routes:
+     - API: `app/Routes/Cms/api.php` (loaded via `routes/api.php`)
+     - Web: `app/Routes/Cms/web.php` (loaded via `routes/web.php`)
+   - Store routes:
+     - API: `app/Routes/Store/api.php` (loaded via `routes/api.php`)
+     - Web: `app/Routes/Store/web.php` (loaded via `routes/web.php`)
 
 ### Action Pattern
 
@@ -170,15 +180,19 @@ Key models in `app/Models/`:
 6. Use database transactions for multi-step operations
 
 ### Creating New Controllers
-1. Place in appropriate domain: `app/Domains/{Cms|Store}/Http/Controllers/`
+1. Place in appropriate context: `app/Http/{Cms|Store}/Controllers/`
 2. Make class `final`
 3. Inject actions as method parameters (not constructor)
 4. Return Resources, not raw models
 5. Use Form Requests for validation
 
 ### Adding Routes
-1. CMS routes: Add to `app/Domains/Cms/Routes/api.php` (under `/c` prefix)
-2. Store routes: Add to `app/Domains/Store/Routes/api.php` (under `/s` prefix)
+1. CMS routes:
+   - API routes: Add to `app/Routes/Cms/api.php` (automatically prefixed with `/api/c`)
+   - Web routes: Add to `app/Routes/Cms/web.php` (automatically prefixed with `/c`)
+2. Store routes:
+   - API routes: Add to `app/Routes/Store/api.php` (automatically prefixed with `/api/s`)
+   - Web routes: Add to `app/Routes/Store/web.php` (automatically prefixed with `/s`)
 3. Apply appropriate authentication middleware (`auth:cms` or `auth:store`)
 4. Verified users only for sensitive operations (`verified` middleware)
 

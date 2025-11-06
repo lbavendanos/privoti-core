@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Domains\Store\Http\Middleware\EnsureEmailIsVerified;
+use App\Http\Store\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,8 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withCommands([
-        __DIR__.'/../app/Domains/Cms/Console/Commands',
-        __DIR__.'/../app/Domains/Store/Console/Commands',
+        __DIR__.'/../app/Console/Cms/Commands',
     ])
     ->withExceptions(function (Exceptions $exceptions): void {
         //
