@@ -7,7 +7,7 @@ use Tests\TestCase;
 it('registers a user via console command', function () {
     /** @var TestCase $this */
     /** @phpstan-ignore-next-line */
-    $this->artisan('cms:user:register')
+    $this->artisan('user:register')
         ->expectsQuestion('What is your name?', 'John Doe')
         ->expectsQuestion('What is your email?', 'm@exmaple.com')
         ->expectsQuestion('What is your password?', 'password')
@@ -19,7 +19,7 @@ it('registers a user via console command', function () {
 it('fails to register a user with invalid data', function () {
     /** @var TestCase $this */
     /** @phpstan-ignore-next-line */
-    $this->artisan('cms:user:register')
+    $this->artisan('user:register')
         ->expectsQuestion('What is your name?', '')
         ->expectsQuestion('What is your email?', 'invalid-email')
         ->expectsQuestion('What is your password?', 'short')

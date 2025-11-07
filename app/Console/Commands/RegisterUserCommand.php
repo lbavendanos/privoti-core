@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Cms\Commands;
+namespace App\Console\Commands;
 
 use App\Actions\User\RegisterUserAction;
 use Illuminate\Console\Command;
@@ -16,7 +16,7 @@ final class RegisterUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'cms:user:register';
+    protected $signature = 'user:register';
 
     /**
      * The console command description.

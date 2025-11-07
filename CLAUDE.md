@@ -31,8 +31,10 @@ The codebase is organized using a horizontal layering approach with context sepa
    - Cms: `app/Notifications/Cms/`
    - Store: `app/Notifications/Store/`
 
-3. **Console Commands** (`app/Console/`)
-   - Cms: `app/Console/Cms/Commands/`
+3. **Console Commands** (`app/Console/Commands/`)
+   - Shared commands for both contexts (similar to Actions)
+   - Commands use actions for business logic
+   - Example: `RegisterUserCommand` with signature `user:register`
 
 4. **Routes** (`app/Routes/`)
    - CMS routes:
@@ -195,6 +197,14 @@ Key models in `app/Models/`:
    - Web routes: Add to `app/Routes/Store/web.php` (automatically prefixed with `/s`)
 3. Apply appropriate authentication middleware (`auth:cms` or `auth:store`)
 4. Verified users only for sensitive operations (`verified` middleware)
+
+### Creating New Console Commands
+1. Place commands in `app/Console/Commands/` (shared between contexts)
+2. Make class `final`
+3. Use descriptive signatures without context prefixes (e.g., `user:register`, not `cms:user:register`)
+4. Inject actions for business logic (not in constructor, as method parameters in `handle()`)
+5. Commands auto-register automatically from `app/Console/Commands/` - no manual registration needed
+6. Add corresponding tests in `tests/Feature/Commands/`
 
 ## Database Migrations
 
